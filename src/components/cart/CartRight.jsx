@@ -26,7 +26,7 @@ const CartRight = () => {
       <div className="">
         <div className="p-3 flex flex-col gap-4 items-center w-full justify-center rounded-[10px] shadow-[0_0_10px_0_rgb(0,0,0,0.1)] mb20">
           <ul className='flex items-center justify-between w-full'>
-            <li className="text-lg font-medium text3">Product Amount:</li>
+            <li className="text-lg font-medium text3">Product Amountsdf:</li>
             <li className="text-lg font-semibold text3">₹. {selectedItemsTotal.toFixed(2)}</li>
           </ul>
           <ul className='flex items-center justify-between w-full'>
