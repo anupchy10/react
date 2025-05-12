@@ -38,7 +38,7 @@ const ProductTitle = () => {
             Female
           </button>
           <button 
-            className="p-3 bg-[#B8A38A] rounded-full text-white text-[20px]"
+            className="p-3 bg-[#B8A38A] rounded-full text-white text-[20px] max-sm:hidden"
             onClick={handleRefreshClick}
           >
             <HiOutlineRefresh />

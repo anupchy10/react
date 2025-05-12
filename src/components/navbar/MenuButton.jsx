@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaShoppingBag, FaShoppingCart, FaHeart, FaHome, FaUserAlt } from 'react-icons/fa';
 import { BsFillInfoCircleFill } from 'react-icons/bs';
+import { useNavigate } from 'react-router-dom';
 
 const MenuButton = () => {
+  const navigate = useNavigate();
   const wrapperRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState({ x: 100, y: 100 });
@@ -25,13 +27,14 @@ const MenuButton = () => {
   }, [isDragging]);
 
   const icons = [
-    { icon: <FaShoppingCart />, name: 'cart' },
-    { icon: <FaHeart />, name: 'heart' },
-    { icon: <FaHome />, name: 'home' },
-    { icon: <FaShoppingBag />, name: 'shop' },
-    { icon: <BsFillInfoCircleFill />, name: 'info' },
-    { icon: <FaUserAlt />, name: 'user' },
+    { icon: <FaShoppingCart />, name: 'cart', path: '/cart' },
+    { icon: <FaHeart />, name: 'heart', path: '/favorite' },
+    { icon: <FaHome />, name: 'home', path: '/home' },
+    { icon: <FaShoppingBag />, name: 'shop', path: '/shop' },
+    { icon: <BsFillInfoCircleFill />, name: 'info', path: '/about' },
+    { icon: <FaUserAlt />, name: 'user', path: '/profile' },
   ];
+
 
   const updatePosition = (x, y) => {
     livePosition.current = { x, y };
@@ -108,10 +111,11 @@ const MenuButton = () => {
     }
   };
 
-  const handleIconSelect = (icon) => {
+  const handleIconSelect = (icon, path) => {
     const biggerIcon = React.cloneElement(icon, { size: 28 });
     setSelectedIcon(biggerIcon);
     setIsOpen(false);
+    if (path) navigate(path);
   };
 
   const getItemPosition = (index, total, radius = 90) => {
@@ -223,11 +227,11 @@ const MenuButton = () => {
       {/* Main Button */}
       <div
         onClick={toggleMenu}
-        className={`group hover:bg-white w-20 h-20 max-md:w-16 max-md:h-16 bg-[#005ca8bd] rounded-full shadow-[0_0_5px_0_rgb(0,0,0,0.2)] flex items-center justify-center relative z-10 transition duration-300 ${
-          isOpen ? '' : 'hover:drop-shadow-[0_0_10px_#005ca8bd]'
+        className={`group hover:bg-white w-20 h-20 max-md:w-16 max-md:h-16 bg-[#B8A38A] rounded-full shadow-[0_0_5px_0_rgb(0,0,0,0.2)] flex items-center justify-center relative z-10 transition duration-300 ${
+          isOpen ? '' : 'hover:drop-shadow-[0_0_10px_#b8a38ad5]'
         }`}
       >
-        <div className="text-[#fff] drop-shadow-[0_0_10px_#fff] group-hover:drop-shadow-[0_0_10px_#005ca8bd] group-hover:text-[#005DA8] text-3xl">
+        <div className="text-[#fff] drop-shadow-[0_0_10px_10px_#fff] group-hover:drop-shadow-[0_0_10px_#b8a38ad5] group-hover:text-[#B8A38A] text-3xl">
           {selectedIcon}
         </div>
       </div>
@@ -240,7 +244,7 @@ const MenuButton = () => {
           return (
             <div
               key={index}
-              className={`group hover:shadow-[0_0_20px_#005ca8bd] absolute w-12 h-12 max-md:w-11 max-md:h-11 bg-white rounded-full cursor-pointer shadow-[0_0_5px_0_rgb(0,0,0,0.3)] flex items-center justify-center transition-all duration-300 ${
+              className={`group hover:shadow-[0_0_20px_#b8a38ad5] absolute w-12 h-12 max-md:w-11 max-md:h-11 bg-white rounded-full cursor-pointer shadow-[0_0_5px_0_rgb(0,0,0,0.3)] flex items-center justify-center transition-all duration-300 ${
                 isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
               }`}
               style={{
@@ -250,9 +254,9 @@ const MenuButton = () => {
                   ? `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`
                   : 'translate(-50%, -50%)',
               }}
-              onClick={() => handleIconSelect(item.icon)}
+              onClick={() => handleIconSelect(item.icon, item.path)}
             >
-              <div className="transition-all duration-300 group-hover:text-[#005DA8] group-hover:drop-shadow-[0_0_6px_#005DA8] text-lg max-md:text-[20px]">
+              <div className="transition-all text-[#B8A38A] duration-300 group-hover:text-[#B8A38A] group-hover:drop-shadow-[0_0_6px_#b8a38ad5] text-lg max-md:text-[20px]">
                 {item.icon}
               </div>
             </div>
