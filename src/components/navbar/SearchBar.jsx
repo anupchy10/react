@@ -1,3 +1,4 @@
+//src/components/navbar/SearchBar.jsx
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, Search } from "lucide-react";
 

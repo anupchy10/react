@@ -1,3 +1,4 @@
+// src/components/navbar/Nav.jsx
 import React from 'react'
 import { assets } from '../../assets/assets'
 import { MdLocationPin } from "react-icons/md";

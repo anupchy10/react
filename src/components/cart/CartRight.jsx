@@ -26,7 +26,7 @@ const CartRight = () => {
       <div className="">
         <div className="p-3 flex flex-col gap-4 items-center w-full justify-center rounded-[10px] shadow-[0_0_10px_0_rgb(0,0,0,0.1)] mb20">
           <ul className='flex items-center justify-between w-full'>
-            <li className="text-lg font-medium text3">Product Amountsdf:</li>
+            <li className="text-lg font-medium text3">Product Amount:</li>
             <li className="text-lg font-semibold text3">₹. {selectedItemsTotal.toFixed(2)}</li>
           </ul>
           <ul className='flex items-center justify-between w-full'>
@@ -64,7 +64,7 @@ const CartRight = () => {
               </div>
             </li>
             <li>
-              <h4 className='text2 text-xl font-medium mb-2'>Premo Code</h4>
+              <h4 className='text2 text-xl font-medium mb-2'>Promo Code</h4>
               <div className='relative w-full h-auto'>
                 <FaTag className="absolute text3 right-4 translate-y-1/2" />
                 <input type="text" placeholder='#283-832' className='px-5 py-2 text-[15px] text3 rounded-[5px] shadow-[0_0_5px_0_rgb(0,0,0,0.3)] w-full' required />

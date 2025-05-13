@@ -13,6 +13,7 @@ import CartInitializer from './components/cart/CartInitializer';
 import FavoriteList from './pages/FavoriteList';
 import ProductDetail from './pages/ProductDetail';
 import MenuButton from './components/navbar/MenuButton';
+import { div } from 'framer-motion/client';
 
 function AppContent() {
   const location = useLocation();

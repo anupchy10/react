@@ -3,8 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { assets } from '../assets/assets';
 import { CgMail } from "react-icons/cg";
-import { IoEyeOff } from "react-icons/io5";
-import { IoEye } from "react-icons/io5";
+import { IoEyeOff, IoEye } from "react-icons/io5";
 
 function Login() {
   const [emailOrPhone, setEmailOrPhone] = useState('');
@@ -16,134 +15,217 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setIsLoading(true);
 
-    try {
-      const response = await axios.post(
-        'http://localhost/react-auth-backend/login.php',
-        {
-          emailOrPhone,
-          password
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      );
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  // Basic validation
+  if (!emailOrPhone.trim() || !password) {
+    setError('Please fill in all fields');
+    return;
+  }
 
-      if (response.data.success) {
-        localStorage.setItem('authToken', response.data.token);
-        localStorage.setItem('userId', response.data.user_id);
-        navigate('/home');
-      } else {
-        setError(response.data.message || 'Login failed. Please try again.');
+  setError('');
+  setIsLoading(true);
+
+  try {
+    const response = await axios.post('/api/login.php', {
+      emailOrPhone: emailOrPhone.trim(),
+      password
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
       }
-    } catch (err) {
-      let errorMessage = 'An error occurred. Please try again.';
-      if (err.response) {
-        errorMessage = err.response.data?.message || 
-                      err.response.statusText || 
-                      'Server error occurred';
-      } else if (err.request) {
-        errorMessage = 'No response from server. Check your connection.';
-      }
-      setError(errorMessage);
-      console.error("Login error:", err);
-    } finally {
-      setIsLoading(false);
+    });
+
+    if (response.data.success) {
+      // Save user data and token
+      localStorage.setItem('user', JSON.stringify(response.data.data.user));
+      localStorage.setItem('token', response.data.data.token);
+      
+      // Redirect to home page
+      navigate('/home');
+    } else {
+      setError(response.data.message || 'Login failed');
     }
-  };
+  } catch (err) {
+    let errorMessage = 'Login failed. Please try again.';
+    
+    if (err.response) {
+      switch (err.response.status) {
+        case 400:
+          errorMessage = 'Invalid input data';
+          break;
+        case 401:
+          errorMessage = 'Invalid credentials';
+          break;
+        case 404:
+          errorMessage = 'User not found';
+          break;
+        case 500:
+          errorMessage = 'Server error';
+          break;
+      }
+    } else if (err.request) {
+      errorMessage = 'No response from server. Check your connection.';
+    }
+    
+    setError(errorMessage);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   return (
-    <div className='allCenter h-screen w-full bg-[#FCF3E8]'>
-      <span className='grid grid-cols-2 gap-[30px] max-lg:gap-[20px] max-w-[1640px] p-[90px] items-center max-lg:p-[60px] max-md:w-full max-md:grid-cols-1 max-md:p-[40px] max-sm:p-[20px]'>
-        <section className='max-md:hidden'>
-          <img className='w-full' src={assets.login} alt="login image banner" loading="lazy" />
-        </section>
-        <section className='p-9 boxShado max-lg:p-[25px] bg-white rounded-[15px] flex flex-col gap-[40px]'>
-          <div>
-            <h1 className='text-center text-[35px] font-semibold max-xl:text-[28px] max-lg:text-[25px] max-md:text-[22px]'>Login</h1>
-            {error && <p className="text-red-500 text-center text-sm mt-2">{error}</p>}
-          </div>
-          <form onSubmit={handleSubmit} className='relative'>
-            <div className='flex gap-[20px] flex-col w-full'>
-              <div className='relative mb-6'>
-                <div className='absolute left-2'>
-                  <h6 className={`max-lg:text-[14px] transition-all duration-300 ${(emailFocused || emailOrPhone) ? 'transform -translate-y-5 text-sm text-[#B8A38A]' : 'top-1/2 -translate-y-0 text3'}`}>
-                    Email address or phone...
-                  </h6>
-                </div>
-                <div className={`absolute right-2 text-[23px] top-1/2 transform -translate-y-1/2 transition-colors duration-300 ${(emailFocused || emailOrPhone) ? 'text-[#B8A38A]' : '-translate-y-0 text3'}`}>
-                  <CgMail className='text-[23px]' />
-                </div>
-                <input 
-                  type="text" 
-                  value={emailOrPhone} 
-                  onChange={(e) => setEmailOrPhone(e.target.value)} 
-                  onFocus={() => setEmailFocused(true)}
-                  onBlur={() => !emailOrPhone && setEmailFocused(false)}
-                  required 
-                  className='w-full pt-6 px-2 pb-2 border-b-2 border-gray-300 focus:border-[#B8A38A] outline-none'
-                  disabled={isLoading}
-                />
-              </div>
+    <div className="min-h-screen w-full bg-gradient-to-r from-[#FDEDD9] to-[#f8cfa0] flex items-center justify-center p-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-6xl">
+        
+        {/* Left Image */}
+        <div className="hidden lg:flex items-center justify-center">
+          <img
+            src={assets.login}
+            alt="Login banner"
+            loading="lazy"
+            className="w-full h-auto max-h-[600px] object-contain animate-fade-in"
+          />
+        </div>
 
-              <div className='relative mb-6'>
-                <div className='absolute left-2 text-[#2a2a2a]'>
-                  <h6 className={`max-lg:text-[14px] transition-all duration-300 ${(passwordFocused || password) ? 'transform -translate-y-5 text-sm text-[#B8A38A]' : 'top-1/2 -translate-y-0 text3'}`}>
-                    Password
-                  </h6>
-                </div>
-                {password && (
-                  <div 
-                    className='absolute right-2 top-1/2 transform -translate-y-1/2 text-[#B8A38A] cursor-pointer select-none'
-                    onClick={() => setShowPassword(!showPassword)}
-                    onMouseDown={(e) => e.preventDefault()} // This prevents text selection
-                  >
-                    {showPassword ? <IoEyeOff className='text-[23px]' /> : <IoEye className='text-[23px]' />}
-                  </div>
-                )}
-                <input 
-                  type={showPassword ? "text" : "password"} 
-                  value={password} 
-                  onChange={(e) => setPassword(e.target.value)} 
-                  onFocus={() => setPasswordFocused(true)}
-                  onBlur={() => !password && setPasswordFocused(false)}
-                  required 
-                  className='w-full pt-6 px-2 pb-2 border-b-2 border-gray-300 focus:border-[#B8A38A] outline-none'
-                  disabled={isLoading}
-                />
-              </div>
+        {/* Right Form */}
+        <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6 sm:p-10 w-full transition-all duration-500">
+          <h1 className="text-3xl sm:text-4xl font-bold text-center text-[#6f4e37] mb-6">Welcome Back</h1>
+          <p className="text-center text-gray-600 mb-8">Login to continue your journey</p>
 
-              <div>
-                <div className='flex items-center justify-between'>
-                  <p className='para mb10 max-lg:text-[14px]'>Don't have an account? <Link to="/signup" className='underline text-blue-500 hover:text-blue-700'>Sign up</Link></p>
-                  <p className='para mb10 max-lg:text-[14px] hover:underline text-blue-500 hover:text-blue-700'>forgot password</p>
-                </div>
-                <button 
-                  className='button1 w-full max-md:text-[16px]' 
-                  type="submit"
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Logging in...' : 'Login'}
-                </button>
-              </div>
+          {error && (
+            <div className="mb-6 p-3 bg-red-100 text-red-700 rounded-lg text-center">
+              {error}
             </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Email/Phone Field */}
+            <div className="relative">
+              <label className={`absolute left-2 transition-all duration-300 ${
+                (emailFocused || emailOrPhone) 
+                  ? 'text-xs text-[#6f4e37] -translate-y-5' 
+                  : 'text-gray-500 top-1/2 -translate-y-1/2'
+              }`}>
+                Email or Phone*
+              </label>
+              <div className={`absolute right-2 top-1/2 transform -translate-y-1/2 ${
+                (emailFocused || emailOrPhone) ? 'text-[#6f4e37]' : 'text-gray-400'
+              }`}>
+                <CgMail className="text-lg" />
+              </div>
+              <input
+                type="text"
+                value={emailOrPhone}
+                onChange={(e) => setEmailOrPhone(e.target.value)}
+                onFocus={() => setEmailFocused(true)}
+                onBlur={() => !emailOrPhone && setEmailFocused(false)}
+                className="w-full pt-5 px-2 pb-2 border-b-2 border-gray-300 focus:border-[#6f4e37] outline-none bg-transparent"
+                disabled={isLoading}
+                required
+              />
+            </div>
+
+            {/* Password Field */}
+            <div className="relative">
+              <label className={`absolute left-2 transition-all duration-300 ${
+                (passwordFocused || password) 
+                  ? 'text-xs text-[#6f4e37] -translate-y-5' 
+                  : 'text-gray-500 top-1/2 -translate-y-1/2'
+              }`}>
+                Password*
+              </label>
+              <button
+                type="button"
+                className={`absolute right-2 top-1/2 transform -translate-y-1/2 ${
+                  (passwordFocused || password) ? 'text-[#6f4e37]' : 'text-gray-400'
+                }`}
+                onClick={() => setShowPassword(!showPassword)}
+                disabled={isLoading}
+              >
+                {showPassword ? <IoEyeOff className="text-lg" /> : <IoEye className="text-lg" />}
+              </button>
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onFocus={() => setPasswordFocused(true)}
+                onBlur={() => !password && setPasswordFocused(false)}
+                className="w-full pt-5 px-2 pb-2 border-b-2 border-gray-300 focus:border-[#6f4e37] outline-none bg-transparent"
+                disabled={isLoading}
+                required
+              />
+            </div>
+
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">
+                Don't have an account?{' '}
+                <Link to="/signup" className="text-[#6f4e37] hover:underline font-medium">
+                  Sign up
+                </Link>
+              </span>
+              <Link to="/" className="text-[#6f4e37] hover:underline font-medium">
+                Forgot password?
+              </Link>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-[#6f4e37] text-white py-3 px-4 rounded-full hover:bg-[#5a3c2e] shadow-lg transition duration-300 disabled:opacity-70"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Logging in...' : 'Login'}
+            </button>
           </form>
-          <div className='flex flex-col gap-[20px]'>
-            <h1 className='text-center text-[25px] font-semibold max-xl:text-[23px] max-lg:text-[20px] max-md:text-[18px] max-sm:text-[16px]'>Login With</h1>
-            <ul className="allCenter gap-[25px]">
-              <li><Link to={'https://accounts.google.com'} target='_blank' rel="noopener noreferrer"><img className='w-[55px] h-[55px] cursor-pointer max-lg:h-[45px] max-md:h-[40px] max-lg:w-[45px] max-md:w-[40px]' src={assets.google} alt="google" loading="lazy" /></Link></li>
-              <li><Link to={'https://www.facebook.com/'} target='_blank' rel="noopener noreferrer"><img className='w-[55px] h-[55px] cursor-pointer max-lg:h-[45px] max-md:h-[40px] max-lg:w-[45px] max-md:w-[40px]' src={assets.facebook} alt="facebook" loading="lazy" /></Link></li>
-              <li><Link to={'https://www.instagram.com/'} target='_blank' rel="noopener noreferrer"><img className='w-[55px] h-[55px] cursor-pointer max-lg:h-[45px] max-md:h-[40px] max-lg:w-[45px] max-md:w-[40px]' src={assets.instagram} alt="instagram" loading="lazy" /></Link></li>
-            </ul>
+
+          <div className="mt-8">
+            <div className="relative flex items-center mb-6">
+              <div className="flex-grow border-t border-gray-300"></div>
+              <span className="mx-4 text-gray-500">or continue with</span>
+              <div className="flex-grow border-t border-gray-300"></div>
+            </div>
+
+            <div className="flex justify-center gap-6">
+              <button
+                onClick={() => window.location.href = 'http://localhost/react-auth-backend/social-auth.php?provider=google'}
+                className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors cursor-pointer"
+              >
+                <img 
+                  className="w-6 h-6" 
+                  src={assets.google} 
+                  alt="google" 
+                  loading="lazy" 
+                />
+              </button>
+              <button
+                onClick={() => window.location.href = 'http://localhost/react-auth-backend/social-auth.php?provider=facebook'}
+                className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors cursor-pointer"
+              >
+                <img 
+                  className="w-6 h-6" 
+                  src={assets.facebook} 
+                  alt="facebook" 
+                  loading="lazy" 
+                />
+              </button>
+              <button
+                onClick={() => window.location.href = 'http://localhost/react-auth-backend/social-auth.php?provider=instagram'}
+                className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors cursor-pointer"
+              >
+                <img 
+                  className="w-6 h-6" 
+                  src={assets.instagram} 
+                  alt="instagram" 
+                  loading="lazy" 
+                />
+              </button>
+            </div>
           </div>
-        </section>
-      </span>
+        </div>
+      </div>
     </div>
   );
 }
