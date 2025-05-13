@@ -94,7 +94,7 @@ const handleSubmit = async (e) => {
         {/* Right Form */}
         <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6 sm:p-10 w-full transition-all duration-500">
           <h1 className="text-3xl sm:text-4xl font-bold text-center text-[#6f4e37] mb-6">Welcome Back</h1>
-          <p className="text-center text-gray-600 mb-8">Login to continue your journey</p>
+          <p className="text-center text-gray-600 mb-8">Login to continue your Shopping</p>
 
           {error && (
             <div className="mb-6 p-3 bg-red-100 text-red-700 rounded-lg text-center">

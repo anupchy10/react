@@ -112,11 +112,11 @@ const Items = () => {
 
   return (
     <div className='mb30'>
-      <section className='grid grid-cols-5 Gap max-2xl:grid-cols-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 mb20'>
+      <section className='grid grid-cols-4 gap-6 max-xl:grid-cols-3 max-md:grid-cols-2 max-md:gap-2 max-md:place-items-center max-[450px]:grid-cols-1 max-md:px-2 mb20 max-md:mb-0'>
         {paginatedItems.map((item, index) => (
           <div 
           key={index} 
-          className='flex flex-col gap-[18px] rounded-[10px] p-3 shadow2 bg-white hover:shadow-md transition-all duration-200 max-sm:max-w-[350px] max-sm:w-full max-sm:m-auto'>
+           className='flex flex-col gap-[18px] rounded-[10px] p-3 shadow2 bg-white hover:shadow-md transition-all duration-200 max-md:max-w-[300px] max-sm:w-full'>
             <div className='relative'>
               <span 
                 className="absolute top-2 right-2 cursor-pointer text-2xl select-none"
@@ -132,15 +132,15 @@ const Items = () => {
                 <p className='text-sm text3 text-[11px]'>{item.gender}</p>
               </div>
               <h2 className='font-medium text1 text-[24px] truncate max-2xl:text-[21px] max-xl:text-[20px]'>{item.name}</h2>
-              <p className='text3 text-[13px] truncate'>{item.desc}</p>
+              <p className='text3 text-[13px] truncate max-sm:hidden'>{item.desc}</p>
               <div className='flex items-center justify-between w-full'>
                 <span className='flex gap-1 text-yellow-400'><FaStar /><FaStar /><FaStar /></span>
                 <ul className='flex gap-2'>
-                  <li className='text-[16px] max-lg:text-[14px] font-medium text5 cursor-pointer hover:underline'>${item.sp}</li>
-                  <p className='text3 text-[14px] max-lg:text-[12px] line-through'>${item.cp}</p>
+                  <li className='text-[16px] max-lg:text-[14px] font-medium text5 cursor-pointer hover:underline max-md:text-[14px]'>${item.sp}</li>
+                  <p className='text3 text-[14px] max-lg:text-[12px] line-through max-md:text-[11px]'>${item.cp}</p>
                 </ul>
               </div>
-              <div className='text-[15px] text3 flex gap-[8px]'>Available items: <p className='font-semibold text1'>{item.available}</p></div>
+              <div className='text-[15px] text3 flex gap-[8px] max-md:text-[12px]'>Available items: <p className='font-semibold text1'>{item.available}</p></div>
               <button 
                 className='productbtn w-full mt-2'
                 onClick={() => handleAddToCart(item)}

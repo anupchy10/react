@@ -1,15 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaShoppingBag, FaShoppingCart, FaHeart, FaHome, FaUserAlt } from 'react-icons/fa';
 import { BsFillInfoCircleFill } from 'react-icons/bs';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const MenuButton = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const wrapperRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [isDragging, setIsDragging] = useState(false);
-  const [selectedIcon, setSelectedIcon] = useState(<FaHome />);
+  const [selectedIcon, setSelectedIcon] = useState(<FaHome size={28} />);
 
   const livePosition = useRef({ x: 100, y: 100 });
   const dragOffset = useRef({ x: 0, y: 0 });
@@ -17,14 +18,6 @@ const MenuButton = () => {
   const hasMoved = useRef(false);
   const animationRef = useRef(null);
   const lastMoveTime = useRef(0);
-
-  useEffect(() => {
-    if (isDragging) {
-      document.body.style.userSelect = 'none';
-    } else {
-      document.body.style.userSelect = '';
-    }
-  }, [isDragging]);
 
   const icons = [
     { icon: <FaShoppingCart />, name: 'cart', path: '/cart' },
@@ -35,6 +28,28 @@ const MenuButton = () => {
     { icon: <FaUserAlt />, name: 'user', path: '/profile' },
   ];
 
+  // Auto-select icon based on current route
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const matchingIcon = icons.find(icon => currentPath.startsWith(icon.path));
+    if (matchingIcon) {
+      setSelectedIcon(React.cloneElement(matchingIcon.icon, { size: 28 }));
+    } else {
+      // Default to home if no match found
+      const homeIcon = icons.find(icon => icon.path === '/home');
+      if (homeIcon) {
+        setSelectedIcon(React.cloneElement(homeIcon.icon, { size: 28 }));
+      }
+    }
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (isDragging) {
+      document.body.style.userSelect = 'none';
+    } else {
+      document.body.style.userSelect = '';
+    }
+  }, [isDragging]);
 
   const updatePosition = (x, y) => {
     livePosition.current = { x, y };
@@ -240,11 +255,14 @@ const MenuButton = () => {
       {icons
         .filter((item) => item.icon.type !== selectedIcon.type)
         .map((item, index, filteredIcons) => {
+          const isActive = location.pathname.startsWith(item.path);
           const { x, y } = getItemPosition(index, filteredIcons.length);
           return (
             <div
               key={index}
-              className={`group hover:shadow-[0_0_20px_#b8a38ad5] absolute w-12 h-12 max-md:w-11 max-md:h-11 bg-white rounded-full cursor-pointer shadow-[0_0_5px_0_rgb(0,0,0,0.3)] flex items-center justify-center transition-all duration-300 ${
+              className={`group hover:shadow-[0_0_20px_#b8a38ad5] absolute w-12 h-12 max-md:w-11 max-md:h-11 ${
+                isActive ? 'bg-[#B8A38A]' : 'bg-white'
+              } rounded-full cursor-pointer shadow-[0_0_5px_0_rgb(0,0,0,0.3)] flex items-center justify-center transition-all duration-300 ${
                 isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
               }`}
               style={{
@@ -256,7 +274,9 @@ const MenuButton = () => {
               }}
               onClick={() => handleIconSelect(item.icon, item.path)}
             >
-              <div className="transition-all text-[#B8A38A] duration-300 group-hover:text-[#B8A38A] group-hover:drop-shadow-[0_0_6px_#b8a38ad5] text-lg max-md:text-[20px]">
+              <div className={`transition-all ${
+                isActive ? 'text-white' : 'text-[#B8A38A]'
+              } duration-300 group-hover:text-[#B8A38A] group-hover:drop-shadow-[0_0_6px_#b8a38ad5] text-lg max-md:text-[20px]`}>
                 {item.icon}
               </div>
             </div>

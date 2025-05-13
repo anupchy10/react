@@ -23,7 +23,7 @@ const Filter = () => {
   return (
     <div className='mb30'>
       <h1 className='text-[25px] font-medium text-center mb25'>Find with easy way...</h1>
-      <section className="flex flex-wrap justify-center Gap px-7 max-sm:p-0">
+      <section className="flex flex-wrap justify-center Gap px-7 max-sm:p-0 max-sm:min-w-[260px]">
         {categories.map((item, index) => (
           <div 
             key={index} 
