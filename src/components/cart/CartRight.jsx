@@ -173,33 +173,37 @@ const CartRight = () => {
   };
 
   return (
-    <section className='bg-white p-6 rounded-[15px] shadow-[0_0_6px_0_rgb(0,0,0,0.2)] w-full'>
+    <section className='bg-white p-6 max-md:p-4 max-sm:p-3 rounded-[15px] shadow-[0_0_6px_0_rgb(0,0,0,0.2)] w-full'>
       <div className='flex justify-between items-center mb-4'>
-        <h2 className="text-xl font-semibold text-gray-800">Shopping Cart</h2>
-        <h2 className='text-xl font-semibold text-green-500'>{selectedItemsCount} Items</h2>
+        <h2 className="text-xl font-semibold text-gray-800 max-sm:text-[18px]">Shopping Cart</h2>
+        <h2 className='text-xl font-semibold text-green-500 max-sm:text-[18px]'>{selectedItemsCount} Items</h2>
       </div>
       <hr className='w-full h-1 bg-gray-300 mb-5' />
 
       <div className="p-3 flex flex-col gap-4 items-center w-full justify-center rounded-[10px] shadow-[0_0_10px_0_rgba(0,0,0,0.1)] mb-6">
         <ul className='flex items-center justify-between w-full'>
-          <li className="text-lg font-medium text-gray-700">Product Amount:</li>
-          <li className="text-lg font-semibold text-gray-700">₹ {selectedItemsTotal.toFixed(2)}</li>
+          <li className="text-lg font-medium text-gray-700 max-md:text-[14px]">Product Amount:</li>
+          <li className="text-lg font-semibold text-gray-700 max-md:text-[14px]">₹ {selectedItemsTotal.toFixed(2)}</li>
         </ul>
         <ul className='flex items-center justify-between w-full'>
-          <li className="text-lg font-medium text-gray-700">Delivery Charge:</li>
-          <li className="text-lg font-semibold text-gray-700">₹ 0</li>
+          <li className="text-lg font-medium text-gray-700 max-md:text-[14px]">Delivery Charge:</li>
+          <li className="text-lg font-semibold text-gray-700 max-md:text-[14px]">₹ {selectedItemsCount * 50}.00</li>
+        </ul>
+        <ul className='flex items-center justify-between w-full'>
+          <li className="text-lg font-medium text-gray-700 max-md:text-[14px]">Selected Items:</li>
+          <li className="text-lg font-semibold text-gray-700 max-md:text-[14px]">{selectedItemsCount} Items</li>
         </ul>
         <hr className='w-full h-[2px] bg-gray-300 mx-1' />
         <ul className='flex items-center justify-between w-full'>
-          <li className="text-lg font-medium text-gray-700">Total Amount:</li>
-          <li className="text-lg font-semibold text-gray-700">₹ {selectedItemsTotal.toFixed(2)}</li>
+          <li className="text-lg font-medium text-gray-700 max-md:text-[14px]">Total Amount:</li>
+          <li className="text-lg font-semibold text-gray-700 max-md:text-[14px]">₹ {(selectedItemsTotal + (selectedItemsCount * 50)).toFixed(2)}</li>
         </ul>
       </div>
 
       <form className='mb-5' onSubmit={handleOrderSelected}>
         <ul className='flex flex-col justify-center gap-5 w-full'>
           <li>
-            <h4 className='text-gray-700 text-xl font-medium mb-2'>Customer Name</h4>
+            <h4 className='text-gray-700 text-xl font-medium mb-2 max-sm:text-[18px]'>Customer Name</h4>
             <div className='relative w-full h-auto'>
               <input 
                 type="text" 
@@ -214,7 +218,7 @@ const CartRight = () => {
           </li>
           
           <li>
-            <h4 className='text-gray-700 text-xl font-medium mb-2'>Country</h4>
+            <h4 className='text-gray-700 text-xl font-medium mb-2 max-sm:text-[18px]'>Country</h4>
             <div className='relative w-full h-auto'>
               <FaMapLocationDot className="absolute text-gray-500 right-4 top-1/2 transform -translate-y-1/2" />
               <input 
@@ -230,7 +234,7 @@ const CartRight = () => {
           </li>
           
           <li>
-            <h4 className='text-gray-700 text-xl font-medium mb-2'>City</h4>
+            <h4 className='text-gray-700 text-xl font-medium mb-2 max-sm:text-[18px]'>City</h4>
             <div className='relative w-full h-auto'>
               <FaCity className="absolute text-gray-500 right-4 top-1/2 transform -translate-y-1/2" />
               <input 
@@ -246,7 +250,7 @@ const CartRight = () => {
           </li>
           
           <li>
-            <h4 className='text-gray-700 text-xl font-medium mb-2'>Address</h4>
+            <h4 className='text-gray-700 text-xl font-medium mb-2 max-sm:text-[18px]'>Address</h4>
             <div className='relative w-full h-auto'>
               <IoHome className="absolute text-gray-500 right-4 top-1/2 transform -translate-y-1/2" />
               <input 
@@ -262,7 +266,7 @@ const CartRight = () => {
           </li>
           
           <li>
-            <h4 className='text-gray-700 text-xl font-medium mb-2'>Phone Number</h4>
+            <h4 className='text-gray-700 text-xl font-medium mb-2 max-sm:text-[18px]'>Phone Number</h4>
             <div className='relative w-full h-auto'>
               <FaPhone className="absolute text-gray-500 right-4 top-1/2 transform -translate-y-1/2" />
               <input 
@@ -279,7 +283,7 @@ const CartRight = () => {
           </li>
           
           <li>
-            <h4 className='text-gray-700 text-xl font-medium mb-2'>Promo Code</h4>
+            <h4 className='text-gray-700 text-xl font-medium mb-2 max-sm:text-[18px]'>Promo Code</h4>
             <div className='relative w-full h-auto'>
               <FaTag className="absolute text-gray-500 right-4 top-1/2 transform -translate-y-1/2" />
               <input 
@@ -346,14 +350,14 @@ const CartRight = () => {
           </button>
         </div>
       </form>
-      
+
       {showCreditCardPayment && (
         <CreditCardPayment
           onClose={() => setShowCreditCardPayment(false)}
           onProceedToPay={handleProceedToPay}
           productAmount={selectedItemsTotal}
-          deliveryCharge={0}
-          totalAmount={selectedItemsTotal}
+          deliveryCharge={selectedItemsCount * 50}
+          totalAmount={selectedItemsTotal + (selectedItemsCount * 50)}
         />
       )}
       

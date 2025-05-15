@@ -21,18 +21,18 @@ const ProductTitle = () => {
     <div className='mb20'>
       <section className='flex items-center justify-between gap-4'>
         <div className='flex items-center justify-start gap-2'>
-          <h1 className='font-semibold text1 text-[23px] max-lg:text-[18px]'>Jivorix online shopping website</h1>
+          <h1 className='font-semibold text1 text-[23px] max-lg:text-[18px] max-sm:text-[14px] max-md:text-[16px]'>Jivorix online shopping website</h1>
           <p className='max-xl:hidden text3'>(products available)</p>
         </div>
-        <div className='flex items-center justify-end gap-3 max-sm:gap-[8px]'>
+        <div className='flex items-center justify-end gap-3 max-md:gap-2'>
           <button 
-            className={`button1 px-7 ${activeGender === 'male' ? 'bg-[#B8A38A] text-white' : ''}`}
+            className={`button1 px-7 max-md:px-3 max-sm:px-2 max-md:text-[13px] ${activeGender === 'male' ? 'bg-[#B8A38A] text-white' : ''}`}
             onClick={() => handleGenderClick('male')}
           >
             Male
           </button>
           <button 
-            className={`button1 px-7 ${activeGender === 'female' ? 'bg-[#B8A38A] text-white' : ''}`}
+            className={`button1 px-7 max-md:px-3 max-sm:px-2 max-md:text-[13px] ${activeGender === 'female' ? 'bg-[#B8A38A] text-white' : ''}`}
             onClick={() => handleGenderClick('female')}
           >
             Female
