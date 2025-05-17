@@ -9,6 +9,7 @@ const PaymentSuccess = ({
   customerName,
   mobileNumber,
   paymentAmount,
+  appliedPromo, // Added this prop
   onClose
 }) => {
   const navigate = useNavigate();
@@ -47,6 +48,15 @@ const PaymentSuccess = ({
             <span className="text-gray-600">Mobile Number:</span>
             <span className="font-medium">{mobileNumber}</span>
           </div>
+          
+          {/* Show applied promo if available */}
+          {appliedPromo && (
+            <div className="flex justify-between">
+              <span className="text-gray-600">Applied Promo:</span>
+              <span className="font-medium text-green-500">{appliedPromo}</span>
+            </div>
+          )}
+          
           <div className="flex justify-between">
             <span className="text-gray-600">Payment Amount:</span>
             <span className="font-medium">₹{paymentAmount.toFixed(2)}</span>

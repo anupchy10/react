@@ -1,10 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { selectSelectedItemsTotal, selectSelectedItemsCount } from '../../redux/cart/cartSlice';
 import { FaMapLocationDot, FaCity, FaTag, FaPhone } from "react-icons/fa6";
 import { IoHome } from "react-icons/io5";
 import CreditCardPayment from './CreditCardPayment';
+import OnlinePayment from './OnlinePayment'; // Add this import
 import PaymentSuccess from './PaymentSuccess';
+
+// Valid promo codes and their discounts
+const PROMO_CODES = {
+  'WELCOME10': { type: 'percentage', value: 10, label: '10% off' },
+  'SAVE20': { type: 'percentage', value: 20, label: '20% off' },
+  'FREESHIP': { type: 'fixed', value: 0, label: 'Free shipping' },
+  'HOLIDAY25': { type: 'percentage', value: 25, label: '25% off' },
+  'SANDESH': { type: 'fullDiscount', value: 100, label: '100% off everything' }
+};
 
 const CartRight = () => {
   const cartItems = useSelector((state) => state.cart.items);
@@ -33,7 +43,9 @@ const CartRight = () => {
   // Payment state
   const [paymentMethod, setPaymentMethod] = useState('payment on deliver');
   const [showCreditCardPayment, setShowCreditCardPayment] = useState(false);
+  const [showOnlinePayment, setShowOnlinePayment] = useState(false); // Add this state
   const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
+  const [showNoItemsSelected, setShowNoItemsSelected] = useState(false);
   const [paymentDetails, setPaymentDetails] = useState({
     transactionId: '',
     date: '',
@@ -42,6 +54,32 @@ const CartRight = () => {
     mobileNumber: '',
     paymentAmount: 0
   });
+
+  // Promo code state
+  const [appliedPromo, setAppliedPromo] = useState(null);
+  const [deliveryCharge, setDeliveryCharge] = useState(selectedItemsCount * 50);
+  const [discount, setDiscount] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(selectedItemsTotal + (selectedItemsCount * 50));
+
+  useEffect(() => {
+    let newDeliveryCharge = selectedItemsCount * 50;
+    let newDiscount = 0;
+
+    if (appliedPromo) {
+      if (appliedPromo.type === 'percentage') {
+        newDiscount = (selectedItemsTotal * appliedPromo.value) / 100;
+      } else if (appliedPromo.type === 'fixed') {
+        newDeliveryCharge = 0; // Free shipping
+      } else if (appliedPromo.type === 'fullDiscount') {
+        newDiscount = selectedItemsTotal; // 100% off products
+        newDeliveryCharge = 0; // Free shipping
+      }
+    }
+
+    setDeliveryCharge(newDeliveryCharge);
+    setDiscount(newDiscount);
+    setTotalAmount(selectedItemsTotal - newDiscount + newDeliveryCharge);
+  }, [selectedItemsTotal, selectedItemsCount, appliedPromo]);
 
   const validatePhone = (phone) => {
     const phoneRegex = /^[0-9]{10}$/;
@@ -62,6 +100,34 @@ const CartRight = () => {
         [name]: ''
       }));
     }
+  };
+
+  // Apply promo code
+  const applyPromoCode = () => {
+    const promoCode = formData.promoCode.trim().toUpperCase();
+    
+    if (!promoCode) {
+      setErrors(prev => ({ ...prev, promoCode: 'Please enter a promo code' }));
+      return;
+    }
+
+    if (appliedPromo) {
+      setErrors(prev => ({ ...prev, promoCode: 'A promo code is already applied' }));
+      return;
+    }
+
+    if (PROMO_CODES[promoCode]) {
+      setAppliedPromo(PROMO_CODES[promoCode]);
+      setErrors(prev => ({ ...prev, promoCode: '' }));
+    } else {
+      setErrors(prev => ({ ...prev, promoCode: 'Invalid promo code' }));
+    }
+  };
+
+  // Remove promo code
+  const removePromoCode = () => {
+    setAppliedPromo(null);
+    setFormData(prev => ({ ...prev, promoCode: '' }));
   };
 
   const validateForm = () => {
@@ -122,17 +188,24 @@ const CartRight = () => {
   const handleOrderSelected = (e) => {
     e.preventDefault();
     
+    // Check if any items are selected
+    if (selectedItemsCount === 0) {
+      setShowNoItemsSelected(true);
+      return;
+    }
+
     if (!validateForm()) {
       return;
     }
 
     if (paymentMethod === 'Credit Card payment') {
       setShowCreditCardPayment(true);
-      return;
+    } else if (paymentMethod === 'Online payment') {
+      setShowOnlinePayment(true);
+    } else {
+      // For other payment methods, show success directly
+      showPaymentSuccessModal();
     }
-
-    // For other payment methods, show success directly
-    showPaymentSuccessModal();
   };
 
   const handleProceedToPay = (cardData) => {
@@ -153,7 +226,8 @@ const CartRight = () => {
       paymentMethod: paymentMethod,
       customerName: formData.customerName,
       mobileNumber: formData.phone,
-      paymentAmount: selectedItemsTotal
+      paymentAmount: totalAmount,
+      appliedPromo: appliedPromo ? appliedPromo.label : null
     });
     
     setShowPaymentSuccess(true);
@@ -161,7 +235,7 @@ const CartRight = () => {
 
   const handlePaymentSuccessClose = () => {
     setShowPaymentSuccess(false);
-    // Reset form if needed
+    // Reset form
     setFormData({
       country: '',
       city: '',
@@ -170,6 +244,7 @@ const CartRight = () => {
       promoCode: '',
       customerName: ''
     });
+    setAppliedPromo(null);
   };
 
   return (
@@ -180,23 +255,52 @@ const CartRight = () => {
       </div>
       <hr className='w-full h-1 bg-gray-300 mb-5' />
 
+      {/* Show warning if no items selected */}
+      {showNoItemsSelected && (
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg flex justify-between items-center">
+          <span>Please select at least one item before proceeding</span>
+          <button 
+            onClick={() => setShowNoItemsSelected(false)} 
+            className="text-red-700 hover:text-red-900"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       <div className="p-3 flex flex-col gap-4 items-center w-full justify-center rounded-[10px] shadow-[0_0_10px_0_rgba(0,0,0,0.1)] mb-6">
         <ul className='flex items-center justify-between w-full'>
           <li className="text-lg font-medium text-gray-700 max-md:text-[14px]">Product Amount:</li>
           <li className="text-lg font-semibold text-gray-700 max-md:text-[14px]">₹ {selectedItemsTotal.toFixed(2)}</li>
         </ul>
+        
         <ul className='flex items-center justify-between w-full'>
           <li className="text-lg font-medium text-gray-700 max-md:text-[14px]">Delivery Charge:</li>
-          <li className="text-lg font-semibold text-gray-700 max-md:text-[14px]">₹ {selectedItemsCount * 50}.00</li>
+          <li className="text-lg font-semibold text-gray-700 max-md:text-[14px]">
+            {appliedPromo?.type === 'fixed' ? (
+              <span className="text-green-500 line-through">₹ {deliveryCharge.toFixed(2)}</span>
+            ) : (
+              `₹ ${deliveryCharge.toFixed(2)}`
+            )}
+          </li>
         </ul>
-        <ul className='flex items-center justify-between w-full'>
-          <li className="text-lg font-medium text-gray-700 max-md:text-[14px]">Selected Items:</li>
-          <li className="text-lg font-semibold text-gray-700 max-md:text-[14px]">{selectedItemsCount} Items</li>
-        </ul>
+
+        {appliedPromo && (
+          <ul className='flex items-center justify-between w-full'>
+            <li className="text-lg font-medium text-gray-700 max-md:text-[14px]">
+              Discount ({appliedPromo.label}):
+            </li>
+            <li className="text-lg font-semibold text-green-500 max-md:text-[14px]">
+              -₹ {discount.toFixed(2)}
+            </li>
+          </ul>
+        )}
+
         <hr className='w-full h-[2px] bg-gray-300 mx-1' />
+        
         <ul className='flex items-center justify-between w-full'>
           <li className="text-lg font-medium text-gray-700 max-md:text-[14px]">Total Amount:</li>
-          <li className="text-lg font-semibold text-gray-700 max-md:text-[14px]">₹ {(selectedItemsTotal + (selectedItemsCount * 50)).toFixed(2)}</li>
+          <li className="text-lg font-semibold text-gray-700 max-md:text-[14px]">₹ {totalAmount.toFixed(2)}</li>
         </ul>
       </div>
 
@@ -285,15 +389,49 @@ const CartRight = () => {
           <li>
             <h4 className='text-gray-700 text-xl font-medium mb-2 max-sm:text-[18px]'>Promo Code</h4>
             <div className='relative w-full h-auto'>
-              <FaTag className="absolute text-gray-500 right-4 top-1/2 transform -translate-y-1/2" />
-              <input 
-                type="text" 
-                name="promoCode"
-                value={formData.promoCode}
-                onChange={handleInputChange}
-                placeholder='#283-832' 
-                className='px-5 py-2 text-[15px] text-gray-700 rounded-[5px] shadow-[0_0_5px_0_rgba(0,0,0,0.2)] w-full' 
-              />
+              <div className="flex gap-2">
+                <input 
+                  type="text" 
+                  name="promoCode"
+                  value={formData.promoCode}
+                  onChange={handleInputChange}
+                  placeholder='Enter promo code' 
+                  disabled={!!appliedPromo}
+                  className={`px-5 py-2 text-[15px] text-gray-700 rounded-[5px] shadow-[0_0_5px_0_rgba(0,0,0,0.2)] w-full ${
+                    errors.promoCode ? 'border-red-500 border-2' : ''
+                  } ${appliedPromo ? 'bg-gray-100' : ''}`} 
+                />
+                {appliedPromo ? (
+                  <button
+                    type="button"
+                    onClick={removePromoCode}
+                    className="px-3 bg-red-500 text-white rounded hover:bg-red-600 whitespace-nowrap"
+                  >
+                    Remove
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={applyPromoCode}
+                    className="px-3 bg-blue-500 text-white rounded hover:bg-blue-600 whitespace-nowrap"
+                  >
+                    Apply
+                  </button>
+                )}
+              </div>
+              {errors.promoCode && (
+                <p className="text-red-500 text-sm mt-1">{errors.promoCode}</p>
+              )}
+              {appliedPromo && (
+                <p className="text-green-500 text-sm mt-1">
+                  Promo applied: {appliedPromo.label}
+                </p>
+              )}
+              {!appliedPromo && (
+                <p className="text-gray-500 text-xs mt-1">
+                  Try: WELCOME10, SAVE20, FREESHIP, HOLIDAY25
+                </p>
+              )}
             </div>
           </li>
         </ul>
@@ -345,19 +483,36 @@ const CartRight = () => {
         <div className='w-full mt-6'>
           <button 
             type="submit" 
-            className="px-3 py-3 bg-green-500 text-white rounded-[5px] w-full hover:bg-green-600 transition-colors duration-300 font-medium text-lg">
+            className="px-3 py-3 bg-green-500 text-white rounded-[5px] w-full hover:bg-green-600 transition-colors duration-300 font-medium text-lg"
+          >
             {paymentMethod === 'Credit Card payment' ? 'Proceed to Payment' : 'Place Order'}
           </button>
         </div>
       </form>
 
-      {showCreditCardPayment && (
+       {showCreditCardPayment && (
         <CreditCardPayment
           onClose={() => setShowCreditCardPayment(false)}
           onProceedToPay={handleProceedToPay}
           productAmount={selectedItemsTotal}
-          deliveryCharge={selectedItemsCount * 50}
-          totalAmount={selectedItemsTotal + (selectedItemsCount * 50)}
+          deliveryCharge={deliveryCharge}
+          discount={discount}
+          totalAmount={totalAmount}
+          onPaymentSuccess={showPaymentSuccessModal}
+          appliedPromo={appliedPromo}
+        />
+      )}
+
+      {showOnlinePayment && (
+        <OnlinePayment
+          onClose={() => setShowOnlinePayment(false)}
+          onProceedToPay={handleProceedToPay}
+          productAmount={selectedItemsTotal}
+          deliveryCharge={deliveryCharge}
+          discount={discount}
+          totalAmount={totalAmount}
+          onPaymentSuccess={showPaymentSuccessModal}
+          appliedPromo={appliedPromo}
         />
       )}
       
@@ -369,6 +524,7 @@ const CartRight = () => {
           customerName={paymentDetails.customerName}
           mobileNumber={paymentDetails.mobileNumber}
           paymentAmount={paymentDetails.paymentAmount}
+          appliedPromo={paymentDetails.appliedPromo}
           onClose={handlePaymentSuccessClose}
         />
       )}
