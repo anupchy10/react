@@ -79,7 +79,7 @@ const CreditCardPayment = ({
   };
 
   return (
-    <div className={`fixed inset-0 z-50 p-6 bg-black/50 flex justify-center items-center ${isVisible ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}>
+    <div className={`fixed inset-0 z-50 p-6 bg-black/60 backdrop-blur-sm flex justify-center items-center transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
       <div className="w-full max-w-3xl rounded-2xl bg-white/10 backdrop-blur-lg shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/20 flex flex-col md:flex-row overflow-hidden">
         
         {/* Left Side: Animated Credit Card Preview */}
