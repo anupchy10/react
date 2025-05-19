@@ -26,7 +26,7 @@ const OnlinePayment = ({
     {
       id: 'esewa',
       name: 'eSewa',
-      icon: '/images/payments/esewa.png',
+      icon: 'src/components/cart/images/esewa.png', 
       description: 'Pay securely with your eSewa wallet',
       fields: ['mobileNumber'],
       primaryColor: '#55C22B',
@@ -36,7 +36,7 @@ const OnlinePayment = ({
     {
       id: 'khalti',
       name: 'Khalti',
-      icon: '/images/payments/khalti.png',
+      icon: 'src/components/cart/images/khalti.png',
       description: 'Pay with Khalti digital wallet',
       fields: ['mobileNumber'],
       primaryColor: '#5C2D91',
@@ -46,7 +46,7 @@ const OnlinePayment = ({
     {
       id: 'imepay',
       name: 'IME Pay',
-      icon: '/images/payments/imepay.png',
+      icon: 'src/components/cart/images/imepay.png',
       description: 'Secure payments with IME Pay',
       fields: ['mobileNumber'],
       primaryColor: '#E31937',
@@ -56,7 +56,7 @@ const OnlinePayment = ({
     {
       id: 'connectips',
       name: 'Connect IPS',
-      icon: '/images/payments/connectips.png',
+      icon: 'src/components/cart/images/connectips.png',
       description: 'Direct bank transfer through Connect IPS',
       fields: ['customerName', 'mobileNumber', 'email'],
       primaryColor: '#0056B3',
@@ -66,7 +66,7 @@ const OnlinePayment = ({
     {
       id: 'fonepay',
       name: 'Fonepay',
-      icon: '/images/payments/fonepay.png',
+      icon: 'src/components/cart/images/fonepay.png',
       description: 'Pay through Fonepay payment gateway',
       fields: ['mobileNumber'],
       primaryColor: '#FF6D00',
