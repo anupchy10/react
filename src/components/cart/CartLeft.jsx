@@ -105,7 +105,7 @@ const CartLeft = () => {
                   </div>
 
                   <div className="w-2/6 max-sm:w-full relative">
-                    <span className='flex flex-col max-sm:flex-row max-sm:mt-3 items-end justify-evenly max-sm:items-center max-sm:justify-around h-full'>
+                    <span className='flex flex-col max-sm:flex-row max-sm:mt-3 items-end justify-evenly max-sm:items-center max-sm:justify-between h-full'>
                       <p className="font-semibold max-sm:text-[14px]">₹. {(item.price * item.quantity).toFixed(2)}</p>
                       <button 
                         onClick={() => dispatch(removeItemFromCart(item._id))} 

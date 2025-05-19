@@ -13,5 +13,4 @@ function Profile() {
     );
   }
   
-  // 2. Add to your App.jsx routes
   <Route path="/profile" element={<Profile />} />
