@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { FaCheckCircle, FaShoppingBag } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
@@ -92,3 +93,4 @@ const PaymentSuccess = ({
 };
 
 export default PaymentSuccess;
+

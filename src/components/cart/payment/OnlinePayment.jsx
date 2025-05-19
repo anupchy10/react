@@ -96,31 +96,32 @@ const OnlinePayment = ({
     setShowPaymentPage(false);
   };
 
-  const processPayment = () => {
-    setPaymentProcessing(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setPaymentProcessing(false);
-      setPaymentSuccess(true);
-      
-      const transactionData = {
-        transactionId: 'TXN' + Math.floor(Math.random() * 1000000000).toString().padStart(10, '0'),
-        date: new Date().toLocaleString(),
-        paymentMethod: selectedMethod.name,
-        customerName: paymentDetails.customerName,
-        mobileNumber: paymentDetails.mobileNumber,
-        paymentAmount: totalAmount,
-        appliedPromo: appliedPromo ? appliedPromo.label : null,
-        productAmount,
-        deliveryCharge,
-        discount
-      };
-      
-      // Call the success handler with transaction data
-      onPaymentSuccess(transactionData);
-    }, 2000);
-  };
+const processPayment = () => {
+  setPaymentProcessing(true);
+
+  setTimeout(() => {
+    setPaymentProcessing(false);
+
+    const transactionData = {
+      transactionId: 'TXN' + Math.floor(Math.random() * 1000000000).toString().padStart(10, '0'),
+      date: new Date().toLocaleString(),
+      paymentMethod: selectedMethod.name,
+      customerName: paymentDetails.customerName,
+      mobileNumber: paymentDetails.mobileNumber,
+      paymentAmount: totalAmount,
+      appliedPromo: appliedPromo ? appliedPromo.label : null,
+      productAmount,
+      deliveryCharge,
+      discount
+    };
+
+    onPaymentSuccess(transactionData);
+    onClose(); // ✅ Hide the modal
+    navigate('/payment-success', { state: { transaction: transactionData } }); // ✅ Redirect
+  }, 2000);
+};
+
+
 
   const handlePaymentSubmit = (e) => {
     e.preventDefault();
