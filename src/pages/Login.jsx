@@ -5,6 +5,7 @@ import { assets } from '../assets/assets';
 import { CgMail } from "react-icons/cg";
 import { IoEyeOff, IoEye } from "react-icons/io5";
 
+
 function Login() {
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -19,7 +20,7 @@ function Login() {
 const handleSubmit = async (e) => {
   e.preventDefault();
   
-  // Basic validation
+  // Basic validation not much
   if (!emailOrPhone.trim() || !password) {
     setError('Please fill in all fields');
     return;
@@ -39,12 +40,9 @@ const handleSubmit = async (e) => {
     });
 
     if (response.data.success) {
-      // Save user data and token
       localStorage.setItem('user', JSON.stringify(response.data.data.user));
       localStorage.setItem('token', response.data.data.token);
-      
-      // Redirect to home page
-      navigate('/home');
+    navigate('/home', { state: { fromLogin: true } }); //it show that the home page is coming from login page
     } else {
       setError(response.data.message || 'Login failed');
     }
@@ -80,8 +78,6 @@ const handleSubmit = async (e) => {
   return (
     <div className="min-h-screen w-full bg-gradient-to-r from-[#FDEDD9] to-[#f8cfa0] flex items-center justify-center p-4">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-6xl">
-        
-        {/* Left Image */}
         <div className="hidden lg:flex items-center justify-center">
           <img
             src={assets.login}
@@ -90,8 +86,6 @@ const handleSubmit = async (e) => {
             className="w-full h-auto max-h-[600px] object-contain animate-fade-in"
           />
         </div>
-
-        {/* Right Form */}
         <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6 sm:p-10 w-full transition-all duration-500">
           <h1 className="text-3xl sm:text-4xl font-bold text-center text-[#6f4e37] mb-6">Welcome Back</h1>
           <p className="text-center text-gray-600 mb-8">Login to continue your Shopping</p>
@@ -103,7 +97,6 @@ const handleSubmit = async (e) => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email/Phone Field */}
             <div className="relative">
               <label className={`absolute left-2 transition-all duration-300 ${
                 (emailFocused || emailOrPhone) 
@@ -128,8 +121,6 @@ const handleSubmit = async (e) => {
                 required
               />
             </div>
-
-            {/* Password Field */}
             <div className="relative">
               <label className={`absolute left-2 transition-all duration-300 ${
                 (passwordFocused || password) 
@@ -171,7 +162,6 @@ const handleSubmit = async (e) => {
                 Forgot password?
               </Link>
             </div>
-
             <button
               type="submit"
               className="w-full bg-[#6f4e37] text-white py-3 px-4 rounded-full hover:bg-[#5a3c2e] shadow-lg transition duration-300 disabled:opacity-70"

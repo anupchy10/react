@@ -2,18 +2,24 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import LeftHome from "../components/home/LeftHome";
 import RightHome from "../components/home/RightHome";
+import { useLocation } from "react-router-dom";
 
 function Home() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [showLoading, setShowLoading] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000); // 2 seconds
-    return () => clearTimeout(timer);
-  }, []);
+    // Check if coming from login page
+    if (location.state?.fromLogin) {
+      setShowLoading(true);
+      const timer = setTimeout(() => {
+        setShowLoading(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [location.state]);
 
-  if (isLoading) {
+  if (showLoading) {
     return (
       <div className="fixed inset-0 bg-white flex items-center justify-center z-50">
         <div className="text-center">
@@ -26,14 +32,14 @@ function Home() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50 }}
+      initial={location.state?.fromLogin ? { opacity: 0, y: 50 } : false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <section className="grid grid-cols-12 gap-4 relative">
         <motion.div
           className="col-span-3 max-lg:hidden sticky bottom-0 self-end h-[calc(100vh-120px)] mb-20"
-          initial={{ x: -100, opacity: 0 }}
+          initial={location.state?.fromLogin ? { x: -100, opacity: 0 } : false}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
@@ -42,7 +48,7 @@ function Home() {
 
         <motion.div
           className="col-span-9 max-lg:col-span-full mt-[67px]"
-          initial={{ x: 100, opacity: 0 }}
+          initial={location.state?.fromLogin ? { x: 100, opacity: 0 } : false}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
