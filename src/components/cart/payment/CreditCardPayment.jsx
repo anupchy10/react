@@ -3,7 +3,6 @@ import { FaCcVisa, FaCcMastercard, FaTimes, FaCheck } from 'react-icons/fa';
 
 const CreditCardPayment = ({
   onClose,
-  onProceedToPay,
   productAmount = 0,
   deliveryCharge = 0,
   discount = 0,
@@ -61,27 +60,35 @@ const CreditCardPayment = ({
     if (!validateForm()) return;
 
     setIsProcessing(true);
-    await new Promise((res) => setTimeout(res, 2000));
+    
+    // Simulate payment processing
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
     setPaymentSuccess(true);
-    await new Promise((res) => setTimeout(res, 2000));
+    
+    // Show success for 1 second before closing
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Call the success callback with all required data
+    onPaymentSuccess({
+      transactionId: 'TXN' + Math.floor(Math.random() * 1e10),
+      date: new Date().toLocaleString(),
+      paymentMethod: 'Credit Card',
+      customerName: cardData.cardHolderName,
+      mobileNumber: '', // You might want to collect this separately
+      paymentAmount: totalAmount,
+      productAmount: productAmount,
+      deliveryCharge: deliveryCharge,
+      discount: discount,
+      appliedPromo: appliedPromo?.label || null
+    });
 
-    const paymentResult = onProceedToPay({ ...cardData, amount: totalAmount });
-    if (paymentResult) {
-      onPaymentSuccess({
-        transactionId: 'TXN' + Math.floor(Math.random() * 1e10),
-        date: new Date().toLocaleString(),
-        paymentMethod: 'Credit Card',
-        customerName: cardData.cardHolderName,
-        paymentAmount: totalAmount,
-        appliedPromo: appliedPromo?.label || null
-      });
-    }
+    setIsProcessing(false);
   };
 
   return (
     <div className={`fixed inset-0 z-50 p-6 bg-black/60 backdrop-blur-sm flex justify-center items-center transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
       <div className="w-full max-w-3xl rounded-2xl bg-white/10 backdrop-blur-lg shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/20 flex flex-col md:flex-row overflow-hidden">
-        
         {/* Left Side: Animated Credit Card Preview */}
         <div className="relative w-full md:w-1/2 p-6 flex items-center justify-center bg-gradient-to-br from-sky-400 to-indigo-600 text-white">
           <div className="w-72 h-44 bg-white/10 border border-white/30 rounded-2xl p-4 backdrop-blur-md shadow-inner animate-pulse">
@@ -183,28 +190,21 @@ const CreditCardPayment = ({
             <button
               type="submit"
               className="w-full py-3 bg-gradient-to-r from-sky-400 to-indigo-600 text-white rounded-lg font-semibold hover:opacity-90 transition"
+              disabled={isProcessing}
             >
-              Pay Now
+              {isProcessing ? 'Processing...' : 'Pay Now'}
             </button>
           </form>
         </div>
       </div>
 
-      {/* Loader */}
-      {isProcessing && (
+      {/* Payment Success Overlay */}
+      {paymentSuccess && (
         <div className="absolute inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-xl text-center">
-            {paymentSuccess ? (
-              <div>
-                <FaCheck className="text-green-500 text-4xl mx-auto mb-2" />
-                <p className="text-lg font-bold">Payment Successful!</p>
-              </div>
-            ) : (
-              <>
-                <div className="animate-spin h-12 w-12 border-4 border-sky-500 border-t-transparent rounded-full mx-auto mb-2" />
-                <p className="text-lg font-semibold text-gray-700">Processing Payment...</p>
-              </>
-            )}
+            <FaCheck className="text-green-500 text-4xl mx-auto mb-2" />
+            <p className="text-lg font-bold">Payment Successful!</p>
+            <p className="text-gray-600">Redirecting...</p>
           </div>
         </div>
       )}

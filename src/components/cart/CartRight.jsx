@@ -3,11 +3,10 @@ import { useSelector } from 'react-redux';
 import { selectSelectedItemsTotal, selectSelectedItemsCount } from '../../redux/cart/cartSlice';
 import { FaMapLocationDot, FaCity, FaTag, FaPhone } from "react-icons/fa6";
 import { IoHome } from "react-icons/io5";
-import CreditCardPayment from './CreditCardPayment';
-import OnlinePayment from './OnlinePayment'; // Add this import
-import PaymentSuccess from './PaymentSuccess';
+import CreditCardPayment from './payment/CreditCardPayment';
+import OnlinePayment from './payment/OnlinePayment';
+import PaymentSuccess from './payment/PaymentSuccess';
 
-// Valid promo codes and their discounts
 const PROMO_CODES = {
   'WELCOME10': { type: 'percentage', value: 10, label: '10% off' },
   'SAVE20': { type: 'percentage', value: 20, label: '20% off' },
@@ -21,7 +20,6 @@ const CartRight = () => {
   const selectedItemsTotal = useSelector(selectSelectedItemsTotal);
   const selectedItemsCount = useSelector(selectSelectedItemsCount);
 
-  // Form state
   const [formData, setFormData] = useState({
     country: '',
     city: '',
@@ -40,10 +38,9 @@ const CartRight = () => {
     customerName: ''
   });
 
-  // Payment state
   const [paymentMethod, setPaymentMethod] = useState('payment on deliver');
   const [showCreditCardPayment, setShowCreditCardPayment] = useState(false);
-  const [showOnlinePayment, setShowOnlinePayment] = useState(false); // Add this state
+  const [showOnlinePayment, setShowOnlinePayment] = useState(false);
   const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
   const [showNoItemsSelected, setShowNoItemsSelected] = useState(false);
   const [paymentDetails, setPaymentDetails] = useState({
@@ -52,10 +49,12 @@ const CartRight = () => {
     paymentMethod: '',
     customerName: '',
     mobileNumber: '',
-    paymentAmount: 0
+    paymentAmount: 0,
+    productAmount: 0,
+    deliveryCharge: 0,
+    discount: 0
   });
 
-  // Promo code state
   const [appliedPromo, setAppliedPromo] = useState(null);
   const [deliveryCharge, setDeliveryCharge] = useState(selectedItemsCount * 50);
   const [discount, setDiscount] = useState(0);
@@ -69,10 +68,10 @@ const CartRight = () => {
       if (appliedPromo.type === 'percentage') {
         newDiscount = (selectedItemsTotal * appliedPromo.value) / 100;
       } else if (appliedPromo.type === 'fixed') {
-        newDeliveryCharge = 0; // Free shipping
+        newDeliveryCharge = 0;
       } else if (appliedPromo.type === 'fullDiscount') {
-        newDiscount = selectedItemsTotal; // 100% off products
-        newDeliveryCharge = 0; // Free shipping
+        newDiscount = selectedItemsTotal;
+        newDeliveryCharge = 0;
       }
     }
 
@@ -93,7 +92,6 @@ const CartRight = () => {
       [name]: value
     }));
 
-    // Clear error when typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -102,7 +100,6 @@ const CartRight = () => {
     }
   };
 
-  // Apply promo code
   const applyPromoCode = () => {
     const promoCode = formData.promoCode.trim().toUpperCase();
     
@@ -124,7 +121,6 @@ const CartRight = () => {
     }
   };
 
-  // Remove promo code
   const removePromoCode = () => {
     setAppliedPromo(null);
     setFormData(prev => ({ ...prev, promoCode: '' }));
@@ -141,19 +137,16 @@ const CartRight = () => {
       customerName: ''
     };
 
-    // Country validation
     if (!formData.country.trim()) {
       newErrors.country = 'Country is required';
       valid = false;
     }
 
-    // City validation
     if (!formData.city.trim()) {
       newErrors.city = 'City is required';
       valid = false;
     }
 
-    // Address validation
     if (!formData.address.trim()) {
       newErrors.address = 'Address is required';
       valid = false;
@@ -162,7 +155,6 @@ const CartRight = () => {
       valid = false;
     }
 
-    // Phone validation
     if (!formData.phone.trim()) {
       newErrors.phone = 'Phone number is required';
       valid = false;
@@ -171,7 +163,6 @@ const CartRight = () => {
       valid = false;
     }
 
-    // Customer name validation
     if (!formData.customerName.trim()) {
       newErrors.customerName = 'Customer name is required';
       valid = false;
@@ -185,10 +176,28 @@ const CartRight = () => {
     return 'TXN' + Math.floor(Math.random() * 1000000000).toString().padStart(10, '0');
   };
 
+  const showPaymentSuccessModal = (paymentData = {}) => {
+    const transactionDate = new Date().toLocaleString();
+    
+    setPaymentDetails({
+      transactionId: paymentData.transactionId || generateTransactionId(),
+      date: paymentData.date || transactionDate,
+      paymentMethod: paymentData.paymentMethod || paymentMethod,
+      customerName: paymentData.customerName || formData.customerName,
+      mobileNumber: paymentData.mobileNumber || formData.phone,
+      paymentAmount: paymentData.paymentAmount || totalAmount,
+      productAmount: selectedItemsTotal,
+      deliveryCharge: deliveryCharge,
+      discount: discount,
+      appliedPromo: appliedPromo ? appliedPromo.label : null
+    });
+    
+    setShowPaymentSuccess(true);
+  };
+
   const handleOrderSelected = (e) => {
     e.preventDefault();
     
-    // Check if any items are selected
     if (selectedItemsCount === 0) {
       setShowNoItemsSelected(true);
       return;
@@ -203,39 +212,12 @@ const CartRight = () => {
     } else if (paymentMethod === 'Online payment') {
       setShowOnlinePayment(true);
     } else {
-      // For other payment methods, show success directly
       showPaymentSuccessModal();
     }
   };
 
-  const handleProceedToPay = (cardData) => {
-    // In a real app, you would process payment here
-    console.log('Processing payment with:', cardData);
-    
-    // After successful payment processing
-    showPaymentSuccessModal();
-    setShowCreditCardPayment(false);
-  };
-
-  const showPaymentSuccessModal = () => {
-    const transactionDate = new Date().toLocaleString();
-    
-    setPaymentDetails({
-      transactionId: generateTransactionId(),
-      date: transactionDate,
-      paymentMethod: paymentMethod,
-      customerName: formData.customerName,
-      mobileNumber: formData.phone,
-      paymentAmount: totalAmount,
-      appliedPromo: appliedPromo ? appliedPromo.label : null
-    });
-    
-    setShowPaymentSuccess(true);
-  };
-
   const handlePaymentSuccessClose = () => {
     setShowPaymentSuccess(false);
-    // Reset form
     setFormData({
       country: '',
       city: '',
@@ -490,15 +472,17 @@ const CartRight = () => {
         </div>
       </form>
 
-       {showCreditCardPayment && (
+
+
+
+      {showCreditCardPayment && (
         <CreditCardPayment
           onClose={() => setShowCreditCardPayment(false)}
-          onProceedToPay={handleProceedToPay}
+          onPaymentSuccess={showPaymentSuccessModal}
           productAmount={selectedItemsTotal}
           deliveryCharge={deliveryCharge}
           discount={discount}
           totalAmount={totalAmount}
-          onPaymentSuccess={showPaymentSuccessModal}
           appliedPromo={appliedPromo}
         />
       )}
@@ -506,25 +490,18 @@ const CartRight = () => {
       {showOnlinePayment && (
         <OnlinePayment
           onClose={() => setShowOnlinePayment(false)}
-          onProceedToPay={handleProceedToPay}
+          onPaymentSuccess={showPaymentSuccessModal}
           productAmount={selectedItemsTotal}
           deliveryCharge={deliveryCharge}
           discount={discount}
           totalAmount={totalAmount}
-          onPaymentSuccess={showPaymentSuccessModal}
           appliedPromo={appliedPromo}
         />
       )}
       
       {showPaymentSuccess && (
         <PaymentSuccess
-          transactionId={paymentDetails.transactionId}
-          date={paymentDetails.date}
-          paymentMethod={paymentDetails.paymentMethod}
-          customerName={paymentDetails.customerName}
-          mobileNumber={paymentDetails.mobileNumber}
-          paymentAmount={paymentDetails.paymentAmount}
-          appliedPromo={paymentDetails.appliedPromo}
+          transactionData={paymentDetails}
           onClose={handlePaymentSuccessClose}
         />
       )}
