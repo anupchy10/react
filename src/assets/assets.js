@@ -13,6 +13,7 @@ import new_item from "./new_item.png";
 import banner from "./banner.png";
 import decrease from "./decrease.png";
 import increase from "./increase.png";
+import landline from "./landline.png";
 
 import hero_1 from "./hero_1.jpg";
 import hero_2 from "./hero_2.jpg";
@@ -242,6 +243,7 @@ export const assets = {
   banner,
   decrease,
   increase,
+  landline,
 };
 
 export const banners = [
@@ -2414,5 +2416,83 @@ export const items = [
     sp: "1,099",
     cp: "1,199",
     available: "15",
+  },
+]
+
+export const comment = [
+  {
+    _id: "1",
+    date: "08 Agust 2025",
+    title: "His favorite shirts!",
+    color: "black",
+    size: "M",
+    cmt: "This is the perfect shirt for my husband who works county fairs, home shows and the state fair, often outside under a canopy as a cendor marketing his product. Light weight fabric that is cooler than most polo shirts with a looser weave that allows air flow. Colors are lighter hues for warmer weather and the fit is just right with a little extra room for air and long enough to allow you to bend over comfortably.",
+    like: "34",
+    unlike: "0",
+  },
+  {
+    _id: "2",
+    date: "08 Agust 2024",
+    title: "His favorite Jacket!",
+    color: "black",
+    size: "M",
+    cmt: "This is the perfect shirt for my husband who works county fairs, home shows and the state fair, often outside under a canopy as a cendor marketing his product. Light weight fabric that is cooler than most polo shirts with a looser weave that allows air flow. Colors are lighter hues for warmer weather and the fit is just right with a little extra room for air and long enough to allow you to bend over comfortably.",
+    like: "65",
+    unlike: "0",
+  },
+  {
+    _id: "3",
+    date: "08 July 2025",
+    title: "His favorite Skirt!",
+    color: "black",
+    size: "M",
+    cmt: "This is the perfect shirt for my husband who works county fairs, home shows and the state fair, often outside under a canopy as a cendor marketing his product. Light weight fabric that is cooler than most polo shirts with a looser weave that allows air flow. Colors are lighter hues for warmer weather and the fit is just right with a little extra room for air and long enough to allow you to bend over comfortably.",
+    like: "88",
+    unlike: "0",
+  },
+  {
+    _id: "4",
+    date: "10 Agust 2025",
+    title: "His favorite Pant!",
+    color: "black",
+    size: "M",
+    cmt: "This is the perfect shirt for my husband who works county fairs, home shows and the state fair, often outside under a canopy as a cendor marketing his product. Light weight fabric that is cooler than most polo shirts with a looser weave that allows air flow. Colors are lighter hues for warmer weather and the fit is just right with a little extra room for air and long enough to allow you to bend over comfortably.",
+    like: "54",
+    unlike: "0",
+  },
+]
+
+export const faqs = [
+  {
+    q: "How do I place an order?",
+    a: "Placing an order is simple! Browse our product catalog, select your desired items, and add them to your cart. Proceed to checkout, where you'll enter your shipping address, choose a payment method, and review your order summary. Once confirmed, you'll receive an order confirmation email with all the details. If you encounter any issues during checkout, our customer support team is ready to assist you.",
+  },
+  {
+    q: "What payment methods do you accept?",
+    a: "We accept a variety of secure payment options, including Visa, MasterCard, American Express, PayPal, and Apple Pay. All transactions are encrypted to ensure your financial information remains protected. For added security, we do not store payment details on our servers. If your preferred payment method isn't listed, contact us, and we'll do our best to accommodate your request.",
+  },
+  {
+    q: "How long does shipping take?",
+    a: "Standard shipping typically takes 3-5 business days for domestic orders, while express shipping delivers within 1-2 business days. International shipping times vary by destination but generally range from 5-14 business days. Delays due to customs or unforeseen circumstances may occur, but we provide tracking updates to keep you informed.",
+  },
+  {
+    q: "Do you offer international shipping?",
+    a: "Yes! We ship worldwide to most countries. Shipping costs and delivery times depend on your location and the selected shipping method. Duties and taxes may apply for international orders, which are the customer's responsibility. For specific country restrictions or shipping rates, check our Shipping Policy page or contact our support team.",
+  },
+  {
+    q: "What is your return policy?",
+    a: "We offer a 30-day return policy for unused and unopened items in their original packaging. To initiate a return, visit our Returns Portal, fill out the form, and ship the item back to us. Once received and inspected, we;ll process your refund within 5-7 business days. Sale items and personalized products may have different return conditions, so please review the policy details before purchasing.",
+  },
+  {
+    q: "How can I track my order?",
+    a: "After your order ships, you'll receive an email with a tracking number and a link to monitor its progress. You can also log into your account on our website to view the latest updates. If your tracking information isn't updating, don't worry—sometimes carriers take 24-48 hours to reflect changes. For further assistance, our support team is happy to help.",
+  },
+  {
+    q: "What if my product is damaged or defective?",
+    a: "If your item arrives damaged or defective, please contact us within 7 days of delivery with photos of the issue. We'll arrange a free replacement or refund as soon as possible. In rare cases where a replacement isn't available, we'll offer a full refund or store credit. Your satisfaction is our priority!",
+  },
+  {
+    q: "Can I modify or cancel my order after placing it?",
+    a: "Orders can be modified or canceled within 1 hour of placement, as they enter processing shortly after. If you need changes beyond this window, contact us immediately—we'll try our best to accommodate your request, though we can't guarantee changes once the order is shipped.",
   },
 ]

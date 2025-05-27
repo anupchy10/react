@@ -23,14 +23,14 @@ const Filter = () => {
   return (
     <div className='mb30'>
       <h1 className='text-[25px] font-medium text-center mb25'>Find with easy way...</h1>
-      <section className="flex flex-wrap justify-center Gap px-7 max-sm:p-0 max-sm:min-w-[260px]">
+      <section className="flex flex-wrap justify-center Gap px-7 max-sm:p-0 max-md:flex-nowrap sc scroll-smooth max-md:overflow-scroll max-md:justify-start">
         {categories.map((item, index) => (
           <div 
             key={index} 
-            className="min-w-[150px] allCenter cursor-pointer group"
+            className="min-w-[140px] cursor-pointer group"
             onClick={() => handleCategoryClick(item.name.toLowerCase())}
           >
-            <div  className="p-2 allCenter flex-col gap-2 w-full">
+            <div  className="p-2 allCenter flex-col gap-2 max-md:max-w-[220px]">
               <img
                 src={item.image}
                 className={`rounded-full bg-[#F3EDE5] h-28 w-28 max-md:h-24 max-md:w-24 max-sm:w-20 max-sm:h-20 transition-transform duration-300 group-hover:-translate-y-[5px] group-hover:shadow-[0_0_13px_0_rgb(0,0,0,0.2)] ease-in-out ${

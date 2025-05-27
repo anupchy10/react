@@ -3,10 +3,13 @@ import { FaHeart, FaStar } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRandomHomeProducts } from '../../../redux/home/homeSlice'
+import { useNavigate } from 'react-router-dom';
+import { setSelectedItem } from '../../../redux/detail/detailSlice';
 import { addToFavorites, removeFromFavorites } from '../../../redux/favorite/favoriteSlice';
 
 const HomeProduct = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const homeProducts = useSelector((state) => state.home.homeProducts);
   const activeGender = useSelector((state) => state.gender.activeGender);
   const refreshCount = useSelector((state) => state.refresh.refreshCount);
@@ -37,15 +40,23 @@ const HomeProduct = () => {
     }
   };
 
+  const handleItemClick = (item) => {
+    dispatch(setSelectedItem(item));
+    navigate(`/item/${item._id}`);
+  };
+
   return (
     <div className='mb35'>
       <section className='grid grid-cols-4 gap-6 max-xl:grid-cols-3 max-md:grid-cols-2 max-md:gap-2 max-md:place-items-center max-md:px-2 mb20 max-md:mb-0'>
         {filteredItems.map((item) => (
-            <div key={item._id} className='flex flex-col gap-[18px] max-md:gap-2 rounded-[10px] p-3 shadow2 bg-white hover:shadow-md transition-all duration-200 max-sm:w-full'>
+            <div key={item._id} onClick={() => handleItemClick(item)} className='flex flex-col gap-[18px] max-md:gap-2 rounded-[10px] p-3 shadow2 bg-white hover:shadow-md transition-all duration-200 max-sm:w-full'>
               <div className='relative'>
                 <span 
                   className="absolute top-2 right-2 cursor-pointer text-2xl select-none"
-                  onClick={() => handleFavoriteToggle(item)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleFavoriteToggle(item);
+                  }}
                 >
                   <FaHeart className={isItemInFavorites(item._id) ? 'text-[#ff4081]' : 'text-[#CCCCCC]'} />
                 </span>

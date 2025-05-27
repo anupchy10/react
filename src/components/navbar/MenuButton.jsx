@@ -8,7 +8,7 @@ const MenuButton = () => {
   const location = useLocation();
   const wrapperRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [position, setPosition] = useState({ x: 100, y: 100 });
+  const [position, setPosition] = useState({ x: 100, y: 150 });
   const [isDragging, setIsDragging] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState(<FaHome size={28} />);
 

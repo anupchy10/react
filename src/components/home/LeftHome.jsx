@@ -5,7 +5,7 @@ import { Link } from "react-router";
 
 const LeftHome = () => {
   return (
-    <aside className='p-5 max-xl:p-3 rounded-[15px] shadow1 bg-white'>
+    <aside className='p-5 mb-5 max-xl:p-3 rounded-[15px] shadow1 bg-white'>
       <div className='flex flex-col gap-[30px]'>
         <section className='flex flex-col Gap'>
           <div className='w-full flex flex-col Gap'>
@@ -13,16 +13,16 @@ const LeftHome = () => {
             <span className='h-[2px] w-full rounded-full bg3'></span>
           </div>
           <ul className='flex flex-col no-underline Gap mb15'>
-            <li className='categoryBox text3 flex items-center justify-between'><p className='text-[16px] font-medium'>Seasonal collection</p><FaCaretRight /></li>
-            <li className='categoryBox text3 flex items-center justify-between'><p className='text-[16px] font-medium'>Occasion based</p><FaCaretRight /></li>
-            <li className='categoryBox text3 flex items-center justify-between'><p className='text-[16px] font-medium'>Style based</p><FaCaretRight /></li>
-            <li className='categoryBox text3 flex items-center justify-between'><p className='text-[16px] font-medium'>Special collection</p><FaCaretRight /></li>
-            <li className='categoryBox text3 flex items-center justify-between'><p className='text-[16px] font-medium'>Casual wares</p><FaCaretRight /></li>
-            <li className='categoryBox text3 flex items-center justify-between'><p className='text-[16px] font-medium'>Sports & Activewear</p><FaCaretRight /></li>
-            <li className='categoryBox text3 flex items-center justify-between'><p className='text-[16px] font-medium'>Traditional Wear</p><FaCaretRight /></li>
+            <li className='categoryBox text3 flex items-center justify-between'><p className='text-[16px] max-md:text-[14px] font-medium'>Seasonal collection</p><FaCaretRight /></li>
+            <li className='categoryBox text3 flex items-center justify-between'><p className='text-[16px] max-md:text-[14px] font-medium'>Occasion based</p><FaCaretRight /></li>
+            <li className='categoryBox text3 flex items-center justify-between'><p className='text-[16px] max-md:text-[14px] font-medium'>Style based</p><FaCaretRight /></li>
+            <li className='categoryBox text3 flex items-center justify-between'><p className='text-[16px] max-md:text-[14px] font-medium'>Special collection</p><FaCaretRight /></li>
+            <li className='categoryBox text3 flex items-center justify-between'><p className='text-[16px] max-md:text-[14px] font-medium'>Casual wares</p><FaCaretRight /></li>
+            <li className='categoryBox text3 flex items-center justify-between'><p className='text-[16px] max-md:text-[14px] font-medium'>Sports & Activewear</p><FaCaretRight /></li>
+            <li className='categoryBox text3 flex items-center justify-between'><p className='text-[16px] max-md:text-[14px] font-medium'>Traditional Wear</p><FaCaretRight /></li>
           </ul>
 
-          <button className='button1 w-full max-md:text-[16px]'><Link to="/shop">Shop Now</Link></button>
+          <Link to="/shop"><button className='button1 w-full max-md:text-[16px]'>Shop Now</button></Link>
         </section>
 
         <section className='flex flex-col Gap'>
@@ -39,12 +39,14 @@ const LeftHome = () => {
             <li className='footerList'>Contact Us</li>
           </ul>
           <div className='flex Gap items-center'>
-            <img src={assets.user} className=' w-[60px]' alt="user..." loading='lazy' />
-            <ul>
-              {/* <h6 className='text1 text-base text2 font-semibold text-nowrap'>{user.name && <p>{user.name}</p>}</h6> */}
-              <h6 className='text1 text-base text2 font-semibold text-nowrap'>Nicholas Swatz</h6>
-              <li className='text3 text-[11px] font-medium text-nowrap'>#579412</li>
-            </ul>
+            <Link to={'/profile'} >
+              <img src={assets.user} className=' w-[60px]' alt="user..." loading='lazy' />
+              <ul>
+                {/* <h6 className='text1 text-base text2 font-semibold text-nowrap'>{user.name && <p>{user.name}</p>}</h6> */}
+                <h6 className='text1 text-base text2 font-semibold text-nowrap'>Nicholas Swatz</h6>
+                <li className='text3 text-[11px] font-medium text-nowrap'>#579412</li>
+              </ul>
+            </Link>
           </div>
         </section>
       </div>

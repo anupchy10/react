@@ -6,9 +6,12 @@ import { FaStar } from 'react-icons/fa';
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { MdDeleteSweep } from "react-icons/md";
 import { addItemToCart } from '../../redux/cart/cartSlice';
+import { useNavigate } from 'react-router-dom';
+import { setSelectedItem } from '../../redux/detail/detailSlice';
 
 const FavoriteItem = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { favoriteItems } = useSelector((state) => state.favorite);
 
   const handleRemoveFavorite = (itemId) => {
@@ -33,6 +36,11 @@ const FavoriteItem = () => {
       available: item.available
     };
     dispatch(addItemToCart(cartItem));
+  };
+
+  const handleItemClick = (item) => {
+    dispatch(setSelectedItem(item));
+    navigate(`/item/${item._id}`);
   };
 
   return (
@@ -62,11 +70,14 @@ const FavoriteItem = () => {
       ) : (
         <section className='grid grid-cols-4 gap-6 max-xl:grid-cols-3 max-md:grid-cols-2 max-md:gap-2 max-md:place-items-center max-md:px-2 mb20 max-md:mb-0'>
           {favoriteItems.map((item, index) => (
-            <div key={index} className='flex flex-col gap-[18px] max-md:gap-2 rounded-[10px] p-3 shadow2 bg-white hover:shadow-md transition-all duration-200 max-sm:w-full'>
+            <div key={index} onClick={() => handleItemClick(item)} className='flex flex-col gap-[18px] max-md:gap-2 rounded-[10px] p-3 shadow2 bg-white hover:shadow-md transition-all duration-200 max-sm:w-full cursor-pointer'>
               <div className='relative'>
                 <span 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRemoveFavorite(item._id);
+                  }}
                   className="absolute top-2 right-2 cursor-pointer text-2xl select-none"
-                  onClick={() => handleRemoveFavorite(item._id)}
                 >
                   <RiDeleteBin6Fill className='text-[#EF4444]' />
                 </span>

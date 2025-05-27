@@ -2,6 +2,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { banners } from "../../../assets/assets";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   const settings = {
@@ -32,9 +33,11 @@ const Hero = () => {
                   {banner.title}
                 </h2>
                 <p className="text-xl max-sm:mb10 max-md:text-[16px] mb-6 max-xl:text-[18px]">{banner.subtitle}</p>
-                <button className="py-2 px-12 max-md:py-[6px] max-md:px-8 max-sm:py-1 max-sm:px-6 rounded-[5px] bg-[#B8A38A] text-white text-[18px] font-medium hover:bg-[#fff] hover:text-[#B8A38A] hover:ease-in-out duration-500 border border-[#B8A38A]  max-md:text-[16px]">
-                  {banner.cta}
-                </button>
+                <Link to={'/shop'} >
+                  <button className="py-2 px-12 max-md:py-[6px] max-md:px-8 max-sm:py-1 max-sm:px-6 rounded-[5px] bg-[#B8A38A] text-white text-[18px] font-medium hover:bg-[#fff] hover:text-[#B8A38A] hover:ease-in-out duration-500 border border-[#B8A38A]  max-md:text-[16px]">
+                    {banner.cta}
+                  </button>
+                </Link>
               </div>
             </div>
           </div>

@@ -1,11 +1,18 @@
+import ContactInfo from "../components/about/ContactInfo";
+import FollowUs from "../components/about/FollowUs";
+
 function Contact() {
     return (
-      <div style={{ padding: '2rem' }}>
-        <h1>Contact Us</h1>
-        <p>Email: contact@example.com</p>
-        <p>Phone: (123) 456-7890</p>
-        <p>Address: 123 Main St, City, Country</p>
-      </div>
+      <section className="mb20">
+        <div className="grid grid-cols-5">
+          <div className="col-span-3 max-md:col-span-full">
+            <ContactInfo />
+          </div>
+          <div className="col-span-2 max-md:col-span-full">
+            <FollowUs />
+          </div>
+        </div>
+      </section>
     );
   }
   

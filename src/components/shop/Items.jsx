@@ -1,6 +1,6 @@
 // shop/Items.jsx
 import React, { useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { initializeItems, goToPage, nextPage, prevPage } from '../../redux/pagination/paginationSlice';
 import { applyCategoryFilter, goToCategoryPage, nextCategoryPage, prevCategoryPage } from '../../redux/category/categoryPaginationSlice';
@@ -8,16 +8,15 @@ import { addItemToCart } from '../../redux/cart/cartSlice';
 import { items as allItems } from '../../assets/assets';
 import { FaHeart, FaStar, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { addToFavorites, removeFromFavorites } from '../../redux/favorite/favoriteSlice';
-// import { setSelectedItem } from '../../redux/detail/detailSlice';
+import { setSelectedItem } from '../../redux/detail/detailSlice';
 
 const Items = () => {
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const { activeGender } = useSelector((state) => state.gender);
   const { refreshCount } = useSelector((state) => state.refresh);
   const { favoriteItems } = useSelector((state) => state.favorite);
   
-  // Get state from both pagination slices
   const { 
     currentPage, 
     itemsPerPage, 
@@ -36,16 +35,11 @@ const Items = () => {
     dispatch(applyCategoryFilter({ items: allItems, category: null }));
   }, [dispatch, activeGender, refreshCount]);
 
-  // ===== CATEGORY SEPARATION LOGIC =====
-  // Use category filtered items if a category is active, otherwise use regular randomized items
   const itemsToUse = activeCategory ? categoryFilteredItems : randomizedItems;
-  
-  // Apply gender filter if active
   const filteredItems = activeGender
     ? itemsToUse.filter(item => item.gender === activeGender)
     : itemsToUse;
 
-  // Determine which pagination to use based on whether category is active
   const currentPageToUse = activeCategory ? currentCategoryPage : currentPage;
   const itemsPerPageToUse = activeCategory ? itemsPerCategoryPage : itemsPerPage;
 
@@ -54,7 +48,6 @@ const Items = () => {
   const paginatedItems = filteredItems.slice(startIdx, endIdx);
 
   const maxPage = Math.ceil(filteredItems.length / itemsPerPageToUse);
-  // ===== END CATEGORY SEPARATION LOGIC =====
 
   const handlePageChange = (pageNum) => {
     if (activeCategory) {
@@ -80,14 +73,14 @@ const Items = () => {
     }
   };
 
-  const handleAddToCart = (item) => {
-    // Prepare the item data to add to cart
+  const handleAddToCart = (e, item) => {
+    e.stopPropagation(); // Stop event bubbling
     const cartItem = {
       _id: item._id,
       name: item.name,
       image: item.image,
       desc: item.desc,
-      price: parseFloat(item.sp.replace(',', '')), // Convert "1,099" to 1099
+      price: parseFloat(item.sp.replace(',', '')),
       available: item.available
     };
     dispatch(addItemToCart(cartItem));
@@ -97,7 +90,8 @@ const Items = () => {
     return favoriteItems.some(item => item._id === itemId);
   };
 
-  const handleFavoriteToggle = (item) => {
+  const handleFavoriteToggle = (e, item) => {
+    e.stopPropagation(); // Stop event bubbling
     if (isItemInFavorites(item._id)) {
       dispatch(removeFromFavorites(item._id));
     } else {
@@ -105,22 +99,23 @@ const Items = () => {
     }
   };
 
-  // const handleItemClick = (item) => {
-  //   dispatch(setSelectedItem(item));
-  //   navigate(`/item/${item._id}`);
-  // };
+  const handleItemClick = (item) => {
+    dispatch(setSelectedItem(item));
+    navigate(`/item/${item._id}`);
+  };
 
   return (
     <div className='mb30'>
       <section className='grid grid-cols-4 gap-6 max-xl:grid-cols-3 max-md:grid-cols-2 max-md:gap-2 max-md:place-items-center max-md:px-2 mb20 max-md:mb-0'>
         {paginatedItems.map((item, index) => (
           <div 
-          key={index} 
+            key={index} 
+            onClick={() => handleItemClick(item)}
             className='flex flex-col gap-[18px] max-md:gap-2 rounded-[10px] p-3 shadow2 bg-white hover:shadow-md transition-all duration-200 max-sm:w-full'>
             <div className='relative'>
               <span 
                 className="absolute top-2 right-2 cursor-pointer text-2xl select-none"
-                onClick={() => handleFavoriteToggle(item)}
+                onClick={(e) => handleFavoriteToggle(e, item)}
               >
                 <FaHeart className={isItemInFavorites(item._id) ? 'text-[#ff4081]' : 'text-[#CCCCCC]'} />
               </span>
@@ -147,7 +142,7 @@ const Items = () => {
               <div className='text-[15px] text3 flex gap-[8px] max-md:text-[12px]'>Available items: <p className='font-semibold text1'>{item.available}</p></div>
               <button 
                 className='productbtn w-full mt-2'
-                onClick={() => handleAddToCart(item)}
+                onClick={(e) => handleAddToCart(e, item)}
               >
                 Add to Cart
               </button>
@@ -156,7 +151,7 @@ const Items = () => {
         ))}
       </section>
 
-      {/* Pagination Controls */}
+      {/* Pagination Controls (unchanged) */}
       <section>
         <div className='flex items-end justify-center Gap'>
           {currentPageToUse > 1 && (
@@ -171,7 +166,6 @@ const Items = () => {
               const pageNum = i + 1;
               const isActive = pageNum === currentPageToUse;
 
-              // show first, last, current, and dots
               if (
                 pageNum === 1 ||
                 pageNum === maxPage ||

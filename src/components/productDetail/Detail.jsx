@@ -1,149 +1,159 @@
-// shop/Detail.jsx
-import React, { useEffect } from 'react';
+import React from 'react';
+import { Star, ZoomIn, ZoomOut } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
-import { items as allItems } from '../../assets/assets';
-import { FaHeart, FaStar, FaArrowLeft } from 'react-icons/fa';
 import { addItemToCart } from '../../redux/cart/cartSlice';
-import { addToFavorites, removeFromFavorites } from '../../redux/favorite/favoriteSlice';
-import { setSelectedItem, clearSelectedItem } from '../../redux/detail/detailSlice';
+import { setSelectedSize, setIsZoomed } from '../../redux/detail/detailSlice';
+import { IoChatboxEllipses } from "react-icons/io5";
+import { IoMdHeartEmpty } from "react-icons/io";
+import { IoIosShareAlt } from "react-icons/io";
+import { select } from 'framer-motion/client';
 
-const Detail = () => {
+export default function Detail() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { id } = useParams();
   const { selectedItem } = useSelector((state) => state.detail);
-  const { favoriteItems } = useSelector((state) => state.favorite);
+  const { selectedSize, isZoomed } = useSelector((state) => state.detail);
+  
+  const sizes = ["S", "M", "L", "XL", "2XL"];
 
-  useEffect(() => {
-    if (!selectedItem) {
-      // If page is refreshed, find the item from allItems
-      const item = allItems.find(item => item._id === id);
-      if (item) {
-        dispatch(setSelectedItem(item));
-      } else {
-        navigate('/shop'); // Redirect if item not found
-      }
-    }
+  const handleSizeSelect = (size) => {
+    dispatch(setSelectedSize(size));
+  };
+
+  const toggleZoom = () => {
+    dispatch(setIsZoomed(!isZoomed));
+  };
+
+  const handleAddToCart = () => {
+    if (!selectedItem) return;
     
-    return () => {
-      dispatch(clearSelectedItem());
-    };
-  }, [dispatch, id, selectedItem, navigate]);
-
-  const isItemInFavorites = (itemId) => {
-    return favoriteItems.some(item => item._id === itemId);
-  };
-
-  const handleFavoriteToggle = (item) => {
-    if (isItemInFavorites(item._id)) {
-      dispatch(removeFromFavorites(item._id));
-    } else {
-      dispatch(addToFavorites(item));
-    }
-  };
-
-  const handleAddToCart = (item) => {
     const cartItem = {
-      _id: item._id,
-      name: item.name,
-      image: item.image,
-      desc: item.desc,
-      price: parseFloat(item.sp.replace(',', '')),
-      available: item.available
+      _id: selectedItem._id,
+      name: selectedItem.name,
+      image: selectedItem.image,
+      desc: selectedItem.desc,
+      price: parseFloat(selectedItem.sp.replace(',', '')),
+      available: selectedItem.available,
+      selectedSize
     };
     dispatch(addItemToCart(cartItem));
   };
 
-  if (!selectedItem) return <div className="allCenter h-screen">Loading...</div>;
+  if (!selectedItem) {
+    return (
+      <div className="min-h-screen bg-[#f9f5f0] p-8 flex justify-center items-center mt-[120px]">
+        <p>No product selected</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <button 
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-2 mb-6 text-[#B8A38A] hover:text-[#EB7C1B] transition-colors"
-      >
-        <FaArrowLeft /> Back to Shop
-      </button>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-white rounded-lg shadow2 p-4">
-          <div className="relative">
-            <span 
-              className="absolute top-2 right-2 cursor-pointer text-2xl select-none z-10"
-              onClick={() => handleFavoriteToggle(selectedItem)}
-            >
-              <FaHeart className={isItemInFavorites(selectedItem._id) ? 'text-[#ff4081]' : 'text-[#CCCCCC]'} />
-            </span>
-            <img 
-              src={selectedItem.image} 
-              alt={selectedItem.desc} 
-              className="w-full h-auto rounded-[5px] object-contain max-h-[500px]"
-            />
-          </div>
+    <div className="bg-[#f9f5f0] flex justify-center mt-[120px]">
+      <div className="w-full grid grid-cols-2 max-sm:grid-cols-1 gap-8 max-lg:gap-6 max-md:gap-4">
+        <div className="relative allCenter bg-white rounded-[15px] overflow-hidden">
+          <img
+            src={selectedItem.image}
+            alt={selectedItem.desc}
+            className={`rounded-2xl w-auto shadow-md transition-transform duration-300 ${isZoomed ? 'scale-[1.7] cursor-zoom-out' : 'cursor-zoom-in'}`}
+            onClick={toggleZoom}
+          />
+          <button
+            onClick={toggleZoom}
+            className="absolute top-4 right-4 bg-white p-2 rounded-full shadow hover:bg-gray-100"
+            aria-label="Zoom"
+          >
+            {isZoomed ? (
+              <ZoomOut className="h-7 w-7 max-md:w-5 max-md:h-5 text1" />
+            ) : (
+              <ZoomIn className="h-7 w-7 max-md:w-5 max-md:h-5 text1" />
+            )}
+          </button>
         </div>
 
-        <div className="bg-white rounded-lg shadow2 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <p className='text-sm text3 text-[11px]'>{selectedItem.category}</p>
-            <p className='text-sm text3 text-[11px]'>{selectedItem.gender}</p>
+        <div className="flex flex-col gap-4 max-lg:gap-3 max-md:gap-2 max-sm:gap-2">
+          <div className='flex flex-col gap-6 max-md:gap-3 max-sm:gap-1'>
+            <h1 className="text-6xl max-xl:text-5xl max-lg:text-4xl max-md:text-2xl font-bold text1">{selectedItem.name}</h1>
+            <p className='text-2xl max-lg:text-xl max-md:text-[14px] max-sm:text-[11px] text3 truncate'>{selectedItem.desc}</p>
           </div>
 
-          <h1 className='font-medium text1 text-[32px] mb-2'>{selectedItem.name}</h1>
-          <p className='text3 text-[16px] mb-6'>{selectedItem.desc}</p>
-
-          <div className='flex items-center gap-2 mb-6'>
-            <span className='flex gap-1 text-yellow-400'>
-              <FaStar /><FaStar /><FaStar />
+          <div className='flex gap-1 items-center justify-between'>
+            <p className='max-md:text-[10px]'>11k + sold</p>
+            <div className='h-3 w-3 max-md:h-2 max-md:w-2 bg1 rounded-full'></div>
+            <span className="flex items-center gap-1 text3 text-xl max-md:text-[10px]">
+              {[...Array(3)].map((_, i) => (
+                <Star key={i} className="h-4 w-4 fill-yellow-500 text-yellow-500" />
+              ))}
+              3/3
             </span>
-            <span className="text-[#B8A38A]">(24 reviews)</span>
+            <div className='h-3 w-3 max-md:h-2 max-md:w-2 bg1 rounded-full'></div>
+            <p className='max-md:text-[10px]'>132 Reviews</p>
           </div>
 
-          <div className="flex items-center gap-4 mb-6">
-            <p className='text-[24px] font-bold text5'>${selectedItem.sp}</p>
-            <p className='text3 text-[18px] line-through'>${selectedItem.cp}</p>
-            <span className="bg-[#FFE1E1] text-[#FF6B6B] px-2 py-1 rounded text-sm">
-              15% OFF
-            </span>
+          <div className='flex justify-between items-center gap-4 max-lg:gap-2 mb-16 max-lg:mb-2'>
+            <div className="flex items-center gap-4 max-lg:gap-2 max-lg:flex-col max-lg:items-start">
+              <div className=' flex items-center justify-center gap-4'>
+                <div className='h-3 w-3 bg3 rounded-full'></div>
+                <span className='text3 text-xl max-md:text-[12px]'>{selectedItem.category}</span>
+              </div>
+            </div>
+            <div className="flex items-baseline gap-4 max-lg:gap-2 max-lg:flex-col max-lg:items-end">
+              <span className='text-[30px] max-lg:text-[24px] max-md:text-[20px] font-medium text6 cursor-pointer max-sm:text-[16px]'>Rs. {selectedItem.sp}</span>
+              <span className='text3 text-[20px] line-through max-sm:text-[10px]'>Rs. {selectedItem.cp}</span>
+            </div>
           </div>
 
-          <div className='text-[16px] text3 flex gap-[8px] mb-8'>
-            Available items: <p className='font-semibold text1'>{selectedItem.available}</p>
+          <div>
+            <p className="text3 max-md:text-[14px] max-sm:text-[12px]">Available: {selectedItem.available} items</p>
           </div>
 
-          <div className="flex flex-wrap gap-4">
+          <div className='flex flex-col gap-4'>
+            <div className="flex justify-between items-center">
+              <span className="text3 text-xl font-medium max-md:text-[20px] max-sm:text-[15px]">Select Size</span>
+              <a href="#" className="text-xl text3 hovere:underlin max-md:text-[20px] max-sm:text-[15px]">Size Guide</a>
+            </div>
+            <div className="flex gap-3">
+              {sizes.map(size => (
+                <button
+                  key={size}
+                  onClick={() => handleSizeSelect(size)}
+                  className={`rounded-[10px] px-5 py-2 max-md:px-4 border transition-colors duration-300 text-[18px] max-md:text-[14px] ${
+                    selectedSize === size
+                      ? "bg-[#B8A38A] text-white border-[#B8A38A]"
+                      : "bg-white text-[#B8A38A] border-[#B8A38A] hover:bg-gray-100"
+                  }`}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className='mt-4'>
             <button 
-              className='productbtn flex-1 min-w-[200px]'
-              onClick={() => handleAddToCart(selectedItem)}
+              onClick={handleAddToCart}
+              className="button1 w-full"
             >
               Add to Cart
             </button>
-            <button className='bg-[#B8A38A] hover:bg-[#B98C59] text-white py-3 px-6 rounded transition-colors flex-1 min-w-[200px]'>
-              Buy Now
-            </button>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <h3 className="text-xl font-semibold mb-4">Product Details</h3>
-            <ul className="space-y-2">
-              <li className="flex">
-                <span className="text3 w-32">Category</span>
-                <span className="text1">{selectedItem.category}</span>
-              </li>
-              <li className="flex">
-                <span className="text3 w-32">Gender</span>
-                <span className="text1">{selectedItem.gender}</span>
-              </li>
-              <li className="flex">
-                <span className="text3 w-32">Availability</span>
-                <span className="text1">{selectedItem.available} items in stock</span>
-              </li>
-            </ul>
+          <div className='flex gap-2 items-center justify-between py-5'>
+            <span className='flex items-center justify-center gap-3 max-lg:gap-2 max-md:gap-1 text2 text-2xl max-lg:text-[20px] max-md:text-[17px] font-medium'>
+              <IoChatboxEllipses />
+              Chat
+            </span>
+            <div className='h-full w-[2px] bg-[#E0D7CC]'></div>
+            <span className='flex items-center justify-center gap-3 max-lg:gap-2 max-md:gap-1 text2 text-2xl max-lg:text-[20px] max-md:text-[17px] font-medium'>
+              <IoMdHeartEmpty />
+              Favourite
+            </span>
+            <div className='h-full w-[2px] bg-[#E0D7CC]'></div>
+            <span className='flex items-center justify-center gap-3 max-lg:gap-2 max-md:gap-1 text2 text-2xl max-lg:text-[20px] max-md:text-[17px] font-medium'>
+              <IoIosShareAlt />
+              Share
+            </span>
           </div>
         </div>
       </div>
     </div>
   );
-};
-
-export default Detail;
+}

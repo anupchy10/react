@@ -60,8 +60,8 @@ const CartLeft = () => {
 
       {cartItems.length === 0 ? (
         <div>
-          <p className="text-center py-10">Your cart is empty</p>
-          <Link to={'/shop'} >
+          <p className="text-center w-full py-10">Your cart is empty</p>
+          <Link to={'/shop'} className='allCenter' >
             <button className="py-2 px-12 bg-[#B8A38A] text-white text-[18px] font-medium hover:bg-[#fff] hover:text-[#B8A38A] hover:ease-in-out duration-500 border border-[#B8A38A]  max-md:text-[16px] rounded-full">
               Shop Now...
             </button>

@@ -1,8 +1,9 @@
-// redux/detail/detailSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   selectedItem: null,
+  selectedSize: 'M',
+  isZoomed: false
 };
 
 const detailSlice = createSlice({
@@ -12,11 +13,17 @@ const detailSlice = createSlice({
     setSelectedItem: (state, action) => {
       state.selectedItem = action.payload;
     },
+    setSelectedSize: (state, action) => {
+      state.selectedSize = action.payload;
+    },
+    setIsZoomed: (state, action) => {
+      state.isZoomed = action.payload;
+    },
     clearSelectedItem: (state) => {
       state.selectedItem = null;
-    },
-  },
+    }
+  }
 });
 
-export const { setSelectedItem, clearSelectedItem } = detailSlice.actions;
+export const { setSelectedItem, setSelectedSize, setIsZoomed, clearSelectedItem } = detailSlice.actions;
 export default detailSlice.reducer;

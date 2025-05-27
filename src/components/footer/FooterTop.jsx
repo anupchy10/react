@@ -80,10 +80,10 @@ const FooterTop = () => {
           <h1 className='text-[18px] text1 font-semibold leading-3 max-sm:text-center'>Install App</h1>
           <div className='flex items-center justify-between Gap max-sm:justify-center'>
             <div>
-              <img src={assets.app_store} className='w-full' alt="app_store..." loading='lazy' />
+              <img src={assets.app_store} className='w-full max-md:max-w-[150px]' alt="app_store..." loading='lazy' />
             </div>
             <div>
-              <img src={assets.google_play} className='w-full' alt="google_play..." loading='lazy' />
+              <img src={assets.google_play} className='w-full max-md:max-w-[150px]' alt="google_play..." loading='lazy' />
             </div>
           </div>
           <h5 className='text1 font-medium text-[18px] max-sm:text-center'>Secured Payment Gateways</h5>

@@ -1,10 +1,28 @@
+import AboutDesc from "../components/about/AboutDesc";
+import FAQ from "../components/about/FAQ";
+import PrivacyPolicy from "../components/about/PrivacyPolicy";
+import TermsAndConditions from "../components/about/TermsAndConditions";
+import DividerLine from "../components/DividerLine";
+import Contact from "./Contact";
+
 function About() {
     return (
-      <div style={{ padding: '2rem' }}>
-        <h1>About Us</h1>
-        <p>We are a company dedicated to providing excellent services to our customers.</p>
-        <p>Our team consists of experienced professionals who are passionate about what they do.</p>
-      </div>
+      <section className="mt-[120px]">
+        <div className="mb30">
+          <AboutDesc />
+        </div>
+        <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-8 max-lg:gap-6 max-md:gap-4">
+          <TermsAndConditions />
+          <PrivacyPolicy />
+        </div>
+        <DividerLine />
+        <div className="w-full">
+          <FAQ />
+        </div>
+        <div>
+          <Contact />
+        </div>
+      </section>
     );
   }
   

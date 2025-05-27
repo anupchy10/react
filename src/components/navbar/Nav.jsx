@@ -43,25 +43,25 @@ const Nav = () => {
         <section className='col-span-2 max-2xl:col-span-3 max-lg:col-span-2 max-md:col-span-1 max-sm:col-span-1 max-md:content-center max-sm:order-3'>
           <div className='w-full grid grid-cols-6 Gap max-lg:gap-3 max-sm:grid-cols-1 max-sm:items-center max-sm:justify-center max-sm:col-span-1 max-md:grid-cols-1 max-md:content-center'>
             <div className='relative col-span-1 max-lg:hidden'>
-              <Link to="/cart" className="relative">
+              <Link to="/cart" className="relative group">
                 <div className='allCenter absolute top-[-9px] left-5 h-[28px] w-[28px] max-lg:h-[22px] max-lg:w-[22px] bg-[#b8a38a] rounded-full cursor-pointer'>
                   <p className='text-center text-white text-[16px] max-lg:text-[14px]'>
                     {cartItems.length}
                   </p>
                 </div>
                 <div className='text-[30px] text2 bottom-0 mt-[8px] col-span-3 max-lg:text-[20px] max-md:col-span-8 cursor-pointer'>
-                  <PiShoppingCartSimpleFill />
+                  <PiShoppingCartSimpleFill className='group-hover:text-[#B8A38A] transition-all duration-300' />
                 </div>
               </Link>
             </div>
             <div className='col-span-3 max-lg:col-span-4 max-md:hidden max-sm:block max-sm:col-span-1:'>
-              <Link to={'/user'} >
-                <div className='gap-4 max-lg:gap-2 flex max-sm:justify-end max-lg:col-span-full'>
+              <Link to={'/profile'} >
+                <div className='gap-4 max-lg:gap-2 flex max-sm:justify-end max-lg:col-span-full group'>
                   <img src={assets.user} className=' w-[55px] max-lg:w-[40px]' alt="user..." loading='lazy' />
                   <ul>
                     <li className='text3 text-[11px] font-medium text-nowrap'>Hello</li>
                     {/* <h6 className='text1 text-base text2 font-semibold text-nowrap'>{user.name && <p>{user.name}</p>}</h6> */}
-                    <h6 className='text1 text-base text2 font-semibold text-nowrap'>Nicholas</h6>
+                    <h6 className='text1 text-base text2 font-semibold text-nowrap group-hover:underline transition-all duration-300'>Nicholas</h6>
                   </ul>
                 </div>
               </Link>
