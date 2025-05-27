@@ -2,7 +2,7 @@ import React from 'react'
 import { FaCaretRight } from "react-icons/fa";
 import { assets } from '../../assets/assets';
 import { Link } from "react-router";
-
+ const user = JSON.parse(localStorage.getItem('user')) || {};
 const LeftHome = () => {
   return (
     <aside className='p-5 mb-5 max-xl:p-3 rounded-[15px] shadow1 bg-white'>
@@ -43,7 +43,9 @@ const LeftHome = () => {
               <img src={assets.user} className=' w-[60px]' alt="user..." loading='lazy' />
               <ul>
                 {/* <h6 className='text1 text-base text2 font-semibold text-nowrap'>{user.name && <p>{user.name}</p>}</h6> */}
-                <h6 className='text1 text-base text2 font-semibold text-nowrap'>Nicholas Swatz</h6>
+                <h6 className="text-[#6f4e37] text-sm sm:text-base font-semibold group-hover:underline transition-all duration-300">
+                      {user.firstName || 'Guest'}
+                    </h6>
                 <li className='text3 text-[11px] font-medium text-nowrap'>#579412</li>
               </ul>
             </Link>
