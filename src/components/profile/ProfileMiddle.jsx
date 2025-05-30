@@ -36,60 +36,63 @@ const ProfileMiddle = () => {
     };
     fetchUserData();
   }, []);
+
   if (loading) {
     return (
-      <section className="flex w-full items-start justify-start">
-        <div className="flex flex-col gap-6 w-full p-3 sm:p-4">
+      <section className='flex w-full items-start justify-start'>
+        <div className='flex flex-col gap-6 w-full p-3 sm:p-4'>
           <p className="text-[#6f4e37] text-sm sm:text-base">Loading...</p>
         </div>
       </section>
     );
   }
+
   if (error) {
     return (
-      <section className="flex w-full items-start justify-start">
-        <div className="flex flex-col gap-6 w-full p-3 sm:p-4">
-          <p className="text-red-500 text-sm sm:text-base">{error}</p>
+      <section className='flex w-full items-start justify-start'>
+        <div className='flex flex-col gap-6 w-full p-3 sm:p-4'>
+          <p className='text-red-500 text-sm sm:text-base'>{error}</p>
         </div>
       </section>
     );
   }
-  const fullName = [userData?.firstName, userData?.middleName, userData?.lastName]
-    .filter(name => name)
-    .join(' ') || 'Guest';
+
   return (
-    <section className="flex w-full items-start justify-start">
-      <div className="flex flex-col gap-6 sm:gap-8 w-full p-3 sm:p-4">
-        <h2 className="text-[#6f4e37] text-xl sm:text-2xl md:text-[26px] font-medium max-xl:text-[22px] max-md:text-xl max-sm:text-lg">
-          User Information
-        </h2>
-        <div className="w-full">
-          <div className="w-full">
-            <div className="flex flex-col gap-2 justify-center">
-              <h4 className="text-[#6f4e37] text-sm sm:text-base md:text-lg max-sm:text-xs">Name</h4>
-              <p className="text-[#6f4e37] text-base sm:text-lg md:text-xl font-medium hover:underline max-sm:text-sm truncate">
-                {fullName}
-              </p>
+    <section className='flex w-full items-start justify-start'>
+      <div className='flex flex-col gap-6 w-full p-3 sm:p-4'>
+        <h4 className='text1 text-2xl max-md:text-xl max-sm:text-[18px] font-medium'>Profile details</h4>
+
+        <div className='flex flex-col gap-4 max-sm:gap-3 w-full max-w-lg'>
+          <div className='flex items-center gap-6'>
+            <div className='flex flex-col gap-2'>
+              <h5 className='profileHead'>First Name</h5>
+              <p className='profileText'>{userData?.firstName || 'N/A'}</p>
             </div>
-            <div className="h-[2px] w-full bg-[#E0D7CC] my-3 sm:my-4"></div>
+
+            <div className='flex flex-col gap-2'>
+              <h5 className='profileHead'>Last Name</h5>
+              <p className='profileText'>{userData?.lastName || 'N/A'}</p>
+            </div>
           </div>
-          <div>
-            <div className="flex flex-col gap-2 justify-center">
-              <h4 className="text-[#6f4e37] text-sm sm:text-base md:text-lg max-sm:text-xs">Email Address</h4>
-              <p className="text-[#6f4e37] text-base sm:text-lg md:text-xl font-medium hover:underline max-sm:text-sm truncate">
-                {userData?.email || 'N/A'}
-              </p>
-            </div>
-            <div className="h-[2px] w-full bg-[#E0D7CC] my-3 sm:my-4"></div>
+            <div className='h-[2px] w-full bg-[#E0D7CC]  my-4'></div>
+
+          <div className='flex flex-col gap-2'>
+            <h5 className='profileHead'>Email</h5>
+            <p className='profileText'>{userData?.email || 'N/A'}</p>
+            <div className='h-[2px] w-full bg-[#E0D7CC]  my-4'></div>
           </div>
+
+          <div className='flex flex-col gap-2'>
+            <h5 className='profileHead'>Phone</h5>
+            <p className='profileText'>{userData?.phone || 'N/A'}</p>
+            <div className='h-[2px] w-full bg-[#E0D7CC]  my-4'></div>
+          </div>
+
           <div>
-            <div className="flex flex-col gap-2 justify-center">
-              <h4 className="text-[#6f4e37] text-sm sm:text-base md:text-lg max-sm:text-xs">Phone Number</h4>
-              <p className="text-[#6f4e37] text-base sm:text-lg md:text-xl font-medium hover:underline max-sm:text-sm truncate">
-                {userData?.phone || 'N/A'}
-              </p>
+            <div className='flex flex-col gap-2 justify-center'>
+              <h4 className='text3 text-[16px] max-sm:text-[10px]'>Shipping Address</h4>
+              <p className='text2 max-sm:text-[14px] font-medium hover:underline'>390 Market street, Suite 200 NE 94102</p>
             </div>
-            <div className="h-[2px] w-full bg-[#E0D7CC] my-3 sm:my-4"></div>
           </div>
         </div>
       </div>

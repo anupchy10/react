@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { assets } from '../../assets/assets';
-import { MdLocationPin } from 'react-icons/md';
+import { MdLocationPin } from "react-icons/md";
 import SearchBar from './SearchBar';
-import { PiShoppingCartSimpleFill } from 'react-icons/pi';
+import { PiShoppingCartSimpleFill } from "react-icons/pi";
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
@@ -10,16 +10,15 @@ import axios from 'axios';
 const Nav = () => {
   const cartItems = useSelector((state) => state.cart.items);
   const itemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem('token');
         if (!token) {
-          setError('No user logged in');
           setLoading(false);
           return;
         }
@@ -33,13 +32,9 @@ const Nav = () => {
 
         if (response.data.success) {
           setUserData(response.data.data);
-          setError('');
-        } else {
-          setError(response.data.message || 'Failed to fetch user data');
         }
       } catch (err) {
-        setError(err.response?.data?.message || 'An error occurred while fetching user data');
-        console.error('Fetch user error:', err);
+        console.error('Error fetching user:', err);
       } finally {
         setLoading(false);
       }
@@ -48,138 +43,69 @@ const Nav = () => {
     fetchUserData();
   }, []);
 
-  // Fallback to 'Guest' if loading or error
-  if (loading || error) {
-    return (
-      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 mb-4">
-        <div className="h-[56px] py-2 grid grid-cols-12 gap-2 sm:gap-3 md:gap-4 w-full items-center justify-items-center sm:h-auto sm:gap-y-2 sm:py-2">
-          {/* Logo and Location Section */}
-          <section className="col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-2 flex items-center">
-            <div className="w-full grid grid-cols-5 items-center sm:place-content-start">
-              <div className="col-span-3 sm:col-span-5 lg:col-span-3">
-                <Link to="/home">
-                  <img
-                    src={assets.logo}
-                    className="w-full max-h-[32px] sm:max-h-[36px] md:max-h-[40px] lg:max-h-[44px] object-contain"
-                    alt="jivorix logo"
-                    loading="lazy"
-                  />
-                </Link>
-              </div>
-              <div className="col-span-2 hidden lg:flex items-center justify-center gap-1.5 sm:gap-2">
-                <MdLocationPin className="text-[18px] sm:text-[20px] lg:text-[22px] text-[#6f4e37]" />
-                <div>
-                  <p className="text-[#6f4e37] text-[9px] sm:text-[10px] lg:text-xs font-medium">Deliver to</p>
-                  <h6 className="text-[#6f4e37] text-xs sm:text-sm lg:text-base font-semibold">Nepal</h6>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Search Bar Section */}
-          <section className="col-span-6 sm:col-span-6 md:col-span-6 lg:col-span-8 w-full flex items-center">
-            <SearchBar />
-          </section>
-
-          {/* Cart and Profile Section */}
-          <section className="col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-2 flex items-center justify-end">
-            <div className="w-full grid grid-cols-6 gap-2 sm:gap-3 md:gap-3 lg:gap-4 items-center">
-              {/* Cart Icon */}
-              <div className="col-span-1 hidden md:block relative">
-                <Link to="/cart" className="relative group">
-                  <div className="absolute top-[-8px] left-3.5 h-5 w-5 sm:h-5.5 sm:w-5.5 md:h-6 md:w-6 lg:h-6.5 lg:w-6.5 bg-[#b8a38a] rounded-full flex items-center justify-center">
-                    <p className="text-center text-white text-[10px] sm:text-xs md:text-sm">{itemCount}</p>
-                  </div>
-                  <PiShoppingCartSimpleFill className="text-[22px] sm:text-[24px] md:text-[26px] lg:text-[28px] text-[#6f4e37] mt-1.5 group-hover:text-[#b8a38a] transition-all duration-300" />
-                </Link>
-              </div>
-
-              {/* Profile Section */}
-              <div className="col-span-5 sm:col-span-5 md:col-span-5 lg:col-span-5 flex justify-end">
-                <Link to="/profile">
-                  <div className="flex items-center justify-end gap-1.5 sm:gap-2 md:gap-2.5 lg:gap-3 bg-white border border-[#b8a38a]/50 rounded-lg p-1 sm:p-1.5 md:p-2 shadow-md hover:shadow-lg hover:bg-[#b8a38a]/10 transition-all duration-300 group">
-                    <img
-                      src={assets.user}
-                      className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 rounded-full object-cover"
-                      alt="user profile"
-                      loading="lazy"
-                    />
-                    <div className="ml-1 sm:ml-1.5 md:ml-2 lg:ml-2.5">
-                      <p className="text-[#6f4e37] text-[9px] sm:text-[10px] md:text-xs font-medium">Hello</p>
-                      <h6 className="text-[#6f4e37] text-xs sm:text-sm md:text-base font-semibold group-hover:underline transition-all duration-300 truncate max-w-[100px] sm:max-w-[120px] md:max-w-[140px]">
-                        Guest
-                      </h6>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            </div>
-          </section>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 mb-4">
-      <div className="h-[56px] py-2 grid grid-cols-12 gap-2 sm:gap-3 md:gap-4 w-full items-center justify-items-center sm:h-auto sm:gap-y-2 sm:py-2">
-        {/* Logo and Location Section */}
-        <section className="col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-2 flex items-center">
-          <div className="w-full grid grid-cols-5 items-center sm:place-content-start">
-            <div className="col-span-3 sm:col-span-5 lg:col-span-3">
-              <Link to="/home">
-                <img
-                  src={assets.logo}
-                  className="w-full max-h-[32px] sm:max-h-[36px] md:max-h-[40px] lg:max-h-[44px] object-contain"
-                  alt="jivorix logo"
-                  loading="lazy"
-                />
+    <div className='w-full px-3 max-md:px-2'>
+      <div className='grid grid-cols-12 items-center max-lg:gap-3 max-md:gap-1 gap-4'>
+        
+        {/* Logo & Location */}
+        <section className='col-span-2 max-2xl:col-span-3 max-sm:col-span-6 max-md:content-center max-sm:order-1'>
+          <div className='w-full grid grid-cols-5 content-center max-sm:place-content-start'>
+            
+            <div className='w-full col-span-3 max-md:col-span-5 content-center max-sm:place-content-start max-sm:mr-[-25px]'>
+              <Link to={'/home'}>
+                <img src={assets.logo} className='w-full max-sm:h-[40px] max-sm:w-auto' alt="jivorix..." loading="lazy" />
               </Link>
             </div>
-            <div className="col-span-2 hidden lg:flex items-center justify-center gap-1.5 sm:gap-2">
-              <MdLocationPin className="text-[18px] sm:text-[20px] lg:text-[22px] text-[#6f4e37]" />
-              <div>
-                <p className="text-[#6f4e37] text-[9px] sm:text-[10px] lg:text-xs font-medium">Deliver to</p>
-                <h6 className="text-[#6f4e37] text-xs sm:text-sm lg:text-base font-semibold">Nepal</h6>
+
+            <div className='w-full col-span-2 max-md:hidden'>
+              <div className='flex items-center justify-center gap-[10px]'>
+                <MdLocationPin className='text-[25px] text3' />
+                <ul>
+                  <li className='text3 text-[11px] font-medium text-nowrap'>Deliver to</li>
+                  <h6 className='text1 text-base text2 font-semibold text-nowrap'>Nepal</h6>
+                </ul>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Search Bar Section */}
-        <section className="col-span-6 sm:col-span-6 md:col-span-6 lg:col-span-8 w-full flex items-center">
+        <section className='col-span-8 max-2xl:col-span-6 max-sm:col-span-full max-md:content-center max-sm:order-3'>
           <SearchBar />
         </section>
 
-        {/* Cart and Profile Section */}
-        <section className="col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-2 flex items-center justify-end">
-          <div className="w-full grid grid-cols-6 gap-2 sm:gap-3 md:gap-3 lg:gap-4 items-center">
-            {/* Cart Icon */}
-            <div className="col-span-1 hidden md:block relative">
+        <section className='col-span-2 max-2xl:col-span-3 max-sm:col-span-6 max-md:content-center max-sm:order-2'>
+          <div className='w-full flex items-center max-sm:justify-end gap-4 max-sm:gap-8 max-lg:gap-3'>
+            
+            <div className='w-1/3 max-sm:w-auto allCenter'>
               <Link to="/cart" className="relative group">
-                <div className="absolute top-[-8px] left-3.5 h-5 w-5 sm:h-5.5 sm:w-5.5 md:h-6 md:w-6 lg:h-6.5 lg:w-6.5 bg-[#b8a38a] rounded-full flex items-center justify-center">
-                  <p className="text-center text-white text-[10px] sm:text-xs md:text-sm">{itemCount}</p>
+                <div className='allCenter absolute top-[-9px] left-5 h-[28px] w-[28px] max-lg:h-[22px] max-lg:w-[22px] bg-[#b8a38a] rounded-full cursor-pointer'>
+                  <p className='text-center text-white text-[16px] max-lg:text-[14px]'>
+                    {itemCount}
+                  </p>
                 </div>
-                <PiShoppingCartSimpleFill className="text-[22px] sm:text-[24px] md:text-[26px] lg:text-[28px] text-[#6f4e37] mt-1.5 group-hover:text-[#b8a38a] transition-all duration-300" />
+                <div className='text-[30px] text2 bottom-0 mt-[8px] col-span-3 max-lg:text-[25px] max-md:col-span-8 cursor-pointer'>
+                  <PiShoppingCartSimpleFill className='group-hover:text-[#B8A38A] transition-all duration-300' />
+                </div>
               </Link>
             </div>
 
-            {/* Profile Section */}
-            <div className="col-span-5 sm:col-span-5 md:col-span-5 lg:col-span-5 flex justify-end">
-              <Link to="/profile">
-                <div className="flex items-center justify-end gap-1.5 sm:gap-2 md:gap-2.5 lg:gap-3 bg-white border border-[#b8a38a]/50 rounded-lg p-1 sm:p-1.5 md:p-2 shadow-md hover:shadow-lg hover:bg-[#b8a38a]/10 transition-all duration-300 group">
-                  <img
-                    src={userData?.profileImage || assets.user}
-                    className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 rounded-full object-cover"
-                    alt="user profile"
-                    loading="lazy"
-                  />
-                  <div className="ml-1 sm:ml-1.5 md:ml-2 lg:ml-2.5">
-                    <p className="text-[#6f4e37] text-[9px] sm:text-[10px] md:text-xs font-medium">Hello</p>
-                    <h6 className="text-[#6f4e37] text-xs sm:text-sm md:text-base font-semibold group-hover:underline transition-all duration-300 truncate max-w-[100px] sm:max-w-[120px] md:max-w-[140px]">
-                      {userData?.firstName || 'Guest'}
-                    </h6>
+            <div className='w-2/3 max-sm:w-auto'>
+              <Link to={'/profile'}>
+                <div className='gap-4 max-lg:gap-2 flex max-sm:justify-end items-center group'>
+                  <div className="w-[40px] h-[40px] max-lg:w-[40px] max-lg:h-[40px] rounded-full overflow-hidden shrink-0">
+                    <img
+                      src={userData?.profileImage || assets.user}
+                      className='w-full h-full object-cover'
+                      alt="user"
+                      loading='lazy'
+                    />
                   </div>
+                  <ul className='max-sm:hidden'>
+                    <li className='text3 text-[11px] font-medium text-nowrap'>Hello</li>
+                    <h6 className='text1 text-base text2 font-semibold text-nowrap group-hover:underline transition-all duration-300'>
+                      {loading ? '...' : (userData?.firstName || 'Guest')}
+                    </h6>
+                  </ul>
                 </div>
               </Link>
             </div>

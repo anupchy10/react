@@ -45,34 +45,30 @@ const LeftHome = () => {
 
   if (loading) {
     return (
-      <aside className="p-3 sm:p-5 mb-4 sm:mb-5 rounded-[15px] shadow-md bg-white">
-        <div className="flex flex-col gap-6 sm:gap-8">
-          <p className="text-[#6f4e37] text-sm sm:text-base">Loading...</p>
-        </div>
+      <aside className="p-5 mb-5 max-xl:p-3 rounded-[15px] shadow1 bg-white">
+        <p className="text3 text-sm">Loading...</p>
       </aside>
     );
   }
 
   if (error) {
     return (
-      <aside className="p-3 sm:p-5 mb-4 sm:mb-5 rounded-[15px] shadow-md bg-white">
-        <div className="flex flex-col gap-6 sm:gap-8">
-          <p className="text-red-500 text-sm sm:text-base">{error}</p>
-        </div>
+      <aside className="p-5 mb-5 max-xl:p-3 rounded-[15px] shadow1 bg-white">
+        <p className="text-red-500 text-sm">{error}</p>
       </aside>
     );
   }
 
   return (
-    <aside className="p-3 sm:p-5 mb-4 sm:mb-5 rounded-[15px] shadow-md bg-white">
-      <div className="flex flex-col gap-6 sm:gap-8">
-        {/* Categories Section */}
-        <section className="flex flex-col gap-3 sm:gap-4">
-          <div className="w-full flex flex-col gap-2">
-            <h1 className="text-[#6f4e37] text-xl sm:text-2xl md:text-[26px] font-medium">Categories</h1>
-            <span className="h-[2px] w-full rounded-full bg-[#E0D7CC]"></span>
+    <aside className='p-5 mb-5 max-xl:p-3 rounded-[15px] shadow1 bg-white'>
+      <div className='flex flex-col gap-[30px]'>
+
+        <section className='flex flex-col Gap'>
+          <div className='w-full flex flex-col Gap'>
+            <h1 className='text1 text-[26px] font-medium'>Categories</h1>
+            <span className='h-[2px] w-full rounded-full bg3'></span>
           </div>
-          <ul className="flex flex-col gap-2 sm:gap-3 mb-3 sm:mb-4">
+          <ul className='flex flex-col no-underline Gap mb15'>
             {[
               "Seasonal collection",
               "Occasion based",
@@ -81,55 +77,44 @@ const LeftHome = () => {
               "Casual wares",
               "Sports & Activewear",
               "Traditional Wear"
-            ].map((category, index) => (
-              <li
-                key={index}
-                className="flex items-center justify-between py-1 sm:py-2 px-2 sm:px-3 hover:bg-[#b8a38a]/10 rounded-md transition-all duration-300"
-              >
-                <p className="text-[#6f4e37] text-sm sm:text-base md:text-lg max-md:text-[14px] font-medium">
-                  {category}
-                </p>
-                <FaCaretRight className="text-[#6f4e37] text-sm sm:text-base" />
+            ].map((category, idx) => (
+              <li key={idx} className='categoryBox text3 flex items-center justify-between'>
+                <p className='text-[16px] max-md:text-[14px] font-medium'>{category}</p>
+                <FaCaretRight />
               </li>
             ))}
           </ul>
           <Link to="/shop">
-            <button className="w-full bg-[#6f4e37] text-white py-2 sm:py-3 px-4 rounded-md hover:bg-[#5a3c2e] transition-all duration-300 text-sm sm:text-base md:text-lg">
-              Shop Now
-            </button>
+            <button className='button1 w-full max-md:text-[16px]'>Shop Now</button>
           </Link>
         </section>
 
-        {/* Help & Support Section */}
-        <section className="flex flex-col gap-3 sm:gap-4">
-          <div className="w-full flex flex-col gap-2">
-            <h1 className="text-[#6f4e37] text-xl sm:text-2xl md:text-[26px] font-medium">Help & Support</h1>
-            <span className="h-[2px] w-full rounded-full bg-[#E0D7CC]"></span>
+        <section className='flex flex-col Gap'>
+          <div className='w-full flex flex-col Gap'>
+            <h1 className='text1 text-[26px] font-medium'>Help & Support</h1>
+            <span className='h-[2px] w-full rounded-full bg3'></span>
           </div>
-          <ul className="flex flex-col gap-2 sm:gap-3 mb-2 sm:mb-3">
-            {["Help", "About", "FAQ Questions", "Terms & Conditions", "Privacy Policy", "Contact Us"].map((item, index) => (
-              <li
-                key={index}
-                className="text-[#6f4e37] text-sm sm:text-base hover:underline cursor-pointer"
-              >
-                {item}
-              </li>
+          <ul className='flex flex-col items-start justify-center no-underline Gap mb10'>
+            {["Help", "About", "FAQ Questions", "Terms & Conditions", "Privacy Policy", "Contact Us"].map((item, idx) => (
+              <li key={idx} className='footerList'>{item}</li>
             ))}
           </ul>
-          <div className="flex gap-2 sm:gap-3 items-center">
-            <Link to="/profile" className="flex items-center gap-2 sm:gap-3 group">
+          <div className='flex Gap items-center'>
+            <Link to={'/profile'} className='flex items-center gap-2'>
               <img
                 src={userData?.profileImage || assets.user}
-                className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full object-cover"
+                className='w-[60px] h-[60px] rounded-full object-cover'
                 alt="user profile"
-                loading="lazy"
+                loading='lazy'
               />
-              <div>
-                <h6 className="text-[#6f4e37] text-sm sm:text-base md:text-lg font-semibold group-hover:underline transition-all duration-300 truncate max-w-[120px] sm:max-w-[150px]">
+              <ul>
+                <h6 className='text1 text-base text2 font-semibold text-nowrap'>
                   {userData?.firstName || 'Guest'}
                 </h6>
-                <p className="text-[#6f4e37] text-[10px] sm:text-xs md:text-sm font-medium">#{userData?.id || 'N/A'}</p>
-              </div>
+                <li className='text3 text-[11px] font-medium text-nowrap'>
+                  #{userData?.id || 'N/A'}
+                </li>
+              </ul>
             </Link>
           </div>
         </section>

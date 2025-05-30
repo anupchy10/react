@@ -2,7 +2,7 @@ import Marquee from 'react-fast-marquee';
 
 const Top = () => {
   return (
-    <div className='w-full bg-black mb10 max-sm:hidden'>
+    <div className='w-full bg-black mb10'>
       <Marquee autoFill speed={40} className='py-1'>
         <span className='text-white text-[11px] mx-20' style={{ wordSpacing: '5px' }}>New arrivals—50% off!</span>
         <span className='text-white text-[11px] mx-20' style={{ wordSpacing: '5px' }}>Discover stylish fashion online today!</span>

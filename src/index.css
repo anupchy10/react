@@ -135,5 +135,12 @@ body{
   .iconText {
     @apply text-[#B8A38A] text-[13px] font-medium text-nowrap
   }
+
+  .profileText {
+    @apply flex gap-2 text3 max-md:text-[14px] max-sm:text-[12px] truncate hover:underline transition-all duration-200;
+  }
+  .profileHead {
+    @apply text1 text-2xl max-md:text-xl max-sm:text-[18px] font-medium;
+  }
 }
 
