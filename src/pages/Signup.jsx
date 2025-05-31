@@ -29,6 +29,7 @@ function Signup() {
     gender: ''
   });
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
 
@@ -51,7 +52,7 @@ function Signup() {
     if (isSuccess) {
       const timer = setTimeout(() => {
         navigate('/login');
-      }, 5000);
+      }, 2000); // Redirect after 2 seconds of showing success
       return () => clearTimeout(timer);
     }
   }, [isSuccess, navigate]);
@@ -75,15 +76,30 @@ function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const requiredFields = ['address', 'city', 'state', 'postcode', 'dateOfBirth', 'nationalId', 'gender'];
+    const isValid = requiredFields.every((field) => formData[field].trim() !== '');
+    if (!isValid) {
+      setError('Please fill in all required fields.');
+      return;
+    }
+    setIsLoading(true);
+    setError('');
     try {
-      const response = await axios.post('http://localhost/react-auth-backend/signup.php', formData);
+      const response = await axios.post('http://localhost/react-auth-backend/signup.php', formData, {
+        headers: { 'Content-Type': 'application/json' },
+        timeout: 5000
+      });
       if (response.data.success) {
-        setIsSuccess(true);
-        setError('');
+        setTimeout(() => {
+          setIsLoading(false);
+          setIsSuccess(true);
+        }, 3000); // Show loader for 3 seconds
       } else {
+        setIsLoading(false);
         setError(response.data.message || 'Registration failed');
       }
     } catch (err) {
+      setIsLoading(false);
       setError(err.response?.data?.message || 'An error occurred. Please try again.');
       console.error('Signup error:', err);
     }
@@ -115,24 +131,75 @@ function Signup() {
     <div className="min-h-screen w-full bg-gradient-to-r from-[#FDEDD9] to-[#f8cfa0] flex items-center justify-center p-4">
       <style>
         {`
-          @keyframes progress {
-            0% { width: 0%; }
-            100% { width: 100%; }
+          .circle-loader {
+            margin: 0 auto 30px;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            border-left-color: #228ae6;
+            animation: loader-spin 1s infinite linear;
+            position: relative;
+            display: inline-block;
+            vertical-align: top;
+            border-radius: 50%;
+            width: 8em;
+            height: 8em;
+          }
+          .checkmark {
+            display: none;
+          }
+          .checkmark.draw:after {
+            animation: checkmark 1.2s ease;
+            transform: scaleX(-1) rotate(135deg);
+          }
+          .checkmark:after {
+            opacity: 1;
+            height: 4em;
+            width: 2em;
+            transform-origin: left top;
+            border-right: 2px solid #396f3a;
+            border-top: 2px solid #396f3a;
+            content: '';
+            left: 2em;
+            top: 4em;
+            position: absolute;
+          }
+          .load-complete.load-success {
+            animation: none;
+            border-color: #396f3a;
+            transition: border 500ms ease-out;
+          }
+          .load-complete .checkmark {
+            display: block;
+          }
+          @keyframes loader-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+          @keyframes checkmark {
+            0% { height: 0; width: 0; opacity: 1; }
+            20% { height: 0; width: 2em; opacity: 1; }
+            40% { height: 4em; width: 2em; opacity: 1; }
+            100% { height: 4em; width: 2em; opacity: 1; }
           }
         `}
       </style>
 
-      {isSuccess && (
+      {(isLoading || isSuccess) && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full">
-            <h3 className="text-xl font-bold text-green-600 mb-2">Success!</h3>
-            <p className="mb-4">Registration successful! Redirecting to login in 5 seconds...</p>
-            <div className="w-full bg-gray-200 rounded-full h-2.5">
-              <div 
-                className="bg-green-600 h-2.5 rounded-full" 
-                style={{ animation: 'progress 5s linear forwards' }}
-              ></div>
-            </div>
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+            {isLoading ? (
+              <>
+                <div className="circle-loader"></div>
+                <p className="text-[#6f4e37] text-lg">Processing...</p>
+              </>
+            ) : (
+              <>
+                <div className="circle-loader load-complete load-success">
+                  <div className="checkmark draw"></div>
+                </div>
+                <h3 className="text-xl font-bold text-green-600 mb-2">Account Created Successfully!</h3>
+                <p className="text-[#6f4e37]">Redirecting to login...</p>
+              </>
+            )}
           </div>
         </div>
       )}
@@ -223,61 +290,48 @@ function Signup() {
             ) : (
               <>
                 {stepTwoFields.map((field, idx) => (
-  <div className="relative" key={idx}>
-    <label className={`absolute left-2 transition-all duration-300 ${
-      (field.focused || field.value) ? 'text-xs text4 -translate-y-5' : 'text3 top-1/2 -translate-y-1/2'
-    }`}>
-      {field.label}
-    </label>
-    <div className={`absolute right-2 top-1/2 transform -translate-y-1/2 ${
-      (field.focused || field.value) ? 'text4' : 'text3'
-    }`}>
-      <field.Icon className="text-lg" />
-    </div>
-    {field.type === 'select' ? (
-      <select
-        name={field.name}
-        value={field.value}
-        onChange={handleInputChange}
-        onFocus={() => field.setFocused(true)}
-        onBlur={() => field.setFocused(false)}
-        required={field.label.includes('*')}
-        className="w-full pt-5 px-2 pb-2 border-b-2 border-gray-300 focus:border4 outline-none bg-transparent appearance-none"
-        style={{ color: field.focused || field.value ? 'inherit' : 'transparent' }}
-      >
-        <option value="" disabled style={{ color: field.focused || field.value ? 'inherit' : 'transparent' }}>Select Gender</option>
-        {field.options.map((option) => (
-          <option key={option} value={option} style={{ color: 'black' }}>{option}</option>
-        ))}
-      </select>
-    ) : field.name === 'dateOfBirth' ? (
-      <input
-        type={field.type || 'text'}
-        name={field.name}
-        value={field.value}
-        onChange={handleInputChange}
-        onFocus={() => field.setFocused(true)}
-        onBlur={() => !field.value && field.setFocused(false)}
-        required={field.label.includes('*')}
-        max={field.max || undefined}
-        placeholder={field.focused ? '(mm/dd/yyyy)' : ''}
-        className="w-full pt-5 px-2 pb-2 border-b-2 border-gray-300 focus:border4 outline-none bg-transparent"
-      />
-) : (
-  <input
-    type={field.type || 'text'}
-    name={field.name}
-    value={field.value}
-    onChange={handleInputChange}
-    onFocus={() => field.setFocused(true)}
-    onBlur={() => !field.value && field.setFocused(false)}
-    required={field.label.includes('*')}
-    max={field.max || undefined}
-        className="w-full pt-5 px-2 pb-2 border-b-2 border-gray-300 focus:border4 outline-none bg-transparent"
-      />
-    )}
-  </div>
-))}
+                  <div className="relative" key={idx}>
+                    <label className={`absolute left-2 transition-all duration-300 ${
+                      (field.focused || field.value) ? 'text-xs text-[#6f4e37] -translate-y-5' : 'text-gray-500 top-1/2 -translate-y-1/2'
+                    }`}>
+                      {field.label}
+                    </label>
+                    <div className={`absolute right-2 top-1/2 transform -translate-y-1/2 ${
+                      (field.focused || field.value) ? 'text-[#6f4e37]' : 'text-gray-400'
+                    }`}>
+                      <field.Icon className="text-lg" />
+                    </div>
+                    {field.type === 'select' ? (
+                      <select
+                        name={field.name}
+                        value={field.value}
+                        onChange={handleInputChange}
+                        onFocus={() => field.setFocused(true)}
+                        onBlur={() => field.setFocused(false)}
+                        required={field.label.includes('*')}
+                        className="w-full pt-5 px-2 pb-2 border-b-2 border-gray-300 focus:border-[#6f4e37] outline-none bg-transparent appearance-none"
+                        style={{ color: field.focused || field.value ? 'inherit' : 'transparent' }}
+                      >
+                        <option value="" disabled style={{ color: field.focused || field.value ? 'inherit' : 'transparent' }}>Select Gender</option>
+                        {field.options.map((option) => (
+                          <option key={option} value={option} style={{ color: 'black' }}>{option}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        type={field.type || 'text'}
+                        name={field.name}
+                        value={field.value}
+                        onChange={handleInputChange}
+                        onFocus={() => field.setFocused(true)}
+                        onBlur={() => !field.value && field.setFocused(false)}
+                        required={field.label.includes('*')}
+                        placeholder={field.name === 'dateOfBirth' && field.focused ? '(YYYY-MM-DD)' : ''}
+                        className="w-full pt-5 px-2 pb-2 border-b-2 border-gray-300 focus:border-[#6f4e37] outline-none bg-transparent"
+                      />
+                    )}
+                  </div>
+                ))}
                 
                 <div className="pt-2 flex gap-4">
                   <button
