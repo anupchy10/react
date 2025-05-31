@@ -174,28 +174,28 @@ const ProfileLeft = () => {
             <div className='h-[2px] w-full bg-[#E0D7CC] mt-6'></div>
           </div>
 
-                    <div>
+          <div>
             <div className='flex flex-col gap-4 justify-center'>
               <h4 className='profileHead'>Address</h4>
               <ul className='flex flex-col gap-3'>
-                <li className='profileText'>Address: <p>390 Market street, Suite 200</p></li>
-                <li className='profileText'>City state: <p>3Jadibuti, Kathmandu</p></li>
-                <li className='profileText'>Postcode: <p>94102</p></li>
+                <li className='profileText'>Address: <p>{userData?.address || 'N/A'}</p></li>
+                <li className='profileText'>City, State: <p>{userData?.city ? `${userData.city}, ${userData.state}` : 'N/A'}</p></li>
+                <li className='profileText'>Postcode: <p>{userData?.postcode || 'N/A'}</p></li>
               </ul>
             </div>
             <div className='h-[2px] w-full bg-[#E0D7CC] mt-6'></div>
           </div>
+
           <div>
             <div className='flex flex-col gap-4 justify-center'>
               <h4 className='profileHead'>User details</h4>
               <ul className='flex flex-col gap-3'>
-                <li className='profileText'>Date of birth: <p>Sep 26, 1997</p></li>
-                <li className='profileText'>National ID: <p>31766 1324 6758</p></li>
-                <li className='profileText'>Gender: <p>Male</p></li>
+                <li className='profileText'>Date of birth: <p>{userData?.dateOfBirth || 'N/A'}</p></li>
+                <li className='profileText'>National ID: <p>{userData?.nationalId || 'N/A'}</p></li>
+                <li className='profileText'>Gender: <p>{userData?.gender || 'N/A'}</p></li>
               </ul>
             </div>
           </div>
-
         </div>
       </div>
       <div className='col-span-1 w-full relative max-lg:hidden'>
