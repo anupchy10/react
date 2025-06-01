@@ -13,32 +13,68 @@ import CartInitializer from './components/cart/CartInitializer';
 import FavoriteList from './pages/FavoriteList';
 import ProductDetail from './pages/ProductDetail';
 import MenuButton from './components/navbar/MenuButton';
-import { div } from 'framer-motion/client';
 import Profile from './pages/Profile';
 import ScrollToTop from './components/ScrollToTop';
+import LeftHome from './components/home/LeftHome';
+import { motion } from "framer-motion";
+import Breadcrumbs from './components/navbar/Breadcrumbs';
 
 function AppContent() {
   const location = useLocation();
   const isAuthRoute = ['/login', '/signup', '/'].includes(location.pathname);
+  
+  // Routes where LeftHome should NOT appear
+  const hideLeftHomeRoutes = ['/about', '/item/'];
+  
+  // Check if current route should hide LeftHome
+  const shouldHideLeftHome = hideLeftHomeRoutes.some(route => 
+    location.pathname.startsWith(route)
+  );
 
   return (
     <>
       {!isAuthRoute && (
         <div className='allCenter flex-col w-full'>
-          <Navbar />
-          <main className='container max-sm:mt-7'>
-            <Routes>
-              <Route element={<PrivateRoute />}>
-                <Route path="/home" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/shop" element={<Shop />} />
-                <Route path="/favorite" element={<FavoriteList />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path='/profile' element={<Profile />} />
-                <Route path="/item/:id" element={<ProductDetail />} />
-              </Route>
-              <Route path="*" element={<Navigate to="/home" />} />
-            </Routes>
+          <div className='fixed top-0 z-50 w-full'>
+            <Navbar />
+            <Breadcrumbs />
+          </div>
+          <main className='container mt-[150px] max-sm:mt-[190px]'>
+            {shouldHideLeftHome ? (
+              <Routes>
+                <Route element={<PrivateRoute />}>
+                  <Route path="/about" element={<About />} />
+                  <Route path="/item/:id" element={<ProductDetail />} />
+                </Route>
+              </Routes>
+            ) : (
+              <div className='grid grid-cols-12 gap-4'>
+                <div className='col-span-3 max-lg:hidden'>
+                  <motion.div
+                    className="sticky top-0 sc h-[100vh] overflow-scroll col-span-3 max-lg:hidden"
+                    initial={location.state?.fromLogin ? { x: -100, opacity: 0 } : false}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.2, duration: 0.5 }}
+                  >
+                    <div className="mb20">
+                      <LeftHome />
+                    </div>
+                  </motion.div>
+                </div>
+                <div className='col-span-9 max-lg:col-span-full'>
+                  <Routes>
+                    <Route element={<PrivateRoute />}>
+                      <Route path="/home" element={<Home />} />
+                      <Route path="/shop" element={<Shop />} />
+                      <Route path="/favorite" element={<FavoriteList />} />
+                      <Route path="/cart" element={<Cart />} />
+                      <Route path='/profile' element={<Profile />} />
+                    </Route>
+                    <Route path="*" element={<Navigate to="/home" />} />
+                  </Routes>
+                </div>
+              </div>
+            )}
           </main>
           <Footer />
           <MenuButton />

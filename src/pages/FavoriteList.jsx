@@ -3,7 +3,7 @@ import FavoriteItem from '../components/favorite/FavoriteItem'
 
 const FavoriteList = () => {
   return (
-    <div className='mt-[120px]'>
+    <div>
       <FavoriteItem />
     </div>
   )

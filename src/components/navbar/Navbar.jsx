@@ -3,8 +3,8 @@ import Top from "./Top";
 
 function Navbar() {
   return (
-    <nav className="w-full">
-      <div className="fixed z-50 bg-white w-full">
+    <nav className="w-full m-0">
+      <div className="fixed z-50 bg-white w-full m-0">
         <Top />
         <Nav />
       </div>

@@ -35,20 +35,10 @@ function Home() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      <section className="mt-[120px] grid grid-cols-12 gap-4 relative">
-        <motion.div
-          className="sticky top-0 sc h-[100vh] overflow-scroll col-span-3 max-lg:hidden"
-          initial={location.state?.fromLogin ? { x: -100, opacity: 0 } : false}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-        >
-          <div className="mb20">
-            <LeftHome />
-          </div>
-        </motion.div>
+      <section className="gap-4 relative">
 
         <motion.div
-          className="relative col-span-9 max-lg:col-span-full"
+          className="relative "
           initial={location.state?.fromLogin ? { x: 100, opacity: 0 } : false}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}

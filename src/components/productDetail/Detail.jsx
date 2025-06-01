@@ -47,7 +47,7 @@ export default function Detail() {
   }
 
   return (
-    <div className="bg-[#f9f5f0] flex justify-center mt-[120px]">
+    <div className="bg-[#f9f5f0] flex justify-center">
       <div className="w-full grid grid-cols-2 max-sm:grid-cols-1 gap-8 max-lg:gap-6 max-md:gap-4">
         <div className="relative allCenter bg-white rounded-[15px] overflow-hidden">
           <img

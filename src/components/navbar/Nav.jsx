@@ -44,7 +44,7 @@ const Nav = () => {
   }, []);
 
   return (
-    <div className='w-full px-3 max-md:px-2'>
+    <div className='w-full px-3 max-md:px-2 bg-white items-center mb-0'>
       <div className='grid grid-cols-12 items-center max-lg:gap-3 max-md:gap-1 gap-4'>
         
         {/* Logo & Location */}

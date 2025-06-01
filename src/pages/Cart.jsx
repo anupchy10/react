@@ -5,7 +5,7 @@ import CartRight from '../components/cart/CartRight';
 
 const Cart = () => {
   return (
-    <div className="mt-[120px] mb30">
+    <div className="mb30">
       <h1 className="text-2xl font-bold mb-6">Shopping Cart</h1>
       <div className="flex flex-col lg:flex-row gap-8 mt-6">
         <div className="lg:w-2/3">

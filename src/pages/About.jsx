@@ -7,7 +7,7 @@ import Contact from "./Contact";
 
 function About() {
     return (
-      <section className="mt-[120px]">
+      <section>
         <div className="mb30">
           <AboutDesc />
         </div>

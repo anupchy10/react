@@ -22,7 +22,7 @@ const Filter = () => {
 
   return (
     <div className='mb30'>
-      <h1 className='text-[25px] font-medium text-center mb25'>Find with easy way...</h1>
+      <h1 className='text-[25px] max-md:text-[18px] font-medium text-center mb25 max-md:mb15'>Find with easy way...</h1>
       <section className="flex flex-wrap justify-center Gap px-7 max-sm:p-0 max-md:flex-nowrap sc scroll-smooth max-md:overflow-scroll max-md:justify-start">
         {categories.map((item, index) => (
           <div 

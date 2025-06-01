@@ -7,7 +7,7 @@ import ProductTitle from '../components/home/right/ProductTitle';
 
 const Shop = () => {
   return (
-    <div className='mt-[120px]'>
+    <div>
       <Filter />
       <ProductTitle />
       <Items />
