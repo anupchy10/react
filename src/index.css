@@ -142,5 +142,15 @@ body{
   .profileHead {
     @apply text1 text-2xl max-md:text-xl max-sm:text-[18px] font-medium;
   }
+
+  .contactLi {
+    @apply flex items-center justify-between transition-all duration-300;
+  }
+  .contactp1 {
+    @apply text2 text-[16px] max-lg:text-[14px] max-md:text-[12px] font-semibold group-hover:underline;
+  }
+  .contactp2 {
+    @apply text3 text-[16px] max-lg:text-[14px] max-md:text-[12px] max-sm:text-[10px] group-hover:underline;
+  }
 }
 

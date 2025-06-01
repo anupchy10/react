@@ -21,10 +21,10 @@ const FollowUs = () => {
         <h1 className='text1 font-semibold text-2xl max-lg:text-xl max-md:text-[18px] max-sm:text-[16px]'>Download Jivorix mobile App</h1>
           <div className='flex items-center gap-8 max-md:gap-4'>
             <div>
-              <img src={assets.app_store} className='max-w-[150px]' alt="app_store..." loading='lazy' />
+              <img src={assets.app_store} className='max-w-[150px] cursor-pointer' alt="app_store..." loading='lazy' />
             </div>
             <div>
-              <img src={assets.google_play} className='max-w-[150px]' alt="google_play..." loading='lazy' />
+              <img src={assets.google_play} className='max-w-[150px] cursor-pointer' alt="google_play..." loading='lazy' />
             </div>
           </div>
       </div>      
