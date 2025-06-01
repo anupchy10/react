@@ -26,7 +26,7 @@ function AppContent() {
       {!isAuthRoute && (
         <div className='allCenter flex-col w-full'>
           <Navbar />
-          <main className='container'>
+          <main className='container max-sm:mt-7'>
             <Routes>
               <Route element={<PrivateRoute />}>
                 <Route path="/home" element={<Home />} />
