@@ -12,28 +12,28 @@ const ContactInfo = () => {
         </div>
         <div>
           <li className='contactLi group'>
-          <p className='contactp1'>Support:</p>
-          <p className='contactp1'>166646468658</p>
+            <p className='contactp1'>Support:</p>
+            <p className='contactp1'>166646468658</p>
           </li>
           <li className='contactLi group'>
-          <p className='contactp2'>Toll Free (NTC) :</p>
-          <p className='contactp2'>01-54654963</p>
+            <p className='contactp2'>Toll Free (NTC) :</p>
+            <p className='contactp2'>01-54654963</p>
           </li>
           <li className='contactLi group'>
-          <p className='contactp2'>Inside Valley and Banepa :</p>
-          <p className='contactp2'>01-54654963</p>
+            <p className='contactp2'>Inside Valley and Banepa :</p>
+            <p className='contactp2'>01-54654963</p>
           </li>
           <li className='contactLi group'>
-          <p className='contactp2'>Bagmati (Outside Valley) and Gandaki :</p>
-          <p className='contactp2'>01-54654963</p>
+            <p className='contactp2'>Bagmati (Outside Valley) and Gandaki :</p>
+            <p className='contactp2'>01-54654963</p>
           </li>
           <li className='contactLi group'>
-          <p className='contactp2'>Province 1 and Madhesh Pradesh :</p>
-          <p className='contactp2'>01-54654963</p>
+            <p className='contactp2'>Province 1 and Madhesh Pradesh :</p>
+            <p className='contactp2'>01-54654963</p>
           </li>
           <li className='contactLi group'>
-          <p className='contactp2'>Lumbini, Karnali and Sudurpashchim :</p>
-          <p className='contactp2'>01-54654963</p>
+            <p className='contactp2'>Lumbini, Karnali and Sudurpashchim :</p>
+            <p className='contactp2'>01-54654963</p>
           </li>
         </div>
       </div>

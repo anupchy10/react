@@ -24,7 +24,7 @@ function AppContent() {
   const isAuthRoute = ['/login', '/signup', '/'].includes(location.pathname);
   
   // Routes where LeftHome should NOT appear
-  const hideLeftHomeRoutes = ['/about', '/item/'];
+  const hideLeftHomeRoutes = ['/about', '/item/', '/cart'];
   
   // Check if current route should hide LeftHome
   const shouldHideLeftHome = hideLeftHomeRoutes.some(route => 
@@ -45,6 +45,7 @@ function AppContent() {
                 <Route element={<PrivateRoute />}>
                   <Route path="/about" element={<About />} />
                   <Route path="/item/:id" element={<ProductDetail />} />
+                  <Route path="/cart" element={<Cart />} />
                 </Route>
               </Routes>
             ) : (
@@ -67,7 +68,6 @@ function AppContent() {
                       <Route path="/home" element={<Home />} />
                       <Route path="/shop" element={<Shop />} />
                       <Route path="/favorite" element={<FavoriteList />} />
-                      <Route path="/cart" element={<Cart />} />
                       <Route path='/profile' element={<Profile />} />
                     </Route>
                     <Route path="*" element={<Navigate to="/home" />} />

@@ -257,6 +257,13 @@ const CartRight = () => {
         </ul>
         
         <ul className='flex items-center justify-between w-full'>
+          <li className="text-lg font-medium text-gray-700 max-md:text-[14px]">Selected Items:</li>
+          <li className="text-lg font-semibold text-gray-700 max-md:text-[14px]">
+            {selectedItemsCount}
+          </li>
+        </ul>
+
+        <ul className='flex items-center justify-between w-full'>
           <li className="text-lg font-medium text-gray-700 max-md:text-[14px]">Delivery Charge:</li>
           <li className="text-lg font-semibold text-gray-700 max-md:text-[14px]">
             {appliedPromo?.type === 'fixed' ? (

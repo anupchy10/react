@@ -13,7 +13,7 @@ const Breadcrumbs = () => {
         <div className="container mx-auto px-4 py-3 flex items-center space-x-2 text-sm text-gray-600">
           <Link to="/home" className="hover:underline text-gray-800 font-medium">
             Home
-          </Link>
+          </Link>a
     
           {pathnames.map((name, index) => {
             const routeTo = buildPath(index);
