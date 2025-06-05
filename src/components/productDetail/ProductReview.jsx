@@ -4,7 +4,7 @@ import RatingBar from './reviews/RatingBar'
 
 const ProductReview = () => {
 
-  const totalRatings = 362; // 132 + 157 + 73
+  const totalRatings = 362; 
 
   const ratings = [
     { stars: 3, count: 250 },
