@@ -1,3 +1,4 @@
+//src/components/cart/payment/CreditCardPayment.jsx
 import React, { useState, useEffect } from 'react';
 import { FaCcVisa, FaCcMastercard, FaTimes, FaCheck } from 'react-icons/fa';
 

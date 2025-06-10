@@ -1,3 +1,4 @@
+//src/components/cart/CartInitializer.jsx
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { loadCart } from '../../redux/cart/cartSlice';
