@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FaShoppingBag, FaShoppingCart, FaHeart, FaHome, FaUserAlt } from 'react-icons/fa';
+import { FaShoppingBag, FaShoppingCart, FaHeart, FaHome, FaUserAlt, FaUsers } from 'react-icons/fa';
 import { BsFillInfoCircleFill } from 'react-icons/bs';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -26,6 +26,7 @@ const MenuButton = () => {
     { icon: <FaShoppingBag />, name: 'shop', path: '/shop' },
     { icon: <BsFillInfoCircleFill />, name: 'info', path: '/about' },
     { icon: <FaUserAlt />, name: 'user', path: '/profile' },
+    { icon: <FaUsers />, name: 'admin', path: '/admin/users' },
   ];
 
   // Auto-select icon based on current route

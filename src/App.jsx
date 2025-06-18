@@ -1,3 +1,4 @@
+// App.jsx
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Navbar from './components/navbar/Navbar';
 import Footer from './components/footer/Footer';
@@ -14,6 +15,7 @@ import FavoriteList from './pages/FavoriteList';
 import ProductDetail from './pages/ProductDetail';
 import MenuButton from './components/navbar/MenuButton';
 import Profile from './pages/Profile';
+import AdminUsers from '../public/AdminUsers'; // NOTE: This will now render without Navbar/Footer
 import ScrollToTop from './components/ScrollToTop';
 import LeftHome from './components/home/LeftHome';
 import { motion } from "framer-motion";
@@ -22,14 +24,23 @@ import Breadcrumbs from './components/navbar/Breadcrumbs';
 function AppContent() {
   const location = useLocation();
   const isAuthRoute = ['/login', '/signup', '/'].includes(location.pathname);
-  
+
+  // Check if route is Admin (no header/footer)
+  const isAdminPage = location.pathname.startsWith('/admin/users');
+
   // Routes where LeftHome should NOT appear
-  const hideLeftHomeRoutes = ['/about', '/item/', '/cart'];
-  
-  // Check if current route should hide LeftHome
-  const shouldHideLeftHome = hideLeftHomeRoutes.some(route => 
+  const hideLeftHomeRoutes = ['/about', '/item/', '/cart', '/admin/users'];
+  const shouldHideLeftHome = hideLeftHomeRoutes.some(route =>
     location.pathname.startsWith(route)
   );
+
+  if (isAdminPage) {
+    return (
+      <Routes>
+        <Route path="/admin/users" element={<AdminUsers />} />
+      </Routes>
+    );
+  }
 
   return (
     <>
