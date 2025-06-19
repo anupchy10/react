@@ -715,7 +715,7 @@ function Signup() {
         ...formData,
         state: formData.province // Fallback for backend compatibility
       };
-      const response = await axios.post('http://localhost/react-auth-backend/login/signup.php', payload, {
+      const response = await axios.post('http://localhost/react-auth-backend/signup.php', payload, {
         headers: { 'Content-Type': 'application/json' },
         timeout: 5000
       });
