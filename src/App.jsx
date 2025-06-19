@@ -1,4 +1,3 @@
-// App.jsx
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Navbar from './components/navbar/Navbar';
 import Footer from './components/footer/Footer';
@@ -26,10 +25,10 @@ function AppContent() {
   const isAuthRoute = ['/login', '/signup', '/'].includes(location.pathname);
 
   // Check if route is Admin (no header/footer)
-  const isAdminPage = location.pathname.startsWith('/admin/users');
+  const isAdminPage = location.pathname.startsWith('/AdminUsers');
 
   // Routes where LeftHome should NOT appear
-  const hideLeftHomeRoutes = ['/about', '/item/', '/cart', '/admin/users'];
+  const hideLeftHomeRoutes = ['/about', '/item/', '/cart', '/AdminUsers'];
   const shouldHideLeftHome = hideLeftHomeRoutes.some(route =>
     location.pathname.startsWith(route)
   );
@@ -37,7 +36,7 @@ function AppContent() {
   if (isAdminPage) {
     return (
       <Routes>
-        <Route path="/admin/users" element={<AdminUsers />} />
+        <Route path="/AdminUsers" element={<AdminUsers />} />
       </Routes>
     );
   }
