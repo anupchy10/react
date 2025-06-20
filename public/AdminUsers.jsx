@@ -195,7 +195,7 @@ const AdminUsers = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Navigation Bar */}
-      <nav className="bg-blue-600 text-white p-4 shadow-md">
+      <nav className="bgBlue text-white p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-2xl font-bold">Admin User Management</h1>
           <button
