@@ -28,7 +28,7 @@ function Login() {
         setIsLoading(true);
 
         try {
-            const response = await axios.post('http://localhost/react-auth-backend/login/login.php', {
+            const response = await axios.post('http://localhost/react-auth-backend/login.php', {
                 emailOrPhone: emailOrPhone.trim(),
                 password
             }, {

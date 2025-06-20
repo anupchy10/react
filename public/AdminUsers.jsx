@@ -195,9 +195,9 @@ const AdminUsers = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Navigation Bar */}
-      <nav className="bg-blue-600 text-white p-4 shadow-md">
+      <nav className="bgBlue text-white p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Admin User Management</h1>
+          <h1 className="text-2xl font-bold">Admin Panel</h1>
           <button
             onClick={openAddModal}
             className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
@@ -602,7 +602,116 @@ const AdminUsers = () => {
           <div className="p-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold">User List</h2>
           </div>
-          <div className="overflow-x-auto">
+          <section className="grid table-layout gap-0 p-4 table-border table-container">
+
+            {/* ID Column */}
+            <div className="flex flex-col">
+              <header className="bg-gray-100 px-6 py-3 table-border">
+                <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider relative">ID</div>
+              </header>
+              <div className="bg-white divide-y divide-gray-200">
+                {loading ? (
+                  <div className="px-6 py-4 text-center text-gray-500 col-span-6">
+                    <div className="flex items-center justify-center">
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Loading users...
+                    </div>
+                  </div>
+                ) : users.length === 0 ? (
+                  <div className="px-6 py-4 text-center text-gray-500 col-span-6">
+                    No users found. Click "Add User" to create the first user.
+                  </div>
+                ) : (
+                  users.map((user) => (
+                    <div key={`id-${user.id}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 hover:bg-gray-50 [text-shadow:0_-5px_5px_rgba(0,0,0,.5)]">
+                      {user.id}
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+
+            {/* First Name Column */}
+            <div className="flex flex-col">
+              <header className="bg-gray-100 px-6 py-3">
+                <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">First Name</div>
+              </header>
+              <div className="bg-white divide-y divide-gray-200">
+                {users.map((user) => (
+                  <div key={`first-name-${user.id}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 hover:bg-gray-50">
+                    {user.first_name}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Last Name Column */}
+            <div className="flex flex-col">
+              <header className="bg-gray-100 px-6 py-3">
+                <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Name</div>
+              </header>
+              <div className="bg-white divide-y divide-gray-200">
+                {users.map((user) => (
+                  <div key={`last-name-${user.id}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 hover:bg-gray-50">
+                    {user.last_name}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Email Column */}
+            <div className="flex flex-col">
+              <header className="bg-gray-100 px-6 py-3">
+                <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</div>
+              </header>
+              <div className="bg-white divide-y divide-gray-200">
+                {users.map((user) => (
+                  <div key={`email-${user.id}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 hover:bg-gray-50">
+                    {user.email}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Phone Column */}
+            <div className="flex flex-col">
+              <header className="bg-gray-100 px-6 py-3">
+                <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</div>
+              </header>
+              <div className="bg-white divide-y divide-gray-200">
+                {users.map((user) => (
+                  <div key={`phone-${user.id}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 hover:bg-gray-50">
+                    {user.phone}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Actions Column */}
+            <div className="flex flex-col">
+              <header className="bg-gray-100 px-6 py-3">
+                <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</div>
+              </header>
+              <div className="bg-white divide-y divide-gray-200">
+                {users.map((user) => (
+                  <div key={`actions-${user.id}`} className="px-6 py-4 whitespace-nowrap hover:bg-gray-50">
+                    <button
+                      onClick={() => openDetailsModal(user)}
+                      className="text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                      More+
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </section>
+
+          {/* <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-100">
                 <tr>
@@ -652,7 +761,7 @@ const AdminUsers = () => {
                 )}
               </tbody>
             </table>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
