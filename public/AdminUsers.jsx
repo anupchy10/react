@@ -406,7 +406,7 @@ const AdminUsers = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" >
             <div className="bg-white rounded-lg shadow-2xl w-full max-w-2xl p-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">{isEditing ? 'Edit User Details' : 'User Details'}</h2>
+                <h2 className="text-xl font-bold">{isEditing ? 'Edit User Details' : `Information of ${selectedUser.first_name} ${selectedUser.middle_name} ${selectedUser.last_name}`}</h2>
                 <button
                   onClick={closeDetailsModal}
                   className="text-gray-500 hover:text-gray-700 text-2xl"
@@ -564,18 +564,17 @@ const AdminUsers = () => {
                 </form>
               ) : (
                 <div className="space-y-4">
-                  <div>
-                    <p><strong>ID:</strong> {selectedUser.id}</p>
-                    <p><strong>Name:</strong> {selectedUser.first_name} {selectedUser.middle_name} {selectedUser.last_name}</p>
-                    <p><strong>Email:</strong> {selectedUser.email}</p>
-                    <p><strong>Phone:</strong> {selectedUser.phone}</p>
-                    <p><strong>Address:</strong> {selectedUser.address || '-'}</p>
-                    <p><strong>City:</strong> {selectedUser.city || '-'}</p>
-                    <p><strong>State:</strong> {selectedUser.state || '-'}</p>
-                    <p><strong>Postcode:</strong> {selectedUser.postcode || '-'}</p>
-                    <p><strong>Date of Birth:</strong> {selectedUser.date_of_birth || '-'}</p>
-                    <p><strong>National ID:</strong> {selectedUser.national_id || '-'}</p>
-                    <p><strong>Gender:</strong> {selectedUser.gender || '-'}</p>
+                  <div className='grid grid-cols-2 max-md:grid-cols-1 gap-3'>
+                    <div className='py-2 border-b-[1px] after-border relative'><strong>ID:</strong> {selectedUser.id}</div>
+                    <div className='py-2 border-b-[1px] after-border relative'><strong>Gender:</strong> {selectedUser.gender || '-'}</div>
+                    <div className='py-2 border-b-[1px] after-border relative'><strong>Phone:</strong> {selectedUser.phone}</div>
+                    <div className='py-2 border-b-[1px] after-border relative'><strong>Email:</strong> {selectedUser.email}</div>
+                    <div className='py-2 border-b-[1px] after-border relative'><strong>City:</strong> {selectedUser.city || '-'}</div>
+                    <div className='py-2 border-b-[1px] after-border relative'><strong>State:</strong> {selectedUser.state || '-'}</div>
+                    <div className='py-2 border-b-[1px] after-border relative'><strong>Postcode:</strong> {selectedUser.postcode || '-'}</div>
+                    <div className='py-2 border-b-[1px] after-border relative'><strong>National ID:</strong> {selectedUser.national_id || '-'}</div>
+                    <div className='py-2 border-b-[1px] after-border relative'><strong>Date of Birth:</strong> {selectedUser.date_of_birth || '-'}</div>
+                    <div className='py-2 border-b-[1px] after-border relative'><strong>Address:</strong> {selectedUser.address || '-'}</div>
                   </div>
                   <div className="flex justify-end gap-4">
                     <button
@@ -606,7 +605,7 @@ const AdminUsers = () => {
 
             {/* ID Column */}
             <div className="flex flex-col">
-              <header className="bg-gray-100 px-6 py-3 table-border">
+              <header className="gray-bg px-6 py-3">
                 <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider relative">ID</div>
               </header>
               <div className="bg-white divide-y divide-gray-200">
@@ -636,7 +635,7 @@ const AdminUsers = () => {
 
             {/* First Name Column */}
             <div className="flex flex-col">
-              <header className="bg-gray-100 px-6 py-3">
+              <header className=" px-6 py-3 gray-bg">
                 <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">First Name</div>
               </header>
               <div className="bg-white divide-y divide-gray-200">
@@ -650,7 +649,7 @@ const AdminUsers = () => {
 
             {/* Last Name Column */}
             <div className="flex flex-col">
-              <header className="bg-gray-100 px-6 py-3">
+              <header className="gray-bg px-6 py-3">
                 <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Name</div>
               </header>
               <div className="bg-white divide-y divide-gray-200">
@@ -664,7 +663,7 @@ const AdminUsers = () => {
 
             {/* Email Column */}
             <div className="flex flex-col">
-              <header className="bg-gray-100 px-6 py-3">
+              <header className="gray-bg px-6 py-3">
                 <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</div>
               </header>
               <div className="bg-white divide-y divide-gray-200">
@@ -678,7 +677,7 @@ const AdminUsers = () => {
 
             {/* Phone Column */}
             <div className="flex flex-col">
-              <header className="bg-gray-100 px-6 py-3">
+              <header className="gray-bg px-6 py-3">
                 <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</div>
               </header>
               <div className="bg-white divide-y divide-gray-200">
@@ -692,7 +691,7 @@ const AdminUsers = () => {
 
             {/* Actions Column */}
             <div className="flex flex-col">
-              <header className="bg-gray-100 px-6 py-3">
+              <header className="gray-bg px-6 py-3">
                 <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</div>
               </header>
               <div className="bg-white divide-y divide-gray-200">

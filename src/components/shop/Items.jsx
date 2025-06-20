@@ -135,8 +135,8 @@ const Items = () => {
                   <FaStar className='max-sm:text-[12px]' />
                 </span>
                 <ul className='flex gap-2'>
-                  <li className='text-[16px] font-medium text5 cursor-pointer hover:underline max-sm:text-[13px]'>${item.sp}</li>
-                  <p className='text3 text-[14px] line-through max-sm:text-[10px]'>${item.cp}</p>
+                  <li className='text-[16px] font-medium text5 cursor-pointer hover:underline max-sm:text-[13px]'>₹. {item.sp}</li>
+                  <p className='text3 text-[14px] line-through max-sm:text-[10px]'>₹. {item.cp}</p>
                 </ul>
               </div>
               <div className='text-[15px] text3 flex gap-[8px] max-md:text-[12px]'>Available items: <p className='font-semibold text1'>{item.available}</p></div>
