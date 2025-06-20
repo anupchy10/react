@@ -37,13 +37,13 @@ function Login() {
                 }
             });
 
-            console.log('Login response:', response.data); // Debug: Log response
+            console.log('Login response:', response.data);
 
             if (response.data.success) {
                 localStorage.setItem('user', JSON.stringify(response.data.data.user));
                 localStorage.setItem('token', response.data.data.token);
-                console.log('Stored token:', response.data.data.token); // Debug: Log token
-                navigate('/home'); // Redirect to profile page
+                console.log('Stored token:', response.data.data.token);
+                navigate('/home');
             } else {
                 setError(response.data.message || 'Login failed');
             }
@@ -51,7 +51,7 @@ function Login() {
             let errorMessage = 'Login failed. Please try again.';
             
             if (err.response) {
-                console.error('Login error response:', err.response.data); // Debug: Log error
+                console.error('Login error response:', err.response.data); 
                 switch (err.response.status) {
                     case 400:
                         errorMessage = err.response.data.message || 'Invalid input data';
