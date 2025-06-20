@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Navbar from './components/navbar/Navbar';
 import Footer from './components/footer/Footer';
-import PrivateRoute from './components/private/PrivateRoute';
+import PrivateRoute from './components/productDetail/PrivateRoute';
 import Home from './pages/Home';
 import About from './pages/About';
 import Login from './pages/Login';
@@ -14,7 +14,7 @@ import FavoriteList from './pages/FavoriteList';
 import ProductDetail from './pages/ProductDetail';
 import MenuButton from './components/navbar/MenuButton';
 import Profile from './pages/Profile';
-import AdminUsers from '../public/AdminUsers'; // NOTE: This will now render without Navbar/Footer
+import AdminUsers from './pages/admin/AdminUsers';
 import ScrollToTop from './components/ScrollToTop';
 import LeftHome from './components/home/LeftHome';
 import { motion } from "framer-motion";
@@ -23,16 +23,14 @@ import Breadcrumbs from './components/navbar/Breadcrumbs';
 function AppContent() {
   const location = useLocation();
   const isAuthRoute = ['/login', '/signup', '/'].includes(location.pathname);
+  const isAdminPage = location.pathname === '/AdminUsers';
 
-  // Check if route is Admin (no header/footer)
-  const isAdminPage = location.pathname.startsWith('/AdminUsers');
-
-  // Routes where LeftHome should NOT appear
-  const hideLeftHomeRoutes = ['/about', '/item/', '/cart', '/AdminUsers'];
+  const hideLeftHomeRoutes = ['/about', '/item/', '/cart'];
   const shouldHideLeftHome = hideLeftHomeRoutes.some(route =>
     location.pathname.startsWith(route)
   );
 
+  // Admin page separate and clean (no Navbar, no Footer, no Breadcrumbs)
   if (isAdminPage) {
     return (
       <Routes>
@@ -45,10 +43,13 @@ function AppContent() {
     <>
       {!isAuthRoute && (
         <div className='allCenter flex-col w-full'>
+          {/* Top navigation */}
           <div className='fixed top-0 z-50 w-full'>
             <Navbar />
             <Breadcrumbs />
           </div>
+
+          {/* Main Content */}
           <main className='container mt-[150px] max-sm:mt-[190px]'>
             {shouldHideLeftHome ? (
               <Routes>
@@ -78,7 +79,7 @@ function AppContent() {
                       <Route path="/home" element={<Home />} />
                       <Route path="/shop" element={<Shop />} />
                       <Route path="/favorite" element={<FavoriteList />} />
-                      <Route path='/profile' element={<Profile />} />
+                      <Route path="/profile" element={<Profile />} />
                     </Route>
                     <Route path="*" element={<Navigate to="/home" />} />
                   </Routes>
@@ -86,14 +87,17 @@ function AppContent() {
               </div>
             )}
           </main>
+
+          {/* Bottom components */}
           <Footer />
           <MenuButton />
         </div>
       )}
 
+      {/* Public/Auth Routes */}
       {isAuthRoute && (
         <Routes>
-          <Route path='/' element={<Enter />} />
+          <Route path="/" element={<Enter />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="*" element={<Navigate to="/" />} />

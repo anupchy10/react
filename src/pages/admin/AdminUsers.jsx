@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import AdminLogin from './admin_login';
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
@@ -24,8 +25,16 @@ const AdminUsers = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(true);
+  const [currentAdmin, setCurrentAdmin] = useState(null);
 
   const API_URL = 'http://localhost/react-auth-backend/admin/admin_api.php';
+
+  // Handle admin login
+  const handleAdminLogin = (adminData) => {
+    setCurrentAdmin(adminData);
+    setIsLoginModalOpen(false);
+  };
 
   // Fetch all users
   const fetchUsers = async () => {
@@ -49,8 +58,10 @@ const AdminUsers = () => {
   };
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    if (currentAdmin) {
+      fetchUsers();
+    }
+  }, [currentAdmin]);
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -192,15 +203,27 @@ const AdminUsers = () => {
     resetForm();
   };
 
+  const closeLoginModal = () => {
+    setIsLoginModalOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Admin Login Modal */}
+      {isLoginModalOpen && (
+        <AdminLogin onLogin={handleAdminLogin} onClose={closeLoginModal} />
+      )}
+
       {/* Navigation Bar */}
-      <nav className="bgBlue text-white p-4 shadow-md">
+      <nav className="bg-blue-600 text-white p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Admin Panel</h1>
+          <h1 className="text-2xl font-bold">
+            Admin Panel {currentAdmin ? `(${currentAdmin.admin} - ${currentAdmin.adminId})` : ''}
+          </h1>
           <button
             onClick={openAddModal}
             className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+            disabled={!currentAdmin}
           >
             Add User
           </button>

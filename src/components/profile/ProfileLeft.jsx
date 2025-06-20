@@ -15,7 +15,7 @@ const ProfileLeft = () => {
         const fetchUserData = async () => {
             try {
                 const token = localStorage.getItem('token');
-                console.log('Token:', token); // Debug: Log token
+                console.log('Token for get_user:', token);
                 if (!token) {
                     setError('No user logged in');
                     setLoading(false);
@@ -29,7 +29,7 @@ const ProfileLeft = () => {
                     }
                 });
 
-                console.log('Response:', response.data); // Debug: Log response
+                console.log('Fetch user response:', response.data);
                 if (response.data.success) {
                     setUserData(response.data.data);
                     setError('');
@@ -38,7 +38,7 @@ const ProfileLeft = () => {
                 }
             } catch (err) {
                 setError(err.response?.data?.message || 'An error occurred while fetching user data');
-                console.error('Fetch user error:', err);
+                console.error('Fetch user error:', err.response?.data || err);
             } finally {
                 setLoading(false);
             }
@@ -49,13 +49,23 @@ const ProfileLeft = () => {
 
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
-        if (!file) return;
+        if (!file) {
+            setUploadError('No file selected');
+            return;
+        }
 
         setUploadLoading(true);
         setUploadError('');
 
         try {
             const token = localStorage.getItem('token');
+            console.log('Token for upload:', token);
+            if (!token) {
+                setUploadError('No authentication token found. Please log in.');
+                setUploadLoading(false);
+                return;
+            }
+
             const formData = new FormData();
             formData.append('profile_image', file);
 
@@ -66,16 +76,19 @@ const ProfileLeft = () => {
                 }
             });
 
-            console.log('Upload response:', response.data); // Debug: Log upload response
+            console.log('Upload response:', response.data);
             if (response.data.success) {
                 setUserData(response.data.data);
-                setUploadError('');
+                setUploadError(''); // Clear error
+                setUploadError('Image uploaded successfully'); // Show success message
+                fileInputRef.current.value = ''; // Reset file input
             } else {
                 setUploadError(response.data.message || 'Failed to upload image');
             }
         } catch (err) {
-            setUploadError(err.response?.data?.message || 'An error occurred while uploading the image');
-            console.error('Image upload error:', err);
+            const errorMessage = err.response?.data?.message || `Error uploading image: ${err.message}`;
+            setUploadError(errorMessage);
+            console.error('Image upload error:', err.response?.data || err, err);
         } finally {
             setUploadLoading(false);
         }
@@ -126,7 +139,7 @@ const ProfileLeft = () => {
                                     src={userData?.profileImage || assets.user}
                                     alt="User Profile"
                                     loading="lazy"
-                                    className='w-full'
+                                    className='w-full rounded-md'
                                 />
                                 <div className="absolute inset-0 bg-[#6f4e37]/50 rounded-md flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
                                     <FaCamera className="text-white text-lg" />
@@ -156,7 +169,9 @@ const ProfileLeft = () => {
                                     #{userData?.id || 'N/A'}
                                 </p>
                                 {uploadError && (
-                                    <p className="text-red-500 text-xs mt-1">{uploadError}</p>
+                                    <p className={uploadError.includes('successfully') ? 'text-green-500 text-xs mt-1' : 'text-red-500 text-xs mt-1'}>
+                                        {uploadError}
+                                    </p>
                                 )}
                             </div>
                         </div>

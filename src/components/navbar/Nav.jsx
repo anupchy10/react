@@ -23,7 +23,7 @@ const Nav = () => {
           return;
         }
 
-        const response = await axios.get('http://localhost/react-auth-backend/get_user.php', {
+        const response = await axios.get('http://localhost/react-auth-backend/user/get_user.php', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
