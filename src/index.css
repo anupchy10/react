@@ -14,10 +14,6 @@ body{
   overflow-x: hidden;
 }
 
-.bgBlue {
-  background: blue !important;
-}
-
 .sc::-webkit-scrollbar {
   display: none;
 }
