@@ -14,6 +14,22 @@ body{
   overflow-x: hidden;
 }
 
+.bgBlue {
+  background-color: #2563EB !important;
+}
+
+.table-layout{
+  grid-template-columns: 100px 1fr 1fr 1fr 1fr 1fr !important;
+}
+
+.table-container{
+  /* border: 1px solid #0000005e !important; */
+}
+
+.table-border {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3) !important;
+}
+
 .sc::-webkit-scrollbar {
   display: none;
 }
