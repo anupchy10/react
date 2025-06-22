@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import Draggable from 'react-draggable';
 import AdminLogin from './admin_login';
+import SandeshAi from './SandeshAi';
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
@@ -22,11 +24,13 @@ const AdminUsers = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(true);
   const [currentAdmin, setCurrentAdmin] = useState(null);
+  const draggableRef = useRef(null); // Ref for draggable button
 
   const API_URL = 'http://localhost/react-auth-backend/admin/admin_api.php';
 
@@ -190,6 +194,10 @@ const AdminUsers = () => {
     setIsEditing(true);
   };
 
+  const openAiModal = () => {
+    setIsAiModalOpen(true);
+  };
+
   // Close modals
   const closeAddModal = () => {
     setIsAddModalOpen(false);
@@ -207,12 +215,33 @@ const AdminUsers = () => {
     setIsLoginModalOpen(false);
   };
 
+  const closeAiModal = () => {
+    setIsAiModalOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Admin Login Modal */}
       {isLoginModalOpen && (
         <AdminLogin onLogin={handleAdminLogin} onClose={closeLoginModal} />
       )}
+
+      {/* Sandesh AI Modal */}
+      {isAiModalOpen && <SandeshAi onClose={closeAiModal} />}
+
+      {/* Draggable AI Button */}
+      <Draggable nodeRef={draggableRef} bounds="parent">
+        <button
+          ref={draggableRef}
+          onClick={openAiModal}
+          className="fixed right-4 top-1/2 transform -translate-y-1/2 bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition"
+          disabled={!currentAdmin}
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4M12 4a4 4 0 00-4 4h8a4 4 0 00-4-4z"></path>
+          </svg>
+        </button>
+      </Draggable>
 
       {/* Navigation Bar */}
       <nav className="bg-blue-600 text-white p-4 shadow-md">
@@ -426,7 +455,7 @@ const AdminUsers = () => {
 
         {/* User Details Modal */}
         {isDetailsModalOpen && selectedUser && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" >
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg shadow-2xl w-full max-w-2xl p-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold">{isEditing ? 'Edit User Details' : `Information of ${selectedUser.first_name} ${selectedUser.middle_name} ${selectedUser.last_name}`}</h2>
@@ -624,12 +653,11 @@ const AdminUsers = () => {
           <div className="p-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold">User List</h2>
           </div>
-          <section className="grid table-layout gap-0 p-4 table-border table-container">
-
+          <section className="grid grid-cols-6 gap-0 p-4 border border-gray-200 rounded-lg">
             {/* ID Column */}
             <div className="flex flex-col">
-              <header className="gray-bg px-6 py-3">
-                <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider relative">ID</div>
+              <header className="bg-gray-100 px-6 py-3">
+                <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</div>
               </header>
               <div className="bg-white divide-y divide-gray-200">
                 {loading ? (
@@ -648,7 +676,7 @@ const AdminUsers = () => {
                   </div>
                 ) : (
                   users.map((user) => (
-                    <div key={`id-${user.id}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 hover:bg-gray-50 [text-shadow:0_-5px_5px_rgba(0,0,0,.5)]">
+                    <div key={`id-${user.id}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 hover:bg-gray-50">
                       {user.id}
                     </div>
                   ))
@@ -658,12 +686,15 @@ const AdminUsers = () => {
 
             {/* First Name Column */}
             <div className="flex flex-col">
-              <header className=" px-6 py-3 gray-bg">
+              <header className="bg-gray-100 px-6 py-3">
                 <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">First Name</div>
               </header>
               <div className="bg-white divide-y divide-gray-200">
                 {users.map((user) => (
-                  <div key={`first-name-${user.id}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 hover:bg-gray-50">
+                  <div
+                    key={`first-name-${user.id}`}
+                    className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 hover:bg-blue-50"
+                  >
                     {user.first_name}
                   </div>
                 ))}
@@ -672,12 +703,15 @@ const AdminUsers = () => {
 
             {/* Last Name Column */}
             <div className="flex flex-col">
-              <header className="gray-bg px-6 py-3">
+              <header className="bg-gray-100 px-6 py-3">
                 <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Name</div>
               </header>
               <div className="bg-white divide-y divide-gray-200">
                 {users.map((user) => (
-                  <div key={`last-name-${user.id}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 hover:bg-gray-50">
+                  <div
+                    key={`last-name-${user.id}`}
+                    className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 hover:bg-blue-50"
+                  >
                     {user.last_name}
                   </div>
                 ))}
@@ -686,7 +720,7 @@ const AdminUsers = () => {
 
             {/* Email Column */}
             <div className="flex flex-col">
-              <header className="gray-bg px-6 py-3">
+              <header className="bg-gray-100 px-6 py-3">
                 <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</div>
               </header>
               <div className="bg-white divide-y divide-gray-200">
@@ -700,7 +734,7 @@ const AdminUsers = () => {
 
             {/* Phone Column */}
             <div className="flex flex-col">
-              <header className="gray-bg px-6 py-3">
+              <header className="bg-gray-100 px-6 py-3">
                 <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</div>
               </header>
               <div className="bg-white divide-y divide-gray-200">
@@ -714,7 +748,7 @@ const AdminUsers = () => {
 
             {/* Actions Column */}
             <div className="flex flex-col">
-              <header className="gray-bg px-6 py-3">
+              <header className="bg-gray-100 px-6 py-3">
                 <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</div>
               </header>
               <div className="bg-white divide-y divide-gray-200">
@@ -730,7 +764,6 @@ const AdminUsers = () => {
                 ))}
               </div>
             </div>
-
           </section>
         </div>
       </div>
