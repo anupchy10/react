@@ -17,12 +17,14 @@ import Profile from './pages/Profile';
 import AdminUsers from './pages/admin/AdminUsers';
 import ScrollToTop from './components/ScrollToTop';
 import LeftHome from './components/home/LeftHome';
+import ForgotPassword from './pages/reset/ForgetPassword';
+import ResetPassword from './pages/reset/ResetPassword';
 import { motion } from "framer-motion";
 import Breadcrumbs from './components/navbar/Breadcrumbs';
 
 function AppContent() {
   const location = useLocation();
-  const isAuthRoute = ['/login', '/signup', '/'].includes(location.pathname);
+  const isAuthRoute = ['/login', '/signup', '/', '/forgot-password', '/reset-password'].includes(location.pathname);
   const isAdminPage = location.pathname === '/AdminUsers';
 
   const hideLeftHomeRoutes = ['/about', '/item/', '/cart'];
@@ -100,6 +102,8 @@ function AppContent() {
           <Route path="/" element={<Enter />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       )}

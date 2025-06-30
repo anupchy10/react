@@ -773,12 +773,10 @@ function Signup() {
     setIsLoading(true);
     setError('');
     try {
-      // Log payload for debugging
       console.log('Submitting formData:', formData);
-      // Map province to state if backend expects state
       const payload = {
         ...formData,
-        state: formData.province // Fallback for backend compatibility
+        state: formData.province
       };
       const response = await axios.post('http://localhost/react-auth-backend/signup.php', payload, {
         headers: { 'Content-Type': 'application/json' },
@@ -886,7 +884,7 @@ function Signup() {
   ];
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-r from-[#FDEDD9] to-[#f8cfa0] flex items-center justify-center p-4">
+    <div className="min-h-screen w-full bg-gradient-to-r from-[#FDEDD9] to-[#f8cfa0] flex items-center justify-center p-4 animate-fade-in">
       <style>
         {`
           .circle-loader {
@@ -938,11 +936,18 @@ function Signup() {
             40% { height: 4em; width: 2em; opacity: 1; }
             100% { height: 4em; width: 2em; opacity: 1; }
           }
+          @keyframes fade-in {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+          }
+          .animate-fade-in {
+            animation: fade-in 0.5s ease-in;
+          }
         `}
       </style>
 
       {(isLoading || isSuccess) && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
             {isLoading ? (
               <>
@@ -963,7 +968,7 @@ function Signup() {
       )}
 
       {showErrorPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full">
             <h3 className="text-xl font-bold text-red-600 mb-4">Validation Errors</h3>
             <p className="text-[#6f4e37] mb-4">{error}</p>
@@ -1008,7 +1013,7 @@ function Signup() {
           />
         </section>
 
-        <section className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6 sm:p-10 w-full transition-all duration-500">
+        <section className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6 sm:p-10 w-full transition-all duration-500 animate-fade-in">
           <h1 className="text-3xl sm:text-4xl font-bold text-center text-[#6f4e37] mb-6">
             Create Account - Step {step} of 2
           </h1>
@@ -1071,7 +1076,7 @@ function Signup() {
                 <div className="pt-2">
                   <p className="text-sm text-center mb-4">
                     Already have an account?{' '}
-                    <Link to="/login" className="text-blue-600 hover:text-blue-800 underline">Login</Link>
+                    <Link to="/login" className="text-[#6f4e37] hover:underline font-medium">Login</Link>
                   </p>
                   <button
                     type="submit"

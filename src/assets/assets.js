@@ -1,5 +1,6 @@
 import enter from "./enter.jpg";
 import login from "./login.png";
+import forgot from "./forgot.jpg";
 import signup from "./signup.png";
 import facebook from "./facebook.png";
 import google from "./google.png";
@@ -230,6 +231,7 @@ import traditional_male_9 from "./traditional_male_9.jpg";
 export const assets = {
   enter,
   login,
+  forgot,
   signup,
   google,
   instagram,

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { assets } from '../assets/assets';
 import { CgMail } from "react-icons/cg";
@@ -14,6 +14,7 @@ function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -43,7 +44,7 @@ function Login() {
                 localStorage.setItem('user', JSON.stringify(response.data.data.user));
                 localStorage.setItem('token', response.data.data.token);
                 console.log('Stored token:', response.data.data.token);
-                navigate('/home');
+                navigate('/home', { state: { fromLogin: true } });
             } else {
                 setError(response.data.message || 'Login failed');
             }
@@ -80,7 +81,18 @@ function Login() {
     };
 
     return (
-        <div className="min-h-screen w-full bg-gradient-to-r from-[#FDEDD9] to-[#f8cfa0] flex items-center justify-center p-4">
+        <div className="min-h-screen w-full bg-gradient-to-r from-[#FDEDD9] to-[#f8cfa0] flex items-center justify-center p-4 animate-fade-in">
+            <style>
+                {`
+                    @keyframes fade-in {
+                        0% { opacity: 0; }
+                        100% { opacity: 1; }
+                    }
+                    .animate-fade-in {
+                        animation: fade-in 0.5s ease-in;
+                    }
+                `}
+            </style>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-6xl">
                 <div className="hidden lg:flex items-center justify-center">
                     <img
@@ -90,9 +102,15 @@ function Login() {
                         className="w-full h-auto max-h-[600px] object-contain animate-fade-in"
                     />
                 </div>
-                <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6 sm:p-10 w-full transition-all duration-500">
+                <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6 sm:p-10 w-full transition-all duration-500 animate-fade-in">
                     <h1 className="text-3xl sm:text-4xl font-bold text-center text-[#6f4e37] mb-6">Welcome Back</h1>
                     <p className="text-center text-gray-600 mb-8">Login to continue your Shopping</p>
+
+                    {location?.state?.message && (
+                        <div className="mb-6 p-3 bg-green-100 text-green-700 rounded-lg text-center">
+                            {location.state.message}
+                        </div>
+                    )}
 
                     {error && (
                         <div className="mb-6 p-3 bg-red-100 text-red-700 rounded-lg text-center">
@@ -162,7 +180,7 @@ function Login() {
                                     Sign up
                                 </Link>
                             </span>
-                            <Link to="/" className="text-[#6f4e37] hover:underline font-medium">
+                            <Link to="/forgot-password" className="text-[#6f4e37] hover:underline font-medium">
                                 Forgot password?
                             </Link>
                         </div>
@@ -175,7 +193,6 @@ function Login() {
                         </button>
                     </form>
 
-                    {/* Social auth buttons commented out until backend supports them */}
                     <div className="mt-8">
                         <div className="relative flex items-center mb-6">
                             <div className="flex-grow border-t border-gray-300"></div>
