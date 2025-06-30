@@ -173,7 +173,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 const CODEBASE_DIR = path.resolve('../src/pages/admin');
 
-app.use(cors({ origin: 'http://localhost:5173' }));
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 const mistralApiKey = process.env.MISTRAL_API_KEY;

@@ -67,146 +67,211 @@ function Signup() {
   const addressData = {
     // "Province 1": {
   "Koshi Province": {
-    "Ilam": [
-      { name: "Ilam", postcode: "57300" },
-      { name: "Nayabazar", postcode: "57302" },
-      { name: "Pashupatinagar", postcode: "57303" },
-      { name: "Aaitabare", postcode: "57304" },
-      { name: "Harkatebazar", postcode: "57305" },
-      { name: "Gajurmukhi", postcode: "57306" },
-      { name: "Mangal Bare", postcode: "57307" },
-      { name: "Nepaltar", postcode: "57308" },
-      { name: "Jamuna", postcode: "57309" },
-      { name: "Gitpur", postcode: "57310" },
-      { name: "Cheesa Pani Panchami", postcode: "57311" },
-      { name: "Phikal", postcode: "57312" }
-    ],
-    "Jhapa": [
-      { name: "Birtamod", postcode: "57200" },
-      { name: "Duhabi", postcode: "57201" },
-      { name: "Kakarbhitta", postcode: "57202" },
-      { name: "Bhadrapur", postcode: "57203" },
-      { name: "Mechinagar", postcode: "57204" },
-      { name: "Kankai", postcode: "57205" },
-      { name: "Samshergunj", postcode: "57206" },
-      { name: "Gauradaha", postcode: "57207" },
-      { name: "Shivasatakshi", postcode: "57208" },
-      { name: "Arjundhara", postcode: "57209" },
-      { name: "Chandragadhi", postcode: "57210" },
-      { name: "Beldangi", postcode: "57211" },
-      { name: "Kachankawal", postcode: "57212" },
-      { name: "Bishnupaduka", postcode: "57213" },
-      { name: "Khadbari", postcode: "57214" },
-      { name: "Birtamod Industrial Area", postcode: "57215" }
-    ]
-  },
+  "Ilam": [
+    { "name": "Ilam", "postcode": "57300" },
+    { "name": "Nayabazar", "postcode": "57302" },
+    { "name": "Pashupatinagar", "postcode": "57303" },
+    { "name": "Aaitabare", "postcode": "57304" },
+    { "name": "Harkatebazar", "postcode": "57305" },
+    { "name": "Gajurmukhi", "postcode": "57306" },
+    { "name": "Mangal Bare", "postcode": "57307" },
+    { "name": "Nepaltar", "postcode": "57308" },
+    { "name": "Jamuna", "postcode": "57309" },
+    { "name": "Gitpur", "postcode": "57310" },
+    { "name": "Cheesa Pani Panchami", "postcode": "57311" },
+    { "name": "Phikal", "postcode": "57312" }
+  ],
+  "Bhojpur": [
+    { "name": "Bhojpur", "postcode": "57000" },
+    { "name": "Kulung Agrakhe", "postcode": "57001" },
+    { "name": "Dingle", "postcode": "57002" },
+    { "name": "Deurali", "postcode": "57003" },
+    { "name": "Pauli", "postcode": "57004" },
+    { "name": "Yaku", "postcode": "57005" },
+    { "name": "Bastim", "postcode": "57006" },
+    { "name": "Timma", "postcode": "57008" },
+    { "name": "Dilpa Annapurna", "postcode": "57009" },
+    { "name": "Bhulke", "postcode": "57010" },
+    { "name": "Baikunthe", "postcode": "57011" },
+    { "name": "Ribas", "postcode": "57012" },
+    { "name": "Walangkha", "postcode": "57013" },
+    { "name": "Tiwari Bhanjyang", "postcode": "57014" },
+    { "name": "Dobhane", "postcode": "57015" }
+  ],
+  "Dhankuta": [
+    { "name": "Dhankuta", "postcode": "56800" },
+    { "name": "Hile", "postcode": "56801" },
+    { "name": "Bhedetar", "postcode": "56802" },
+    { "name": "Muga", "postcode": "56803" },
+    { "name": "Rajarani", "postcode": "56804" },
+    { "name": "Ankhisalla", "postcode": "56805" },
+    { "name": "Leguwa", "postcode": "56806" },
+    { "name": "Murtidhunga", "postcode": "56807" },
+    { "name": "Dandabazar", "postcode": "56808" },
+    { "name": "Ahale", "postcode": "56809" }
+  ],
+  "Jhapa": [
+    { "name": "Jhapa", "postcode": "57200" },
+    { "name": "Damak", "postcode": "57201" },
+    { "name": "Birtamod", "postcode": "57202" },
+    { "name": "Kankai", "postcode": "57203" },
+    { "name": "Chandragadhi", "postcode": "57204" },
+    { "name": "Anarmani", "postcode": "57205" },
+    { "name": "Kakarbhitta", "postcode": "57206" },
+    { "name": "Surunga", "postcode": "57207" },
+    { "name": "Charpane", "postcode": "57208" },
+    { "name": "Gauradaha", "postcode": "57209" },
+    { "name": "Shivaganj", "postcode": "57210" },
+    { "name": "Dudhe", "postcode": "57211" },
+    { "name": "Budhabare", "postcode": "57212" }
+  ],
+  "Khotang": [
+    { "name": "Khotang", "postcode": "56200" },
+    { "name": "Diktel", "postcode": "56201" },
+    { "name": "Halesi", "postcode": "56202" },
+    { "name": "Aiselukharka", "postcode": "56203" },
+    { "name": "Lamidanda", "postcode": "56204" },
+    { "name": "Jalpa", "postcode": "56205" }
+  ],
+  "Morang": [
+    { "name": "Morang", "postcode": "56600" },
+    { "name": "Biratnagar", "postcode": "56601" },
+    { "name": "Rangeli", "postcode": "56602" },
+    { "name": "Urlabari", "postcode": "56603" },
+    { "name": "Letang", "postcode": "56604" },
+    { "name": "Pathari", "postcode": "56605" },
+    { "name": "Itahari", "postcode": "56606" },
+    { "name": "Belbari", "postcode": "56607" },
+    { "name": "Bayarban", "postcode": "56608" },
+    { "name": "Sundarpur", "postcode": "56609" }
+  ],
+  "Okhaldhunga": [
+    { "name": "Okhaldhunga", "postcode": "56100" },
+    { "name": "Rumjatar", "postcode": "56101" },
+    { "name": "Manebhanjyang", "postcode": "56102" },
+    { "name": "Okhaldhunga Bazar", "postcode": "56103" },
+    { "name": "Baruneshwor", "postcode": "56104" },
+    { "name": "Ratmate", "postcode": "56105" }
+  ],
+  "Panchthar": [
+    { "name": "Panchthar", "postcode": "57400" },
+    { "name": "Phidim", "postcode": "57401" },
+    { "name": "Yasok", "postcode": "57402" },
+    { "name": "Rabi", "postcode": "57403" },
+    { "name": "Nawamidanda", "postcode": "57404" }
+  ],
+  "Sankhuwasabha": [
+    { "name": "Sankhuwasabha", "postcode": "56900" },
+    { "name": "Hatiya", "postcode": "56901" },
+    { "name": "Telangana", "postcode": "56902" },
+    { "name": "Tamku", "postcode": "56903" },
+    { "name": "Chandanpur", "postcode": "56904" },
+    { "name": "Bahrabise", "postcode": "56905" },
+    { "name": "Tumlingtar", "postcode": "56906" },
+    { "name": "Wana", "postcode": "56907" },
+    { "name": "Shidhakali", "postcode": "56908" },
+    { "name": "Madi", "postcode": "56909" },
+    { "name": "Ankhibhui", "postcode": "56910" },
+    { "name": "Mailing", "postcode": "56911" },
+    { "name": "Manebhanjyang", "postcode": "56912" },
+    { "name": "Chainpur", "postcode": "56913" }
+  ],
+  "Sunsari": [
+    { "name": "Sunsari", "postcode": "56700" },
+    { "name": "Itahari", "postcode": "56701" },
+    { "name": "Inaruwa", "postcode": "56702" },
+    { "name": "Duhabi", "postcode": "56703" },
+    { "name": "Bhadgau Sinuwari", "postcode": "56704" },
+    { "name": "Chatara", "postcode": "56705" },
+    { "name": "Barahachhetra", "postcode": "56706" },
+    { "name": "Prakashpur", "postcode": "56707" },
+    { "name": "Jhumka", "postcode": "56708" }
+  ]
+},
   //province 2
   "Madhesh Province": {
-    "Parsa": [
-      { name: "Parsa D.P.O.", postcode: "44300" },
-      { name: "Aadarshanagar", postcode: "44301" },
-      { name: "Parbanipur", postcode: "44303" },
-      { name: "Bindabasini", postcode: "44304" },
-      { name: "Bahuari Pidari", postcode: "44305" },
-      { name: "Shrisiya Khalwatola", postcode: "44306" },
-      { name: "Biruwaguthi", postcode: "44307" },
-      { name: "Pakahamainpur", postcode: "44308" },
-      { name: "Phokhariya", postcode: "44309" },
-      { name: "Ranigunj", postcode: "44310" },
-      { name: "Paterwa Sugauli", postcode: "44311" },
-      { name: "Viswa", postcode: "44312" },
-      { name: "Janakitol", postcode: "44313" },
-      { name: "Jeetpur", postcode: "44314" },
-      { name: "Thori", postcode: "44315" }
-    ],
-    "Bara": [
-      { name: "Bara D.P.O.", postcode: "44400" },
-      { name: "Nijgadh", postcode: "44401" },
-      { name: "Mahendra Adarsha", postcode: "44402" },
-      { name: "Simraungadh", postcode: "44403" },
-      { name: "Umjan", postcode: "44404" },
-      { name: "Bariyarpur", postcode: "44405" },
-      { name: "Kabahigoth", postcode: "44406" },
-      { name: "Dumarwana", postcode: "44408" },
-      { name: "Pipradhigoth", postcode: "44410" },
-      { name: "Basantapur", postcode: "44411" },
-      { name: "Simara", postcode: "44412" },
-      { name: "Parsoni", postcode: "44413" },
-      { name: "Amalekhgung", postcode: "44416" },
-      { name: "Jeetpur (Bhavanipur)", postcode: "44417" }
-    ],
-    "Rautahat": [
-      { name: "Rautahat D.P.O.", postcode: "44500" },
-      { name: "Saruatha", postcode: "44502" },
-      { name: "Pipara Bazar", postcode: "44503" },
-      { name: "Madhopur", postcode: "44504" },
-      { name: "Rajpurpharahadawa", postcode: "44506" },
-      { name: "Patharabudhram", postcode: "44508" },
-      { name: "Sitalpur", postcode: "44509" },
-      { name: "Shivanagar", postcode: "44510" },
-      { name: "Laxminiya", postcode: "44511" },
-      { name: "Kataharia", postcode: "44512" },
-      { name: "Samanpur", postcode: "44513" },
-      { name: "Chandranigahapur", postcode: "44515" }
-    ],
-    "Dhanusha": [
-      { name: "Dhanusha D.P.O.", postcode: "45600" },
-      { name: "Khajuri", postcode: "45601" },
-      { name: "Tinkoriya", postcode: "45602" },
-      { name: "Yadukuha", postcode: "45603" },
-      { name: "Duhabi", postcode: "45604" },
-      { name: "Chakkar", postcode: "45605" },
-      { name: "Raghunathpur", postcode: "45606" },
-      { name: "Godar Chisapani", postcode: "45607" },
-      { name: "Dhanushadham", postcode: "45608" },
-      { name: "Bagachouda", postcode: "45610" },
-      { name: "Jatahi", postcode: "45611" },
-      { name: "Phulgama", postcode: "45612" },
-      { name: "Sakhuwa Majemdranagar", postcode: "45616" },
-      { name: "Dhalkebar", postcode: "45617" }
-    ],
-    "Mahottari": [
-      { name: "Mahottari D.P.O.", postcode: "45700" },
-      { name: "Bardibas", postcode: "45701" },
-      { name: "Bhangaha", postcode: "45702" },
-      { name: "Loharpatti", postcode: "45703" },
-      { name: "Pipara", postcode: "45704" },
-      { name: "Matihani", postcode: "45705" },
-      { name: "Ramgopalpur", postcode: "45707" },
-      { name: "Balawa", postcode: "45708" },
-      { name: "Laxminiya", postcode: "45710" },
-      { name: "Gaushala", postcode: "45711" },
-      { name: "Shreepur", postcode: "45712" },
-      { name: "Samsi", postcode: "45713" },
-      { name: "Manara", postcode: "45714" }
-    ],
-    "Sarlahi": [
-      { name: "Sarlahi D.P.O.", postcode: "45800" },
-      { name: "Lalbandi", postcode: "45801" },
-      { name: "Bayalbas", postcode: "45802" },
-      { name: "Haripurwa", postcode: "45803" },
-      { name: "Hariaun", postcode: "45804" },
-      { name: "Haripur", postcode: "45805" },
-      { name: "Brahmapuri", postcode: "45806" },
-      { name: "Kaudena", postcode: "45809" }
-    ],
-    "Saptari": [
-      { name: "Rajbiraj", postcode: "56400" },
-      { name: "Kanchanpur", postcode: "56401" },
-      { name: "Hanumannagar", postcode: "56402" },
-      { name: "Rupani", postcode: "56403" },
-      { name: "Tilathi", postcode: "56404" },
-      { name: "Bishnupur", postcode: "56405" }
-    ],
-    "Siraha": [
-      { name: "Siraha", postcode: "56500" },
-      { name: "Mirchaiya", postcode: "56501" },
-      { name: "Lahan", postcode: "56502" },
-      { name: "Golbazaar", postcode: "56503" },
-      { name: "Dhangadhi", postcode: "56504" },
-      { name: "Bariyarpatti", postcode: "56505" }
-    ]
-  },
+  "Bara": [
+    { "name": "Kalaiya", "postcode": "44400" },
+    { "name": "Nijgadh", "postcode": "44401" },
+    { "name": "Mahendra Adarsha", "postcode": "44402" },
+    { "name": "Simraungadh", "postcode": "44403" },
+    { "name": "Ajman", "postcode": "44404" },
+    { "name": "Bariyarpur", "postcode": "44405" },
+    { "name": "Kabahigoth", "postcode": "44406" },
+    { "name": "Dumarwana", "postcode": "44408" },
+    { "name": "Pipradhigoth", "postcode": "44410" },
+    { "name": "Basantapur", "postcode": "44411" },
+    { "name": "Simara", "postcode": "44412" },
+    { "name": "Parsauna", "postcode": "44413" },
+    { "name": "Amalekhgunj", "postcode": "44416" },
+    { "name": "Jeetpur", "postcode": "44417" }
+  ],
+  "Dhanusha": [
+    { "name": "Janakpur", "postcode": "45600" },
+    { "name": "Dhalkebar", "postcode": "45617" },
+    { "name": "Chhireshwarnath", "postcode": "45600" },
+    { "name": "Ganeshman Charnath", "postcode": "45600" },
+    { "name": "Dhanusadham", "postcode": "45600" }
+  ],
+  "Mahottari": [
+    { "name": "Jaleshwar", "postcode": "45700" },
+    { "name": "Bardibas", "postcode": "45701" },
+    { "name": "Gaushala", "postcode": "45700" },
+    { "name": "Balawa", "postcode": "45700" },
+    { "name": "Manara Shiswa", "postcode": "45700" }
+  ],
+  "Parsa": [
+    { "name": "Birgunj", "postcode": "44300" },
+    { "name": "Parsa", "postcode": "44301" },
+    { "name": "Pokhariya", "postcode": "44300" },
+    { "name": "Bahudarmai", "postcode": "44300" }
+  ],
+  "Rautahat": [
+    { "name": "Gaur", "postcode": "44500" },
+    { "name": "Chandrapur", "postcode": "44501" },
+    { "name": "Garuda", "postcode": "44500" },
+    { "name": "Brindaban", "postcode": "44500" }
+  ],
+  "Saptari": [
+    { "name": "Rajbiraj", "postcode": "56400" },
+    { "name": "Hanuman Nagar", "postcode": "56401" },
+    { "name": "Barabas", "postcode": "56402" },
+    { "name": "Phattepur", "postcode": "56403" },
+    { "name": "Kanchanpur", "postcode": "56404" },
+    { "name": "Praswani", "postcode": "56405" },
+    { "name": "Bhagwatpur", "postcode": "56406" },
+    { "name": "Khiladi", "postcode": "56407" },
+    { "name": "Chhinnamasta", "postcode": "56408" },
+    { "name": "Bishnupur", "postcode": "56409" },
+    { "name": "Rupani", "postcode": "56411" },
+    { "name": "Pato", "postcode": "56412" },
+    { "name": "Aranha", "postcode": "56413" },
+    { "name": "Kalyanpur", "postcode": "56414" },
+    { "name": "Bodebarsain", "postcode": "56415" },
+    { "name": "Misawa", "postcode": "56416" },
+    { "name": "Kadarwona", "postcode": "56417" },
+    { "name": "Bhardaha", "postcode": "56418" }
+  ],
+  "Sarlahi": [
+    { "name": "Malangwa", "postcode": "45800" },
+    { "name": "Hariwan", "postcode": "45801" },
+    { "name": "Barhathwa", "postcode": "45802" },
+    { "name": "Lalbandi", "postcode": "45803" },
+    { "name": "Nawalpur", "postcode": "45804" },
+    { "name": "Ishwarpur", "postcode": "45805" },
+    { "name": "Haripur", "postcode": "45800" },
+    { "name": "Godaita", "postcode": "45800" },
+    { "name": "Balara", "postcode": "45800" }
+  ],
+  "Siraha": [
+    { "name": "Siraha", "postcode": "56500" },
+    { "name": "Lahan", "postcode": "56502" },
+    { "name": "Golbazar", "postcode": "56500" },
+    { "name": "Dhangadimai", "postcode": "56500" },
+    { "name": "Kalyanpur", "postcode": "56500" }
+  ]
+},
+
   //province 3
     "Bagmati Province": {
       "Kathmandu": [
