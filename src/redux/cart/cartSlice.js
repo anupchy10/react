@@ -1,4 +1,3 @@
-// redux/cart/cartSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
 // Helper function to load cart from localStorage
@@ -6,12 +5,12 @@ const loadCartFromLocalStorage = () => {
   try {
     const serializedCart = localStorage.getItem('reduxCart');
     if (serializedCart === null) {
-      return { items: [] };
+      return { items: [], paymentSuccess: false, paymentDetails: {}, orderDetails: { user: {}, products: [] } };
     }
     return JSON.parse(serializedCart);
   } catch (e) {
     console.warn("Failed to load cart from localStorage", e);
-    return { items: [] };
+    return { items: [], paymentSuccess: false, paymentDetails: {}, orderDetails: { user: {}, products: [] } };
   }
 };
 
@@ -33,7 +32,6 @@ const cartSlice = createSlice({
   reducers: {
     addItemToCart: (state, action) => {
       const existingItem = state.items.find(item => item._id === action.payload._id);
-      
       if (existingItem) {
         existingItem.quantity += 1;
       } else {
@@ -68,14 +66,13 @@ const cartSlice = createSlice({
     },
     clearCart: (state) => {
       state.items = [];
+      state.orderDetails.products = [];
       saveCartToLocalStorage(state);
     },
-    // Add a new reducer to load cart from localStorage
     loadCart: (state) => {
       const loadedCart = loadCartFromLocalStorage();
       return loadedCart;
     },
-    
     selectAllItems: (state, action) => {
       const shouldSelect = action.payload !== undefined ? action.payload : !state.items.every(item => item.selected);
       state.items.forEach(item => {
@@ -83,7 +80,13 @@ const cartSlice = createSlice({
       });
       saveCartToLocalStorage(state);
     },
-  }
+    setPaymentSuccess: (state, action) => {
+      state.paymentSuccess = action.payload.success;
+      state.paymentDetails = action.payload.details || {};
+      state.orderDetails = action.payload.orderDetails || { user: {}, products: [] };
+      saveCartToLocalStorage(state);
+    },
+  },
 });
 
 export const selectCartTotal = (state) => {
@@ -112,15 +115,16 @@ export const selectSelectedItemsCount = (state) => {
   return state.cart.items.filter(item => item.selected).length;
 };
 
-export const { 
-  addItemToCart, 
-  removeItemFromCart, 
-  incrementQuantity, 
+export const {
+  addItemToCart,
+  removeItemFromCart,
+  incrementQuantity,
   decrementQuantity,
   toggleItemSelection,
   clearCart,
   loadCart,
   selectAllItems,
+  setPaymentSuccess,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

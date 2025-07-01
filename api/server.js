@@ -171,7 +171,9 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
-const CODEBASE_DIR = path.resolve('../src/pages/admin');
+const CODEBASE_DIR = path.resolve('../src/pages/admin/orderDetail');
+const CODEBASE_DIR = path.resolve('../src/pages/admin/orderDetail');
+
 
 app.use(cors({ origin: '*' }));
 app.use(express.json());

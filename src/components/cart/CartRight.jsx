@@ -1,12 +1,12 @@
-//src/components/cart/CartRight.jsx
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { selectSelectedItemsTotal, selectSelectedItemsCount } from '../../redux/cart/cartSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectSelectedItemsTotal, selectSelectedItemsCount, setPaymentSuccess } from '../../redux/cart/cartSlice';
 import { FaMapLocationDot, FaCity, FaTag, FaPhone } from "react-icons/fa6";
 import { IoHome } from "react-icons/io5";
 import CreditCardPayment from './payment/CreditCardPayment';
 import OnlinePayment from './payment/OnlinePayment';
 import PaymentSuccess from './payment/PaymentSuccess';
+import { useNavigate } from 'react-router-dom';
 
 const PROMO_CODES = {
   'WELCOME10': { type: 'percentage', value: 10, label: '10% off' },
@@ -17,6 +17,8 @@ const PROMO_CODES = {
 };
 
 const CartRight = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.items);
   const selectedItemsTotal = useSelector(selectSelectedItemsTotal);
   const selectedItemsCount = useSelector(selectSelectedItemsCount);
@@ -44,17 +46,6 @@ const CartRight = () => {
   const [showOnlinePayment, setShowOnlinePayment] = useState(false);
   const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
   const [showNoItemsSelected, setShowNoItemsSelected] = useState(false);
-  const [paymentDetails, setPaymentDetails] = useState({
-    transactionId: '',
-    date: '',
-    paymentMethod: '',
-    customerName: '',
-    mobileNumber: '',
-    paymentAmount: 0,
-    productAmount: 0,
-    deliveryCharge: 0,
-    discount: 0
-  });
 
   const [appliedPromo, setAppliedPromo] = useState(null);
   const [deliveryCharge, setDeliveryCharge] = useState(selectedItemsCount * 50);
@@ -179,8 +170,9 @@ const CartRight = () => {
 
   const showPaymentSuccessModal = (paymentData = {}) => {
     const transactionDate = new Date().toLocaleString();
+    const selectedItems = cartItems.filter(item => item.selected);
     
-    setPaymentDetails({
+    const paymentDetails = {
       transactionId: paymentData.transactionId || generateTransactionId(),
       date: paymentData.date || transactionDate,
       paymentMethod: paymentData.paymentMethod || paymentMethod,
@@ -191,9 +183,47 @@ const CartRight = () => {
       deliveryCharge: deliveryCharge,
       discount: discount,
       appliedPromo: appliedPromo ? appliedPromo.label : null
-    });
-    
+    };
+
+    const orderDetails = {
+      user: {
+        clientId: `CODI${Math.floor(Math.random() * 1000)}`,
+        username: formData.customerName,
+        phone: formData.phone,
+        location: `${formData.country}, ${formData.city}, ${formData.address}`,
+        avatar: 'path/to/default/avatar.jpg' // Replace with actual avatar if available
+      },
+      products: selectedItems.map(item => ({
+        _id: item._id,
+        image: item.image,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        totalPrice: (item.price * item.quantity).toFixed(2)
+      }))
+    };
+
+    dispatch(setPaymentSuccess({
+      success: true,
+      details: paymentDetails,
+      orderDetails: orderDetails
+    }));
+
     setShowPaymentSuccess(true);
+  };
+
+  const handlePaymentSuccessClose = () => {
+    setShowPaymentSuccess(false);
+    setFormData({
+      country: '',
+      city: '',
+      address: '',
+      phone: '',
+      promoCode: '',
+      customerName: ''
+    });
+    setAppliedPromo(null);
+    navigate('/order-details'); // Navigate to order-details after closing PaymentSuccess
   };
 
   const handleOrderSelected = (e) => {
@@ -217,19 +247,6 @@ const CartRight = () => {
     }
   };
 
-  const handlePaymentSuccessClose = () => {
-    setShowPaymentSuccess(false);
-    setFormData({
-      country: '',
-      city: '',
-      address: '',
-      phone: '',
-      promoCode: '',
-      customerName: ''
-    });
-    setAppliedPromo(null);
-  };
-
   return (
     <section className='bg-white p-6 max-md:p-4 max-sm:p-3 rounded-[15px] shadow-[0_0_6px_0_rgb(0,0,0,0.2)] w-full'>
       <div className='flex justify-between items-center mb-4'>
@@ -238,7 +255,6 @@ const CartRight = () => {
       </div>
       <hr className='w-full h-1 bg-gray-300 mb-5' />
 
-      {/* Show warning if no items selected */}
       {showNoItemsSelected && (
         <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg flex justify-between items-center">
           <span>Please select at least one item before proceeding</span>
@@ -480,9 +496,6 @@ const CartRight = () => {
         </div>
       </form>
 
-
-
-
       {showCreditCardPayment && (
         <CreditCardPayment
           onClose={() => setShowCreditCardPayment(false)}
@@ -509,7 +522,6 @@ const CartRight = () => {
       
       {showPaymentSuccess && (
         <PaymentSuccess
-          transactionData={paymentDetails}
           onClose={handlePaymentSuccessClose}
         />
       )}

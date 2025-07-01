@@ -1,24 +1,30 @@
-//src/components/cart/payment/PaymentSuccess.jsx
 import React from 'react';
 import { FaCheckCircle, FaShoppingBag } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-const PaymentSuccess = ({ 
-  transactionData: {
-    transactionId,
-    date,
-    paymentMethod,
-    customerName,
-    mobileNumber,
-    paymentAmount,
-    productAmount,
-    deliveryCharge,
-    discount,
-    appliedPromo
-  },
-  onClose
-}) => {
+const PaymentSuccess = ({ onClose }) => {
   const navigate = useNavigate();
+  const { paymentSuccess, paymentDetails } = useSelector((state) => state.cart);
+
+  // If paymentSuccess is false, redirect to shop or cart
+  if (!paymentSuccess) {
+    navigate('/shop');
+    return null;
+  }
+
+  const {
+    transactionId = 'N/A',
+    date = new Date().toLocaleString(),
+    paymentMethod = 'N/A',
+    customerName = 'Guest',
+    mobileNumber = 'N/A',
+    paymentAmount = 0,
+    productAmount = 0,
+    deliveryCharge = 0,
+    discount = 0,
+    appliedPromo = ''
+  } = paymentDetails;
 
   const handleContinueShopping = () => {
     onClose(); // Close the modal first
@@ -93,4 +99,3 @@ const PaymentSuccess = ({
 };
 
 export default PaymentSuccess;
-

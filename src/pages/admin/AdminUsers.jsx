@@ -2,6 +2,101 @@ import React, { useState, useEffect, useRef } from 'react';
 import Draggable from 'react-draggable';
 import AdminLogin from './admin_login';
 import SandeshAi from './SandeshAi';
+import OrderDetails from './orderDetail/OrderDetails';
+
+const UserCartSummary = ({ userId, onClose }) => {
+  const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const API_URL = 'http://localhost/react-auth-backend/admin/admin_api.php';
+
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`${API_URL}/cart?user_id=${userId}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        setCartItems(data);
+      } catch (error) {
+        console.error('Error fetching cart items:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (userId) {
+      fetchCartItems();
+    }
+  }, [userId]);
+
+  const [showOrderDetails, setShowOrderDetails] = useState(false);
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="w-full max-w-2xl bg-white p-6 rounded-[15px] shadow-[0_0_6px_0_rgb(0,0,0,0.2)]">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">User Cart Summary</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700 text-2xl"
+          >
+            ×
+          </button>
+        </div>
+        {loading ? (
+          <div className="flex items-center justify-center">
+            <svg className="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span className="ml-2">Loading cart items...</span>
+          </div>
+        ) : cartItems.length === 0 ? (
+          <div className="text-center text-gray-500">No items in the cart.</div>
+        ) : showOrderDetails ? (
+          <OrderDetails cartItems={cartItems} userId={userId} onBack={() => setShowOrderDetails(false)} />
+        ) : (
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="p-3 border">Image</th>
+                <th className="p-3 border">Name</th>
+                <th className="p-3 border">Quantity</th>
+                <th className="p-3 border">Price (₹)</th>
+                <th className="p-3 border">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cartItems.map((item) => (
+                <tr key={item._id} className="border-t">
+                  <td className="p-3">
+                    <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded" />
+                  </td>
+                  <td className="p-3">{item.name}</td>
+                  <td className="p-3">{item.quantity}</td>
+                  <td className="p-3">{(item.price * item.quantity).toFixed(2)}</td>
+                  <td className="p-3">
+                    <button
+                      onClick={() => setShowOrderDetails(true)}
+                      className="text-blue-500 hover:underline"
+                    >
+                      View Order Details
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
@@ -25,22 +120,21 @@ const AdminUsers = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
+  const [isCartModalOpen, setIsCartModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(true);
   const [currentAdmin, setCurrentAdmin] = useState(null);
-  const draggableRef = useRef(null); // Ref for draggable button
+  const draggableRef = useRef(null);
 
   const API_URL = 'http://localhost/react-auth-backend/admin/admin_api.php';
 
-  // Handle admin login
   const handleAdminLogin = (adminData) => {
     setCurrentAdmin(adminData);
     setIsLoginModalOpen(false);
   };
 
-  // Fetch all users
   const fetchUsers = async () => {
     setLoading(true);
     try {
@@ -67,13 +161,11 @@ const AdminUsers = () => {
     }
   }, [currentAdmin]);
 
-  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle form submission for create/update
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
     setLoading(true);
@@ -125,7 +217,6 @@ const AdminUsers = () => {
     }
   };
 
-  // Handle delete button click
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       setLoading(true);
@@ -157,7 +248,6 @@ const AdminUsers = () => {
     }
   };
 
-  // Reset form
   const resetForm = () => {
     setFormData({
       id: '',
@@ -178,7 +268,6 @@ const AdminUsers = () => {
     setIsEditing(false);
   };
 
-  // Open modals
   const openAddModal = () => {
     resetForm();
     setIsAddModalOpen(true);
@@ -198,7 +287,11 @@ const AdminUsers = () => {
     setIsAiModalOpen(true);
   };
 
-  // Close modals
+  const openCartModal = (user) => {
+    setSelectedUser(user);
+    setIsCartModalOpen(true);
+  };
+
   const closeAddModal = () => {
     setIsAddModalOpen(false);
     resetForm();
@@ -219,17 +312,23 @@ const AdminUsers = () => {
     setIsAiModalOpen(false);
   };
 
+  const closeCartModal = () => {
+    setIsCartModalOpen(false);
+    setSelectedUser(null);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Admin Login Modal */}
       {isLoginModalOpen && (
         <AdminLogin onLogin={handleAdminLogin} onClose={closeLoginModal} />
       )}
 
-      {/* Sandesh AI Modal */}
       {isAiModalOpen && <SandeshAi onClose={closeAiModal} />}
 
-      {/* Draggable AI Button */}
+      {isCartModalOpen && selectedUser && (
+        <UserCartSummary userId={selectedUser.id} onClose={closeCartModal} />
+      )}
+
       <Draggable nodeRef={draggableRef} bounds="parent">
         <button
           ref={draggableRef}
@@ -243,23 +342,30 @@ const AdminUsers = () => {
         </button>
       </Draggable>
 
-      {/* Navigation Bar */}
       <nav className="bg-blue-600 text-white p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-2xl font-bold">
             Admin Panel {currentAdmin ? `(${currentAdmin.admin} - ${currentAdmin.adminId})` : ''}
           </h1>
-          <button
-            onClick={openAddModal}
-            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
-            disabled={!currentAdmin}
-          >
-            Add User
-          </button>
+          <div className='allCenter gap-6'>
+            <button
+              onClick={() => openCartModal(selectedUser || users[0])}
+              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+              disabled={!currentAdmin || users.length === 0}
+            >
+              Order Details
+            </button>
+            <button
+              onClick={openAddModal}
+              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+              disabled={!currentAdmin}
+            >
+              Add User
+            </button>
+          </div>
         </div>
       </nav>
 
-      {/* Message Display */}
       <div className="container mx-auto p-6">
         {message && (
           <div className={`mb-4 p-4 rounded-lg shadow-md ${message.includes('Error') ? 'bg-red-100 text-red-700 border border-red-200' : 'bg-green-100 text-green-700 border border-green-200'}`}>
@@ -279,7 +385,6 @@ const AdminUsers = () => {
           </div>
         )}
 
-        {/* Add User Modal */}
         {isAddModalOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg shadow-2xl w-full max-w-2xl p-6">
@@ -453,7 +558,6 @@ const AdminUsers = () => {
           </div>
         )}
 
-        {/* User Details Modal */}
         {isDetailsModalOpen && selectedUser && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg shadow-2xl w-full max-w-2xl p-6">
@@ -648,13 +752,11 @@ const AdminUsers = () => {
           </div>
         )}
 
-        {/* User Table */}
         <div className="bg-white rounded-lg shadow-md mt-6">
           <div className="p-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold">User List</h2>
           </div>
           <section className="grid grid-cols-6 gap-0 p-4 border border-gray-200 rounded-lg">
-            {/* ID Column */}
             <div className="flex flex-col">
               <header className="bg-gray-100 px-6 py-3">
                 <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</div>
@@ -684,7 +786,6 @@ const AdminUsers = () => {
               </div>
             </div>
 
-            {/* First Name Column */}
             <div className="flex flex-col">
               <header className="bg-gray-100 px-6 py-3">
                 <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">First Name</div>
@@ -701,7 +802,6 @@ const AdminUsers = () => {
               </div>
             </div>
 
-            {/* Last Name Column */}
             <div className="flex flex-col">
               <header className="bg-gray-100 px-6 py-3">
                 <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Name</div>
@@ -718,7 +818,6 @@ const AdminUsers = () => {
               </div>
             </div>
 
-            {/* Email Column */}
             <div className="flex flex-col">
               <header className="bg-gray-100 px-6 py-3">
                 <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</div>
@@ -732,7 +831,6 @@ const AdminUsers = () => {
               </div>
             </div>
 
-            {/* Phone Column */}
             <div className="flex flex-col">
               <header className="bg-gray-100 px-6 py-3">
                 <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</div>
@@ -746,7 +844,6 @@ const AdminUsers = () => {
               </div>
             </div>
 
-            {/* Actions Column */}
             <div className="flex flex-col">
               <header className="bg-gray-100 px-6 py-3">
                 <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</div>

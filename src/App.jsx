@@ -19,6 +19,8 @@ import ScrollToTop from './components/ScrollToTop';
 import LeftHome from './components/home/LeftHome';
 import ForgotPassword from './pages/reset/ForgetPassword';
 import ResetPassword from './pages/reset/ResetPassword';
+import PaymentSuccess from './components/cart/payment/PaymentSuccess';
+import OrderDetails from './pages/admin/orderDetail/OrderDetails';
 import { motion } from "framer-motion";
 import Breadcrumbs from './components/navbar/Breadcrumbs';
 
@@ -27,7 +29,7 @@ function AppContent() {
   const isAuthRoute = ['/login', '/signup', '/', '/forgot-password', '/reset-password'].includes(location.pathname);
   const isAdminPage = location.pathname === '/AdminUsers';
 
-  const hideLeftHomeRoutes = ['/about', '/item/', '/cart'];
+  const hideLeftHomeRoutes = ['/about', '/item/', '/cart', '/payment-success', '/order-details'];
   const shouldHideLeftHome = hideLeftHomeRoutes.some(route =>
     location.pathname.startsWith(route)
   );
@@ -59,6 +61,8 @@ function AppContent() {
                   <Route path="/about" element={<About />} />
                   <Route path="/item/:id" element={<ProductDetail />} />
                   <Route path="/cart" element={<Cart />} />
+                  <Route path="/payment-success" element={<PaymentSuccess onClose={() => Navigate('/shop')} />} />
+                  <Route path="/order-details" element={<OrderDetails onBack={() => Navigate('/cart')} />} />
                 </Route>
               </Routes>
             ) : (
