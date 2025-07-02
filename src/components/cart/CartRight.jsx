@@ -24,7 +24,7 @@ const CartRight = () => {
   const selectedItemsCount = useSelector(selectSelectedItemsCount);
 
   const [formData, setFormData] = useState({
-    country: '',
+    country: 'Nepal',
     city: '',
     address: '',
     phone: '',
@@ -46,11 +46,58 @@ const CartRight = () => {
   const [showOnlinePayment, setShowOnlinePayment] = useState(false);
   const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
   const [showNoItemsSelected, setShowNoItemsSelected] = useState(false);
+  const [fetchError, setFetchError] = useState('');
 
   const [appliedPromo, setAppliedPromo] = useState(null);
   const [deliveryCharge, setDeliveryCharge] = useState(selectedItemsCount * 50);
   const [discount, setDiscount] = useState(0);
   const [totalAmount, setTotalAmount] = useState(selectedItemsTotal + (selectedItemsCount * 50));
+
+  // Fetch user data
+  const fetchUserData = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setFetchError('Please log in to proceed');
+        return;
+      }
+
+      const response = await fetch('http://localhost/react-auth-backend/user/get_user.php', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to fetch user data');
+      }
+
+      if (data.success && data.data) {
+        const { firstName, middleName, lastName, city, address, phone, profileImage } = data.data;
+        const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ').trim();
+        setFormData(prev => ({
+          ...prev,
+          customerName: fullName,
+          city: city || '',
+          address: address || '',
+          phone: phone || '',
+          profileImage: profileImage || null
+        }));
+        setFetchError('');
+      } else {
+        throw new Error(data.message || 'Invalid response format');
+      }
+    } catch (error) {
+      setFetchError(error.message || 'Error fetching user data');
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
   useEffect(() => {
     let newDeliveryCharge = selectedItemsCount * 50;
@@ -129,7 +176,9 @@ const CartRight = () => {
       customerName: ''
     };
 
-    if (!formData.country.trim()) {
+    if (!
+
+formData.country.trim()) {
       newErrors.country = 'Country is required';
       valid = false;
     }
@@ -191,7 +240,7 @@ const CartRight = () => {
         username: formData.customerName,
         phone: formData.phone,
         location: `${formData.country}, ${formData.city}, ${formData.address}`,
-        avatar: 'path/to/default/avatar.jpg' // Replace with actual avatar if available
+        avatar: formData.profileImage || 'path/to/default/avatar.jpg'
       },
       products: selectedItems.map(item => ({
         _id: item._id,
@@ -215,7 +264,7 @@ const CartRight = () => {
   const handlePaymentSuccessClose = () => {
     setShowPaymentSuccess(false);
     setFormData({
-      country: '',
+      country: 'Nepal',
       city: '',
       address: '',
       phone: '',
@@ -223,7 +272,8 @@ const CartRight = () => {
       customerName: ''
     });
     setAppliedPromo(null);
-    navigate('/order-details'); // Navigate to order-details after closing PaymentSuccess
+    fetchUserData(); // Refetch user data after reset
+    navigate('/order-details');
   };
 
   const handleOrderSelected = (e) => {
@@ -260,6 +310,18 @@ const CartRight = () => {
           <span>Please select at least one item before proceeding</span>
           <button 
             onClick={() => setShowNoItemsSelected(false)} 
+            className="text-red-700 hover:text-red-900"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
+      {fetchError && (
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg flex justify-between items-center">
+          <span>{fetchError}</span>
+          <button 
+            onClick={() => setFetchError('')} 
             className="text-red-700 hover:text-red-900"
           >
             ×
@@ -332,12 +394,11 @@ const CartRight = () => {
             <div className='relative w-full h-auto'>
               <FaMapLocationDot className="absolute text-gray-500 right-4 top-1/2 transform -translate-y-1/2" />
               <input 
-                type="text" 
+               _grp_type="text" 
                 name="country"
                 value={formData.country}
-                onChange={handleInputChange}
-                placeholder='Nepal' 
-                className={`px-5 py-2 text-[15px] text-gray-700 rounded-[5px] shadow-[0_0_5px_0_rgba(0,0,0,0.2)] w-full ${errors.country ? 'border-red-500 border-2' : ''}`} 
+                readOnly
+                className={`px-5 py-2 text-[15px] text-gray-700 rounded-[5px] shadow-[0_0_5px_0_rgba(0,0,0,0.2)] w-full bg-gray-100 ${errors.country ? 'border-red-500 border-2' : ''}`} 
               />
               {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country}</p>}
             </div>
