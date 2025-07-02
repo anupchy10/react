@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { FaHeart, FaStar } from "react-icons/fa";
+import { FaHeart, FaStar, FaCheckCircle } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRandomHomeProducts } from '../../../redux/home/homeSlice'
@@ -14,6 +14,7 @@ const HomeProduct = () => {
   const activeGender = useSelector((state) => state.gender.activeGender);
   const refreshCount = useSelector((state) => state.refresh.refreshCount);
   const { favoriteItems } = useSelector((state) => state.favorite);
+  const { items: cartItems } = useSelector(state => state.cart);
 
   useEffect(() => {
     dispatch(setRandomHomeProducts());
@@ -43,6 +44,10 @@ const HomeProduct = () => {
   const handleItemClick = (item) => {
     dispatch(setSelectedItem(item));
     navigate(`/item/${item._id}`);
+  };
+
+  const isItemInCart = (itemId) => {
+    return cartItems.some(cartItem => cartItem._id === itemId);
   };
 
   return (
@@ -81,7 +86,12 @@ const HomeProduct = () => {
                     <p className='text3 text-[14px] line-through max-sm:text-[10px]'>${item.cp}</p>
                   </ul>
                 </div>
-                <div className='text-[15px] text3 flex gap-[8px] max-md:text-[12px]'>Available items: <p className='font-semibold text1'>{item.available}</p></div>
+                <div className='flex justify-between items-center'>
+                  <div className='text-[15px] text3 flex gap-[8px] max-md:text-[12px]'>Available items: <p className='font-semibold text1'>{item.available}</p></div>
+                  {isItemInCart(item._id) && (
+                    <FaCheckCircle className='text-green-400 text-[19px]' />
+                  )}
+                </div>  
               </div>
             </div>
         ))}

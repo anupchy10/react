@@ -1,13 +1,20 @@
+// shop/LeftHome.jsx
 import React, { useState, useEffect } from 'react';
 import { FaCaretRight } from "react-icons/fa";
 import { assets } from '../../assets/assets';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { applyCategoryFilter } from '../../redux/category/categoryPaginationSlice';
+import { items } from '../../assets/assets';
 
 const LeftHome = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { randomizedItems } = useSelector((state) => state.pagination);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -43,6 +50,21 @@ const LeftHome = () => {
     fetchUserData();
   }, []);
 
+  const handleCategoryClick = (category) => {
+    const encodedCategory = encodeURIComponent(category.toLowerCase());
+    navigate(`/shop?category=${encodedCategory}`);
+  };
+
+  const categoryList = [
+    "Seasonal collection",
+    "Occasion based",
+    "Style based",
+    "Special collection",
+    "Casual wares",
+    "Sports & Activewear",
+    "Traditional Wear"
+  ];
+
   if (loading) {
     return (
       <aside className="p-5 mb-5 max-xl:p-3 rounded-[15px] shadow1 bg-white">
@@ -60,7 +82,7 @@ const LeftHome = () => {
   }
 
   return (
-    <aside className='p-5 mb-5 max-xl:p-3 rounded-[15px] shadow1 bg-white'>
+    <aside className='p-5 max-xl:p-3 rounded-[15px] shadow1 bg-white'>
       <div className='flex flex-col gap-[30px]'>
 
         <section className='flex flex-col Gap'>
@@ -69,18 +91,14 @@ const LeftHome = () => {
             <span className='h-[2px] w-full rounded-full bg3'></span>
           </div>
           <ul className='flex flex-col no-underline Gap mb15'>
-            {[
-              "Seasonal collection",
-              "Occasion based",
-              "Style based",
-              "Special collection",
-              "Casual wares",
-              "Sports & Activewear",
-              "Traditional Wear"
-            ].map((category, idx) => (
-              <li key={idx} className='categoryBox text3 flex items-center justify-between'>
+            {categoryList.map((category, idx) => (
+              <li
+                key={idx}
+                onClick={() => handleCategoryClick(category)}
+                className='group categoryBox text3 flex items-center justify-between cursor-pointer hover:bg-gray-100 transition rounded px-2 py-1'
+              >
                 <p className='text-[16px] max-md:text-[14px] font-medium'>{category}</p>
-                <FaCaretRight />
+                <FaCaretRight className='group-hover:translate-x-1 transition-all ease-in-out duration-300' />
               </li>
             ))}
           </ul>

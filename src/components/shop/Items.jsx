@@ -1,21 +1,24 @@
 // shop/Items.jsx
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { initializeItems, goToPage, nextPage, prevPage } from '../../redux/pagination/paginationSlice';
 import { applyCategoryFilter, goToCategoryPage, nextCategoryPage, prevCategoryPage } from '../../redux/category/categoryPaginationSlice';
 import { addItemToCart } from '../../redux/cart/cartSlice';
 import { items as allItems } from '../../assets/assets';
-import { FaHeart, FaStar, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { FaHeart, FaStar, FaArrowLeft, FaArrowRight, FaCheckCircle } from 'react-icons/fa';
 import { addToFavorites, removeFromFavorites } from '../../redux/favorite/favoriteSlice';
 import { setSelectedItem } from '../../redux/detail/detailSlice';
 
 const Items = () => {
+  const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { activeGender } = useSelector((state) => state.gender);
   const { refreshCount } = useSelector((state) => state.refresh);
   const { favoriteItems } = useSelector((state) => state.favorite);
+  const { items: cartItems } = useSelector(state => state.cart);
   
   const { 
     currentPage, 
@@ -32,8 +35,7 @@ const Items = () => {
 
   useEffect(() => {
     dispatch(initializeItems(allItems));
-    dispatch(applyCategoryFilter({ items: allItems, category: null }));
-  }, [dispatch, activeGender, refreshCount]);
+  }, [dispatch]);
 
   const itemsToUse = activeCategory ? categoryFilteredItems : randomizedItems;
   const filteredItems = activeGender
@@ -104,6 +106,21 @@ const Items = () => {
     navigate(`/item/${item._id}`);
   };
 
+  const isItemInCart = (itemId) => {
+    return cartItems.some(cartItem => cartItem._id === itemId);
+  };
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const category = queryParams.get('category');
+
+    if (category) {
+      dispatch(applyCategoryFilter({ items: allItems, category }));
+    } else {
+      dispatch(applyCategoryFilter({ items: allItems, category: null }));
+    }
+  }, [location.search, dispatch, activeGender, refreshCount]);
+
   return (
     <div className='mb30'>
       <section className='grid grid-cols-4 gap-6 max-xl:grid-cols-3 max-md:grid-cols-2 max-md:gap-2 max-md:place-items-center max-md:px-2 mb20 max-md:mb-0'>
@@ -139,7 +156,12 @@ const Items = () => {
                   <p className='text3 text-[14px] line-through max-sm:text-[10px]'>₹. {item.cp}</p>
                 </ul>
               </div>
-              <div className='text-[15px] text3 flex gap-[8px] max-md:text-[12px]'>Available items: <p className='font-semibold text1'>{item.available}</p></div>
+             <div className='flex justify-between items-center'>
+                <div className='text-[15px] text3 flex gap-[8px] max-md:text-[12px]'>Available items: <p className='font-semibold text1'>{item.available}</p></div>
+                {isItemInCart(item._id) && (
+                  <FaCheckCircle className='text-green-400 text-[19px]' />
+                )}
+              </div>  
               <button 
                 className='productbtn w-full mt-2'
                 onClick={(e) => handleAddToCart(e, item)}

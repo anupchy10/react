@@ -1,10 +1,12 @@
 // shop/Filter.jsx
 import React from 'react';
 import { categories } from '../../assets/assets';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { applyCategoryFilter, clearCategoryFilter } from '../../redux/category/categoryPaginationSlice';
 
 const Filter = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { activeCategory } = useSelector((state) => state.categoryPagination);
   const { randomizedItems } = useSelector((state) => state.pagination);
@@ -12,11 +14,10 @@ const Filter = () => {
   const handleCategoryClick = (category) => {
     if (activeCategory === category) {
       dispatch(clearCategoryFilter());
+      navigate('/shop');
     } else {
-      dispatch(applyCategoryFilter({ 
-        items: randomizedItems,
-        category
-      }));
+      dispatch(applyCategoryFilter({ items: randomizedItems, category }));
+      navigate(`/shop?category=${encodeURIComponent(category)}`);
     }
   };
 

@@ -9,7 +9,7 @@ import axios from 'axios';
 
 const Nav = () => {
   const cartItems = useSelector((state) => state.cart.items);
-  const itemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const itemCount = cartItems.length;
 
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
