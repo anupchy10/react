@@ -1,29 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { assets } from '../../assets/assets';
 import { CgMail } from 'react-icons/cg';
-import { FaPhone } from 'react-icons/fa';
 
-function ForgotPassword() {
+function ForgetPassword() {
     const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const [emailFocused, setEmailFocused] = useState(false);
-    const [phoneFocused, setPhoneFocused] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
     const navigate = useNavigate();
 
-    // Email and phone validation
+    // Trigger fade-in animation on component mount
+    useEffect(() => {
+        setIsVisible(true);
+    }, []);
+
+    // Email validation
     const validateInputs = () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const phoneRegex = /^\+?\d{10,15}$/;
-        if (!emailRegex.test(email.trim())) {
-            setError('Please enter a valid email address');
+        if (!email.trim()) {
+            setError('Please enter your email address');
             return false;
         }
-        if (!phoneRegex.test(phone.trim())) {
-            setError('Please enter a valid phone number (10-15 digits)');
+        if (!emailRegex.test(email.trim())) {
+            setError('Please enter a valid email address');
             return false;
         }
         return true;
@@ -32,22 +35,17 @@ function ForgotPassword() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        setSuccess('');
         setIsLoading(true);
 
-        try {
-            if (!email.trim() || !phone.trim()) {
-                setError('Please enter both email and phone number');
-                setIsLoading(false);
-                return;
-            }
-            if (!validateInputs()) {
-                setIsLoading(false);
-                return;
-            }
+        if (!validateInputs()) {
+            setIsLoading(false);
+            return;
+        }
 
-            const response = await axios.post('http://localhost/react-auth-backend/reset/forget_password.php', {
+        try {
+            const response = await axios.post('http://localhost/react-auth-backend/reset/forgot_password.php', {
                 email: email.trim(),
-                phone: phone.trim(),
             }, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -57,39 +55,45 @@ function ForgotPassword() {
             console.log('Forgot password response:', response.data);
 
             if (response.data.success) {
-                navigate('/reset-password', {
-                    state: {
-                        email: email.trim(),
-                        userId: response.data.data.userId,
-                        name: response.data.data.name,
-                        token: response.data.data.token,
-                    },
-                });
+                setSuccess('OTP generated successfully.');
+                // Display OTP in an alert
+                alert(`Your OTP is: ${response.data.data.otp}`);
+                // Navigate to reset-password page after a short delay
+                setTimeout(() => {
+                    navigate('/reset-password', {
+                        state: {
+                            email: email.trim(),
+                            userId: response.data.data.userId,
+                            name: response.data.data.name,
+                        },
+                    });
+                }, 2000);
             } else {
-                setError(response.data.message || 'Password reset request failed');
+                setError(response.data.message || 'Password reset request failed. Please try again.');
             }
         } catch (err) {
-            let errorMessage = 'Request failed. Please try again.';
+            let errorMessage = 'Something went wrong. Please try again.';
             if (err.response) {
                 console.error('Forgot password error response:', err.response.data);
+                errorMessage = err.response.data.message || errorMessage;
                 switch (err.response.status) {
                     case 400:
-                        errorMessage = err.response.data.message || 'Invalid email or phone number';
+                        errorMessage = err.response.data.message || 'Invalid email format';
                         break;
                     case 404:
-                        errorMessage = err.response.data.message || 'No account found with this email and phone number';
+                        errorMessage = err.response.data.message || 'No account found with this email';
                         break;
                     case 429:
-                        errorMessage = err.response.data.message || 'Too many attempts';
+                        errorMessage = err.response.data.message || 'Too many attempts. Please try again later.';
                         break;
                     case 500:
-                        errorMessage = err.response.data.message || 'Server error';
+                        errorMessage = err.response.data.message || 'Server error. Please try again later.';
                         break;
                     default:
-                        errorMessage = err.response.data.message || 'Unexpected error';
+                        errorMessage = err.response.data.message || 'Unexpected error occurred';
                 }
             } else if (err.request) {
-                errorMessage = 'No response from server. Check your connection.';
+                errorMessage = 'Unable to connect to the server. Please check your network or try again later.';
             }
             setError(errorMessage);
             console.error('Forgot password error:', err);
@@ -99,7 +103,7 @@ function ForgotPassword() {
     };
 
     return (
-        <div className="min-h-screen w-full bg-gradient-to-r from-[#FDEDD9] to-[#f8cfa0] flex items-center justify-center p-4 animate-fade-in">
+        <div className={`min-h-screen w-full bg-gradient-to-r from-[#FDEDD9] to-[#f8cfa0] flex items-center justify-center p-4 transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
             <style>
                 {`
                     @keyframes fade-in {
@@ -122,11 +126,16 @@ function ForgotPassword() {
                 </div>
                 <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6 sm:p-10 w-full transition-all duration-500 hiking">
                     <h1 className="text-3xl sm:text-4xl font-bold text-center text-[#6f4e37] mb-6">Reset Your Password</h1>
-                    <p className="text-center text-gray-600 mb-8">Enter your email and phone number to receive a password reset link</p>
+                    <p className="text-center text-gray-600 mb-8">Enter your email to receive a password reset OTP</p>
 
                     {error && (
                         <div className="mb-6 p-3 bg-red-100 text-red-700 rounded-lg text-center">
                             {error}
+                        </div>
+                    )}
+                    {success && (
+                        <div className="mb-6 p-3 bg-green-100 text-green-700 rounded-lg text-center">
+                            {success}
                         </div>
                     )}
 
@@ -138,7 +147,7 @@ function ForgotPassword() {
                                 Email*
                             </label>
                             <div className={`absolute right-2 top-1/2 transform -translate-y-1/2 ${
-                                emailFocused || email ? 'text-[#5957b5]' : 'text-gray-400'
+                                emailFocused || email ? 'text-[#6f4e37]' : 'text-gray-400'
                             }`}>
                                 <CgMail className="text-lg" />
                             </div>
@@ -148,28 +157,6 @@ function ForgotPassword() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 onFocus={() => setEmailFocused(true)}
                                 onBlur={() => !email && setEmailFocused(false)}
-                                className="w-full pt-5 px-2 pb-2 border-b-2 border-gray-300 focus:border-[#6f4e37] outline-none bg-transparent"
-                                disabled={isLoading}
-                                required
-                            />
-                        </div>
-                        <div className="relative">
-                            <label className={`absolute left-2 transition-all duration-300 ${
-                                phoneFocused || phone ? 'text-xs text-[#6f4e37] -translate-y-5' : 'text-gray-500 top-1/2 -translate-y-1/2'
-                            }`}>
-                                Phone Number*
-                            </label>
-                            <div className={`absolute right-2 top-1/2 transform -translate-y-1/2 ${
-                                phoneFocused || phone ? 'text-[#5957b5]' : 'text-gray-400'
-                            }`}>
-                                <FaPhone className="text-lg" />
-                            </div>
-                            <input
-                                type="tel"
-                                value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
-                                onFocus={() => setPhoneFocused(true)}
-                                onBlur={() => !phone && setPhoneFocused(false)}
                                 className="w-full pt-5 px-2 pb-2 border-b-2 border-gray-300 focus:border-[#6f4e37] outline-none bg-transparent"
                                 disabled={isLoading}
                                 required
@@ -204,7 +191,7 @@ function ForgotPassword() {
                                     Processing...
                                 </span>
                             ) : (
-                                'Send Reset Link'
+                                'Send Reset OTP'
                             )}
                         </button>
                     </form>
@@ -214,4 +201,4 @@ function ForgotPassword() {
     );
 }
 
-export default ForgotPassword;
+export default ForgetPassword;
