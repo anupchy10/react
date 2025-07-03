@@ -45,7 +45,7 @@ const AdminLogin = ({ onLogin, onClose }) => {
           userId: adminId,
           password: password,
           adminType: selectedAdmin,
-          adminName: adminName || '', // Send empty string if adminName is not provided
+          adminName: adminName || '',
         }),
       });
 

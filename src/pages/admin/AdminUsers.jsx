@@ -6,7 +6,9 @@ import OrderDetails from './orderDetail/OrderDetails';
 
 const UserCartSummary = ({ userId, onClose }) => {
   const [cartItems, setCartItems] = useState([]);
+  const [orderDetails, setOrderDetails] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showOrderDetails, setShowOrderDetails] = useState(false);
   const API_URL = 'http://localhost/react-auth-backend/admin/admin_api.php';
 
   useEffect(() => {
@@ -21,9 +23,11 @@ const UserCartSummary = ({ userId, onClose }) => {
         if (data.error) {
           throw new Error(data.error);
         }
-        setCartItems(data);
+        console.log('Cart Items:', data); // Debug API response
+        setCartItems(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error('Error fetching cart items:', error);
+        setCartItems([]);
       } finally {
         setLoading(false);
       }
@@ -34,13 +38,31 @@ const UserCartSummary = ({ userId, onClose }) => {
     }
   }, [userId]);
 
-  const [showOrderDetails, setShowOrderDetails] = useState(false);
+  const fetchOrderDetails = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/orders?user_id=${userId}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      setOrderDetails(data);
+      setShowOrderDetails(true);
+    } catch (error) {
+      console.error('Error fetching order details:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="w-full max-w-2xl bg-white p-6 rounded-[15px] shadow-[0_0_6px_0_rgb(0,0,0,0.2)]">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">User Cart Summary</h2>
+    <section className="fixed m-auto w-full inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+      <div className="bg-white rounded-lg shadow-xl w-[100vw] max-w-6xl h-[85vh] flex flex-col overflow-hidden">
+        <div className="flex justify-between items-center p-4 border-b">
+          <h2 className="text-xl font-bold text-gray-800">User Cart Summary</h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 text-2xl"
@@ -49,52 +71,70 @@ const UserCartSummary = ({ userId, onClose }) => {
           </button>
         </div>
         {loading ? (
-          <div className="flex items-center justify-center">
+          <div className="p-4 flex items-center justify-center h-full">
             <svg className="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <span className="ml-2">Loading cart items...</span>
+            <span className="ml-2">Loading...</span>
           </div>
-        ) : cartItems.length === 0 ? (
-          <div className="text-center text-gray-500">No items in the cart.</div>
-        ) : showOrderDetails ? (
-          <OrderDetails cartItems={cartItems} userId={userId} onBack={() => setShowOrderDetails(false)} />
+        ) : cartItems.length === 0 && !showOrderDetails ? (
+          <div className="p-4 flex items-center justify-center h-full">
+            <p className="text-gray-600">No items in the cart.</p>
+          </div>
+        ) : showOrderDetails && orderDetails ? (
+          <OrderDetails
+            orderDetails={orderDetails}
+            userId={userId}
+            onBack={() => setShowOrderDetails(false)}
+          />
         ) : (
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="p-3 border">Image</th>
-                <th className="p-3 border">Name</th>
-                <th className="p-3 border">Quantity</th>
-                <th className="p-3 border">Price (₹)</th>
-                <th className="p-3 border">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cartItems.map((item) => (
-                <tr key={item._id} className="border-t">
-                  <td className="p-3">
-                    <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded" />
-                  </td>
-                  <td className="p-3">{item.name}</td>
-                  <td className="p-3">{item.quantity}</td>
-                  <td className="p-3">{(item.price * item.quantity).toFixed(2)}</td>
-                  <td className="p-3">
-                    <button
-                      onClick={() => setShowOrderDetails(true)}
-                      className="text-blue-500 hover:underline"
-                    >
-                      View Order Details
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="overflow-auto p-4">
+            <div className="overflow-x-auto h-full">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="p-2 border text-gray-600 font-medium">Image</th>
+                    <th className="p-2 border text-gray-600 font-medium">Name</th>
+                    <th className="p-2 border text-gray-600 font-medium">Quantity</th>
+                    <th className="p-2 border text-gray-600 font-medium">Price (₹)</th>
+                    <th className="p-2 border text-gray-600 font-medium">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.isArray(cartItems) && cartItems.length > 0 ? (
+                    cartItems.map((item, index) => (
+                      <tr key={item._id || `cart-item-${index}`} className="border-b hover:bg-gray-50">
+                        <td className="p-2 border">
+                          <img src={item.image} alt={item.name} className="w-10 h-10 object-cover mx-auto" />
+                        </td>
+                        <td className="p-2 border">{item.name}</td>
+                        <td className="p-2 border">{item.quantity}</td>
+                        <td className="p-2 border font-semibold">{(item.price * item.quantity).toFixed(2)}</td>
+                        <td className="p-2 border">
+                          <button
+                            onClick={fetchOrderDetails}
+                            className="text-blue-500 hover:underline"
+                          >
+                            View Order Details
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5" className="p-2 text-center text-gray-600">
+                        No items available.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
         )}
       </div>
-    </div>
+    </section>
   );
 };
 
@@ -138,15 +178,42 @@ const AdminUsers = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await fetch(API_URL);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      const usersResponse = await fetch(API_URL);
+      if (!usersResponse.ok) {
+        throw new Error(`HTTP error! status: ${usersResponse.status}`);
       }
-      const data = await response.json();
-      if (data.error) {
-        throw new Error(data.error);
+      const usersData = await usersResponse.json();
+      if (usersData.error) {
+        throw new Error(usersData.error);
       }
-      setUsers(data);
+      console.log('Users:', usersData); // Debug API response
+      const usersWithOrders = await Promise.all(
+        usersData.map(async (user) => {
+          try {
+            const ordersResponse = await fetch(`${API_URL}/orders?user_id=${user.id}`);
+            if (!ordersResponse.ok) {
+              return { ...user, orderQuantity: 0, orderTotalPrice: 0 };
+            }
+            const ordersData = await ordersResponse.json();
+            if (ordersData.error || !ordersData.products) {
+              return { ...user, orderQuantity: 0, orderTotalPrice: 0 };
+            }
+            const orderQuantity = ordersData.products.reduce((sum, item) => sum + (item.quantity || 0), 0);
+            const orderTotalPrice = ordersData.products.reduce((sum, item) => sum + (parseFloat(item.totalPrice) || 0), 0);
+            return { ...user, orderQuantity, orderTotalPrice };
+          } catch (error) {
+            console.error(`Error fetching orders for user ${user.id}:`, error);
+            return { ...user, orderQuantity: 0, orderTotalPrice: 0 };
+          }
+        })
+      );
+      const sortedUsers = usersWithOrders.sort((a, b) => {
+        if (b.orderTotalPrice === a.orderTotalPrice) {
+          return b.orderQuantity - a.orderQuantity;
+        }
+        return b.orderTotalPrice - a.orderTotalPrice;
+      });
+      setUsers(sortedUsers);
     } catch (error) {
       setMessage('Error fetching users: ' + error.message);
       setTimeout(() => setMessage(''), 5000);
@@ -169,7 +236,6 @@ const AdminUsers = () => {
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
     setLoading(true);
-    
     try {
       if (isEditing) {
         const response = await fetch(API_URL, {
@@ -287,7 +353,7 @@ const AdminUsers = () => {
     setIsAiModalOpen(true);
   };
 
-  const openCartModal = (user) => {
+  const openCartModal = async (user) => {
     setSelectedUser(user);
     setIsCartModalOpen(true);
   };
@@ -541,7 +607,7 @@ const AdminUsers = () => {
                   <button
                     type="button"
                     onClick={closeAddModal}
-                    className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                    className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
                   >
                     Cancel
                   </button>
@@ -705,7 +771,7 @@ const AdminUsers = () => {
                     <button
                       type="button"
                       onClick={closeDetailsModal}
-                      className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                      className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
                     >
                       Cancel
                     </button>
@@ -731,6 +797,8 @@ const AdminUsers = () => {
                     <div className='py-2 border-b-[1px] after-border relative'><strong>National ID:</strong> {selectedUser.national_id || '-'}</div>
                     <div className='py-2 border-b-[1px] after-border relative'><strong>Date of Birth:</strong> {selectedUser.date_of_birth || '-'}</div>
                     <div className='py-2 border-b-[1px] after-border relative'><strong>Address:</strong> {selectedUser.address || '-'}</div>
+                    <div className='py-2 border-b-[1px] after-border relative'><strong>Order Quantity:</strong> {selectedUser.orderQuantity || 0}</div>
+                    <div className='py-2 border-b-[1px] after-border relative'><strong>Order Total Price:</strong> {selectedUser.orderTotalPrice ? `₹ ${selectedUser.orderTotalPrice.toFixed(2)}` : '₹ 0.00'}</div>
                   </div>
                   <div className="flex justify-end gap-4">
                     <button
@@ -756,14 +824,14 @@ const AdminUsers = () => {
           <div className="p-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold">User List</h2>
           </div>
-          <section className="grid grid-cols-6 gap-0 p-4 border border-gray-200 rounded-lg">
+          <section className="grid grid-cols-8 gap-0 p-4 border border-gray-200 rounded-lg">
             <div className="flex flex-col">
               <header className="bg-gray-100 px-6 py-3">
                 <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</div>
               </header>
               <div className="bg-white divide-y divide-gray-200">
                 {loading ? (
-                  <div className="px-6 py-4 text-center text-gray-500 col-span-6">
+                  <div className="px-6 py-4 text-center text-gray-500 col-span-8">
                     <div className="flex items-center justify-center">
                       <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -773,7 +841,7 @@ const AdminUsers = () => {
                     </div>
                   </div>
                 ) : users.length === 0 ? (
-                  <div className="px-6 py-4 text-center text-gray-500 col-span-6">
+                  <div className="px-6 py-4 text-center text-gray-500 col-span-8">
                     No users found. Click "Add User" to create the first user.
                   </div>
                 ) : (
@@ -839,6 +907,32 @@ const AdminUsers = () => {
                 {users.map((user) => (
                   <div key={`phone-${user.id}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 hover:bg-gray-50">
                     {user.phone}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <header className="bg-gray-100 px-6 py-3">
+                <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order Quantity</div>
+              </header>
+              <div className="bg-white divide-y divide-gray-200">
+                {users.map((user) => (
+                  <div key={`order-quantity-${user.id}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 hover:bg-gray-50">
+                    {user.orderQuantity || 0}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <header className="bg-gray-100 px-6 py-3">
+                <div className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order Total Price</div>
+              </header>
+              <div className="bg-white divide-y divide-gray-200">
+                {users.map((user) => (
+                  <div key={`order-total-price-${user.id}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 hover:bg-gray-50">
+                    {user.orderTotalPrice ? `₹ ${user.orderTotalPrice.toFixed(2)}` : '₹ 0.00'}
                   </div>
                 ))}
               </div>
