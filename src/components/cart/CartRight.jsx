@@ -459,7 +459,7 @@ formData.country.trim()) {
               <div className="flex gap-2">
                 <input 
                   type="text" 
-                  name="promoCode"
+                  name="promoCode" 
                   value={formData.promoCode}
                   onChange={handleInputChange}
                   placeholder='Enter promo code' 

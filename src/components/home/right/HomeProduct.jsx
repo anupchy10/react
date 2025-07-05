@@ -82,8 +82,8 @@ const HomeProduct = () => {
                     <FaStar className='max-sm:text-[12px]' />
                   </span>
                   <ul className='flex gap-2'>
-                    <li className='text-[16px] font-medium text5 cursor-pointer hover:underline max-sm:text-[13px]'>${item.sp}</li>
-                    <p className='text3 text-[14px] line-through max-sm:text-[10px]'>${item.cp}</p>
+                    <li className='text-[16px] font-medium text5 cursor-pointer hover:underline max-sm:text-[13px]'>Rs. {item.sp}</li>
+                    <p className='text3 text-[14px] line-through max-sm:text-[10px]'>Rs. {item.cp}</p>
                   </ul>
                 </div>
                 <div className='flex justify-between items-center'>
