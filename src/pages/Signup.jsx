@@ -790,7 +790,7 @@ function Signup() {
         ...formData,
         state: formData.province
       };
-      const response = await axios.post('http://localhost/react-auth-backend/signup.php', payload, {
+      const response = await axios.post('http://localhost/react-auth-backend/signup.php'||'http://192.168.1.65/react-auth-backend/signup.php', payload, {
         headers: { 'Content-Type': 'application/json' },
         timeout: 5000
       });
@@ -820,7 +820,7 @@ function Signup() {
       console.error('Signup error:', err, err.response?.data);
     }
   };
-
+// Social login handler
   const handleSocialLogin = (provider) => {
     window.location.href = `http://localhost/react-auth-backend/social-auth.php?provider=${provider}`;
   };
