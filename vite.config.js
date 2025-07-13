@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import { qrcode } from 'vite-plugin-qrcode'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { qrcode } from 'vite-plugin-qrcode';
 
 export default defineConfig({
   plugins: [
@@ -12,10 +12,19 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost/react-auth-backend',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
-      }
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
     },
-    host: '0.0.0.0', // Add this to allow external connections
-    port: 5173, // Explicitly set the port (optional)
-  }
-})
+    host: '0.0.0.0',
+    port: 5173,
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'], // Split React and ReactDOM into a separate chunk
+        },
+      },
+    },
+  },
+});
