@@ -1,20 +1,28 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// Helper function to load cart from localStorage
 const loadCartFromLocalStorage = () => {
   try {
     const serializedCart = localStorage.getItem('reduxCart');
     if (serializedCart === null) {
-      return { items: [], paymentSuccess: false, paymentDetails: {}, orderDetails: { user: {}, products: [] } };
+      return {
+        items: [],
+        paymentSuccess: false,
+        paymentDetails: {},
+        orderDetails: { user: {}, products: [] },
+      };
     }
     return JSON.parse(serializedCart);
   } catch (e) {
     console.warn("Failed to load cart from localStorage", e);
-    return { items: [], paymentSuccess: false, paymentDetails: {}, orderDetails: { user: {}, products: [] } };
+    return {
+      items: [],
+      paymentSuccess: false,
+      paymentDetails: {},
+      orderDetails: { user: {}, products: [] },
+    };
   }
 };
 
-// Helper function to save cart to localStorage
 const saveCartToLocalStorage = (cartState) => {
   try {
     const serializedCart = JSON.stringify(cartState);
@@ -33,7 +41,9 @@ const cartSlice = createSlice({
     addItemToCart: (state, action) => {
       const existingItem = state.items.find(item => item._id === action.payload._id);
       if (existingItem) {
-        existingItem.quantity += 1;
+        if (existingItem.quantity < existingItem.available) {
+          existingItem.quantity += 1;
+        }
       } else {
         state.items.push({ ...action.payload, quantity: 1, selected: false });
       }
@@ -45,7 +55,7 @@ const cartSlice = createSlice({
     },
     incrementQuantity: (state, action) => {
       const item = state.items.find(item => item._id === action.payload);
-      if (item) {
+      if (item && item.quantity < item.available) {
         item.quantity += 1;
         saveCartToLocalStorage(state);
       }
@@ -113,6 +123,12 @@ export const selectSelectedItemsTotalAmount = (state) => {
 
 export const selectSelectedItemsCount = (state) => {
   return state.cart.items.filter(item => item.selected).length;
+};
+
+export const selectIsItemInStock = (state, itemId) => {
+  const item = state.cart.items.find(item => item._id === itemId);
+  if (!item) return false;
+  return item.quantity <= item.available;
 };
 
 export const {

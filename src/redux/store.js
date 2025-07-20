@@ -8,6 +8,7 @@ import categoryPaginationReducer from './category/categoryPaginationSlice';
 import cartReducer from './cart/cartSlice';
 import favoriteReducer from './favorite/favoriteSlice';
 import detailReducer from './detail/detailSlice';
+import drawerReducer from './drawer/drawerSlice';
 
 const localStorageMiddleware = (store) => (next) => (action) => {
   const result = next(action);
@@ -34,6 +35,7 @@ export const store = configureStore({
     cart: cartReducer,
     favorite: favoriteReducer,
     detail: detailReducer,
+    drawer: drawerReducer,
   },
   middleware: (getDefaultMiddleware) => 
     getDefaultMiddleware().concat(localStorageMiddleware),

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import LeftHome from "../components/home/LeftHome";
 import RightHome from "../components/home/RightHome";
 import { useLocation } from "react-router-dom";
 

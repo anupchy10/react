@@ -23,6 +23,7 @@ import PaymentSuccess from './components/cart/payment/PaymentSuccess';
 import OrderDetails from './pages/admin/orderDetail/OrderDetails';
 import { motion } from "framer-motion";
 import Breadcrumbs from './components/navbar/Breadcrumbs';
+import LeftDrawer from './components/home/LeftDrawer'; // ✅ NEW
 
 function AppContent() {
   const location = useLocation();
@@ -53,6 +54,9 @@ function AppContent() {
             <Breadcrumbs />
           </div>
 
+          {/* Mobile drawer */}
+          <LeftDrawer />
+
           {/* Main Content */}
           <main className='container mt-[150px] max-sm:mt-[190px]'>
             {shouldHideLeftHome ? (
@@ -74,7 +78,7 @@ function AppContent() {
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.2, duration: 0.5 }}
                   >
-                    <div className="mb20">
+                    <div>
                       <LeftHome />
                     </div>
                   </motion.div>
@@ -89,13 +93,13 @@ function AppContent() {
                     </Route>
                     <Route path="*" element={<Navigate to="/home" />} />
                   </Routes>
+                  <Footer />
                 </div>
               </div>
             )}
           </main>
 
           {/* Bottom components */}
-          <Footer />
           <MenuButton />
         </div>
       )}

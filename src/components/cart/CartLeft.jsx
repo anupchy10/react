@@ -8,12 +8,14 @@ import {
   toggleItemSelection, 
   selectAllItems,
   selectCartTotal,
+  selectIsItemInStock,
 } from '../../redux/cart/cartSlice';
 import { IoAddCircle } from "react-icons/io5";
 import { FaCircleMinus } from "react-icons/fa6";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import DividerLine from '../DividerLine';
 import { Link } from 'react-router-dom';
+
 
 const CartLeft = () => {
   const dispatch = useDispatch();
@@ -99,6 +101,13 @@ const CartLeft = () => {
                           <button onClick={() => dispatch(incrementQuantity(item._id))} className="text-green-500 text-3xl">
                             <IoAddCircle className='max-md:h-6 max-md:w-6' />
                           </button>
+                        </div>
+                        <div>
+                          {item.quantity <= item.available ? (
+                            <p className='text-green-600 text-sm max-sm:text-xs'>Item is in stock</p>
+                          ) : (
+                            <p className='text-red-600 text-sm max-sm:text-xs'>Item is not in stock</p>
+                          )}
                         </div>
                       </div>
                     </div>

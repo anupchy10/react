@@ -11,8 +11,8 @@ const ProductDetail = () => {
 
   return (
     <div className='container relative'>
-      <div className='p-2 fixed z-10 cursor-pointer' onClick={() => navigate(-1)}>
-        <TbArrowBackUp className='text-[45px] text1' />
+      <div className='p-2 fixed z-10 cursor-pointer bg-[#B8A38A] rounded-full' onClick={() => navigate(-1)}>
+        <TbArrowBackUp className='text-[45px] text1 text-white' />
       </div>
       <Detail />
       <ProductDesc />
