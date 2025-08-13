@@ -1,12 +1,20 @@
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. install 
+  https://code.visualstudio.com/download
+  https://nodejs.org/en/download
+  https://www.apachefriends.org/download.html
+2. move or copy react-auth-backend folder to
+   C:\xampp\htdocs  (here C drive is your local drive where xampp is install as default)
+3. open xampp applicaion and start "Apache" & "MySQL"
+4. after that click on "Admin" button OR you can go on browser and open "http://localhost/phpmyadmin/"
+5. then create a database "user_auth"
+   click on "new"
+   name database "user_auth" and click on create buton
+6. open jivorix folder in vs code
+7. go to the react-auth-frontend folder in vs code terminal
+   "cd .\react-auth-frontend"
+8. then install "node_modules" folder
+   "npm install"
+9. after that run the project
+   "npm run dev"
+10. then open the project on localhost
+11. noe that the xampp server also in running state
