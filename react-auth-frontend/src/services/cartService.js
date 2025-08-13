@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Use XAMPP localhost setup
-const API_BASE_URL = 'http://localhost/jivorix/react-auth-backend';
+const API_BASE_URL = 'http://localhost/react-auth-backend';
 
 // Get user from localStorage
 const getUser = () => {
